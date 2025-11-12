@@ -1,0 +1,81 @@
+/* src/sections/VisitaSection.css */
+
+.visita-section {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.main-title {
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--color-tierra);
+}
+
+.info-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+  border-top: 4px solid; /* color via inline style */
+}
+
+.card-title {
+  font-size: 2rem;
+  margin: 0 0 1rem 0;
+}
+
+.info-table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+.info-table th, .info-table td {
+  padding: 0.75rem;
+}
+.info-table thead {
+  color: white;
+}
+.info-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s;
+}
+.info-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+.info-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.location-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.location-map iframe {
+  border: 0;
+  width: 100%;
+  height: 300px;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.directions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.directions-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .location-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

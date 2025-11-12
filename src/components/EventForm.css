@@ -1,0 +1,126 @@
+/* src/components/EventForm/EventForm.css */
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* space-y-6 */
+}
+
+.form-main-title {
+  font-size: 1.5rem; /* text-2xl */
+  font-family: serif;
+  font-weight: bold;
+  color: var(--color-tierra);
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+  margin: 0;
+}
+
+.form-status-message {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  color: white;
+}
+.form-status-message.success { background-color: #28a745; }
+.form-status-message.error { background-color: #dc3545; }
+
+.form-selector-container {
+  background-color: #f9fafb; /* bg-gray-50/100 */
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151; /* text-gray-700 */
+  margin-bottom: 0.5rem;
+}
+
+.form-select,
+.form-input,
+.form-textarea {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db; /* border-gray-300 */
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-select:focus,
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-ocre);
+  box-shadow: 0 0 0 3px rgba(244, 164, 96, 0.4); /* Anillo de foco */
+}
+
+.event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-top: 4px solid;
+}
+
+.form-title {
+  font-family: serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  flex-wrap: wrap; /* Para que se ajuste en pantallas pequeñas */
+  gap: 1rem;
+}
+
+.form-button {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.2s;
+}
+.form-button:hover {
+  opacity: 0.9;
+}
+.form-button:active {
+  transform: scale(0.98);
+}
+
+.form-button-delete {
+  background-color: #dc3545;
+}
+.form-button-delete:hover {
+  background-color: #c82333;
+}
+
+.form-button-reset {
+  background: none;
+  box-shadow: none;
+  color: #4b5563;
+  padding: 0.5rem 1rem;
+  font-weight: normal;
+}
+.form-button-reset:hover {
+  background-color: #f3f4f6;
+}
