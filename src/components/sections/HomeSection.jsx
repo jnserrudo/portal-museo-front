@@ -1,9 +1,16 @@
 import React from 'react';
 import { COLORS } from '../../constants/colors';
 import EventCarousel from '../../components/EventCarousel';
+import * as eventService from '../../api/eventService';
 import './HomeSection.css'; // Importamos nuestros estilos
 
-const HomeSection = ({ events, isLoading }) => (
+const HomeSection = ({ events = [], isLoading = false }) => {
+    // Filtrar solo los eventos publicados
+    const publishedEvents = Array.isArray(events) 
+        ? events.filter(event => event.publicado)
+        : [];
+
+    return (
     <section id="home-section">
         
         {/* HERO / SLIDER Principal */}
@@ -69,6 +76,7 @@ const HomeSection = ({ events, isLoading }) => (
         </div>
 
     </section>
-);
+    );
+};
 
 export default HomeSection;

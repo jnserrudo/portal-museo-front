@@ -1,9 +1,29 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
-export default defineConfig({
-  base: "/portal/", // ← 🔑 ¡ESTA ES LA LÍNEA CLAVE!
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
 
-  plugins: [react()],
+  return {
+    base: env.VITE_BASE_URL || "/portal/",
+    plugins: [react()],
+    server: {
+      ...(command === "serve" && {
+        proxy: {
+          "/api": {
+            target: env.VITE_API_URL || "http://localhost:3000",
+            changeOrigin: true,
+            secure: false,
+            // ✅ NO usar rewrite: ¡debe preservar /api!
+            // El backend ya espera /api/eventos.
+          },
+        },
+      }),
+    },
+    build: {
+      outDir: "dist",
+      assetsDir: "assets",
+      sourcemap: true,
+    },
+  };
 });

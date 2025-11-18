@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { COLORS } from "./constants/colors";
-import * as eventService from "./api/eventServiceSimulated";
+import * as eventService from "./api/eventService";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./App.css"; // Importa el archivo CSS
 // Componentes y Secciones
 import Modal from "./components/Modal";
@@ -70,35 +72,106 @@ const App = () => {
 
   // --- Carga inicial de datos desde la API ---
   const fetchEvents = async () => {
-    setIsEventsLoading(true);
-    const data = await eventService.getEvents();
-    setEvents(data);
-    setIsEventsLoading(false);
+    console.log('Fetching events...');
+    try {
+      setIsEventsLoading(true);
+      const data = await eventService.getEvents();
+      console.log('Events received:', data);
+      setEvents(data);
+      console.log('Events state updated');
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      toast.error('Error al cargar los eventos');
+    } finally {
+      setIsEventsLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchEvents();
   }, []); // El array vacío asegura que se ejecute solo una vez al montar el componente.
 
+  // Agrega esto temporalmente en App.jsx
+useEffect(() => {
+  console.log('Configuración de entorno:', {
+    VITE_API_URL: import.meta.env.VITE_API_URL,
+    VITE_BASE_URL: import.meta.env.VITE_BASE_URL,
+    NODE_ENV: import.meta.env.MODE
+  });
+}, []);
   // --- Funciones CRUD para pasar al formulario ---
   const saveEvent = async (eventData) => {
-    if (eventData.id) {
-      // Actualizar evento existente
-      await eventService.updateEvent(eventData.id, eventData);
-    } else {
-      // Crear nuevo evento
-      // Excluimos el 'id' vacío que podría enviar el formulario
-      const { id, ...newEventData } = eventData;
-      await eventService.createEvent(newEventData);
+    console.log('Datos recibidos en saveEvent:', eventData);
+    let savedEvent;
+    
+    try {
+      // Verificar si es FormData
+      const isFormData = eventData instanceof FormData;
+      
+      if (isFormData) {
+        const id = eventData.get('id');
+        
+        if (id) {
+          // Actualizar evento existente
+          savedEvent = await eventService.updateEvent(id, eventData);
+        } else {
+          // Crear nuevo evento
+          savedEvent = await eventService.createEvent(eventData);
+        }
+      } else {
+        // Manejo para objeto regular (backward compatibility)
+        if (eventData.id) {
+          // Actualizar evento existente
+          savedEvent = await eventService.updateEvent(eventData.id, eventData);
+        } else {
+          // Crear nuevo evento
+          const { id, ...newEventData } = eventData;
+          savedEvent = await eventService.createEvent(newEventData);
+        }
+      }
+      
+      // Actualizar la lista de eventos
+      await fetchEvents();
+      
+      // Cerrar el modal de administración después de guardar exitosamente
+      setIsAdminModalOpen(false);
+      
+      return savedEvent;
+    } catch (error) {
+      console.error('Error al guardar el evento:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'No se pudo guardar el evento';
+      toast.error(`Error: ${errorMessage}`);
+      throw error; // Re-lanzar el error para que el formulario lo maneje
     }
-    // Después de guardar, volvemos a cargar la lista para ver los cambios
-    await fetchEvents();
   };
 
   const deleteEvent = async (id) => {
-    await eventService.deleteEvent(id);
-    // Volvemos a cargar la lista para reflejar la eliminación
-    await fetchEvents();
+    try {
+      // Mostrar confirmación antes de eliminar
+      const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este evento?');
+      if (!confirmDelete) return false;
+      
+      await eventService.deleteEvent(id);
+      
+      // Mostrar notificación de éxito
+      toast.success('Evento eliminado exitosamente');
+      
+      // Actualizar la lista de eventos
+      await fetchEvents();
+      
+      return true;
+    } catch (error) {
+      console.error('Error al eliminar el evento:', error);
+      toast.error(`Error: ${error.message || 'No se pudo eliminar el evento'}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      throw error;
+    }
   };
 
   // --- Handlers de Navegación y Modales ---
@@ -168,6 +241,52 @@ const App = () => {
 
   return (
     <div>
+      {/* ToastContainer para mostrar notificaciones */}
+      {/* Botón de prueba para los toasts - Solo para desarrollo */}
+      {process.env.NODE_ENV === 'development'&& false && (
+        <button 
+          onClick={() => {
+            toast.success('¡Notificación de prueba exitosa!');
+            toast.error('¡Error de prueba!');
+          }}
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+            zIndex: 1000,
+            backgroundColor: COLORS.OCRE,
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            padding: '8px 16px',
+            cursor: 'pointer',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+          }}
+        >
+          Probar Notificaciones
+        </button>
+      )}
+      
+      {/* Configuración del ToastContainer */}
+      <ToastContainer 
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        style={{ marginTop: '70px' }}
+        toastStyle={{
+          backgroundColor: COLORS.OCRE,
+          color: '#fff',
+          fontSize: '14px',
+          padding: '12px 20px',
+        }}
+      />
       <header className="main-header">
         <div className="container header-container">
           <h1 className="header-logo">Museo Regional Andino</h1>
@@ -228,7 +347,17 @@ const App = () => {
         isOpen={isAdminModalOpen}
         onClose={() => setIsAdminModalOpen(false)}
       >
-        <EventForm events={events} onSave={saveEvent} onDelete={deleteEvent} />
+        <EventForm 
+          events={events} 
+          onSave={saveEvent} 
+          onDelete={deleteEvent}
+          onCreate={saveEvent}
+          onUpdate={(id, data) => saveEvent(data)}
+          onSaveSuccess={() => {
+            // Opcional: Cerrar el modal después de guardar exitosamente
+            // setIsAdminModalOpen(false);
+          }}
+        />
       </Modal>
 
       <Modal
