@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaMapMarkerAlt, FaClock, FaTicketAlt, FaBus, FaWheelchair, FaParking, FaUtensils, FaCamera, FaInfoCircle } from 'react-icons/fa';
-import { theme } from '../../styles/theme';
+import { theme } from '../styles/theme';
 import Button from '../components/ui/Button';
 
 const PageContainer = styled.div`

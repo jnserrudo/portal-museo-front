@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaRobot, FaVrCardboard, FaMobileAlt, FaLaptopCode, FaBrain, FaGlobeAmericas } from 'react-icons/fa';
-import { theme } from '../../styles/theme';
+import { theme } from '../styles/theme';
 import Button from '../components/ui/Button';
 
 const PageContainer = styled.div`
