@@ -1,12 +1,12 @@
 import { toast } from 'react-toastify';
 
-// Usamos ruta relativa para que funcione con el proxy
-const API_BASE_URL = '/api';
+// Usamos la variable de entorno para la URL base de la API
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const getApiUrl = (endpoint) => {
   // Aseguramos que el endpoint no empiece con /
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
-  return `${API_BASE_URL}/${cleanEndpoint}`;
+  return `${API_BASE_URL}/api/${cleanEndpoint}`; // Aseguramos que la ruta incluya /api/
 };
 
 /**
@@ -219,6 +219,55 @@ export const updateEvent = async (id, formData) => {
 /**
  * Elimina un evento
  * @param {number} id - ID del evento a eliminar
+ * @returns {Promise<Object>} Resultado de la operación
+ */
+/**
+ * Obtiene un evento por su ID
+ * @param {string|number} id - ID del evento a obtener
+ * @returns {Promise<Object>} Datos del evento
+ */
+export const getEventById = async (id) => {
+    try {
+        const apiUrl = getApiUrl(`eventos/${id}`);
+        console.log(`Solicitando evento con ID ${id} desde:`, apiUrl);
+        
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
+            let errorData;
+            try {
+                errorData = JSON.parse(errorText);
+            } catch (e) {
+                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+            }
+            throw new Error(errorData.message || `Error al obtener el evento (${response.status})`);
+        }
+        
+        const data = await response.json();
+        console.log('Evento obtenido:', data);
+        return data;
+    } catch (error) {
+        console.error('Error en getEventById:', {
+            message: error.message,
+            stack: error.stack,
+            url: window.location.href
+        });
+        throw error;
+    }
+};
+
+/**
+ * Elimina un evento
+ * @param {string|number} id - ID del evento a eliminar
  * @returns {Promise<Object>} Resultado de la operación
  */
 export const deleteEvent = async (id) => {

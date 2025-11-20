@@ -239,7 +239,4 @@ const EventCarousel = ({ events }) => {
     );
 };
 
-// Asegúrate de que esta constante coincida con tu configuración
-const API_BASE_URL = 'http://195.200.0.39:3000/api';
-
 export default EventCarousel;

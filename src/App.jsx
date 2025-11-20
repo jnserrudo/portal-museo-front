@@ -1,382 +1,249 @@
-import React, { useState, useEffect } from "react";
-import { COLORS } from "./constants/colors";
-import * as eventService from "./api/eventService";
+import React, { useState, useEffect, Suspense, lazy } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import "./App.css"; // Importa el archivo CSS
-// Componentes y Secciones
+import { AuthProvider } from "./context/AuthContext";
+import ErrorBoundary from "./components/ErrorBoundary";
+
+// Estilos
+import GlobalStyles from "./styles/GlobalStyles";
+import theme from "./styles/theme";
+
+// Componentes
+import Layout from "./components/layout/Layout";
+import LoadingSpinner from "./components/ui/LoadingSpinner";
 import Modal from "./components/Modal";
-import EventForm from "./components/EventForm";
-import HomeSection from "./components/sections/HomeSection";
-import ColeccionesSection from "./components/sections/ColeccionesSection";
-import VisitaSection from "./components/sections/VisitaSection";
 
-// NUEVO: Un componente simple para el login simulado
-const LoginModal = ({ onLogin }) => {
-  const [password, setPassword] = useState("");
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Simulación: si la contraseña es "admin123", el login es exitoso.
-    if (password === "admin123") {
-      onLogin();
-    } else {
-      alert("Contraseña incorrecta");
-    }
-  };
+// Páginas (cargadas con lazy loading)
+const HomePage = lazy(() => import("./pages/HomePage"));
+const ElMuseoPage = lazy(() => import("./pages/ElMuseoPage"));
+const ColeccionPage = lazy(() => import("./pages/ColeccionPage"));
+const VisitaPage = lazy(() => import("./pages/VisitaPage"));
+const TecnologiaPage = lazy(() => import("./pages/TecnologiaPage"));
+const EventosPage = lazy(() => import("./pages/EventosPage"));
+const EventoDetallePage = lazy(() => import("./pages/EventoDetallePage"));
+const ContactoPage = lazy(() => import("./pages/ContactoPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-    >
-      <label htmlFor="password">Contraseña de Administrador:</label>
-      <input
-        type="password"
-        id="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Prueba con: admin123"
-        className="form-input" // Reutilizamos una clase de EventForm.css
-      />
-      <button
-        type="submit"
-        className="form-button"
-        style={{ backgroundColor: COLORS.SKY }}
-      >
-        Ingresar
-      </button>
-    </form>
-  );
-};
+// Servicios
+import * as eventService from "./api/eventService";
 
 const App = () => {
-  // Estados de la UI
-  const [currentPage, setCurrentPage] = useState("home");
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Estados de Datos
+  // Estados de la aplicación
   const [events, setEvents] = useState([]);
   const [isEventsLoading, setIsEventsLoading] = useState(true);
-
-  // Estados de Modales
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // NUEVO
-    const [isAdmin, setIsAdmin] = useState(false); // NUEVO: Estado para saber si el usuario es admin
-
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [isPieceModalOpen, setIsPieceModalOpen] = useState(false);
   const [pieceModalContent, setPieceModalContent] = useState({
-    imgSrc: "",
-    title: "",
-    description: "",
+    title: '',
+    description: '',
+    imageUrl: ''
   });
 
-  // --- Carga inicial de datos desde la API ---
+  // Cargar eventos desde la API y ordenarlos por fecha
   const fetchEvents = async () => {
-    console.log('Fetching events...');
+    setIsEventsLoading(true);
     try {
-      setIsEventsLoading(true);
       const data = await eventService.getEvents();
-      console.log('Events received:', data);
-      setEvents(data);
-      console.log('Events state updated');
+      
+      // Ordenar eventos por fecha (más cercanos primero)
+      const sortedEvents = [...data].sort((a, b) => {
+        const dateA = new Date(a.fecha);
+        const dateB = new Date(b.fecha);
+        return dateA - dateB; // Orden ascendente (más cercanos primero)
+      });
+      
+      // Filtrar eventos pasados (opcional, si lo prefieres)
+      // const currentDate = new Date();
+      // const upcomingEvents = sortedEvents.filter(event => new Date(event.fecha) >= currentDate);
+      
+      setEvents(sortedEvents);
     } catch (error) {
-      console.error('Error fetching events:', error);
+      console.error('Error al cargar los eventos:', error);
       toast.error('Error al cargar los eventos');
     } finally {
       setIsEventsLoading(false);
     }
   };
 
+  // Cargar eventos al montar el componente
   useEffect(() => {
     fetchEvents();
-  }, []); // El array vacío asegura que se ejecute solo una vez al montar el componente.
+  }, []);
 
-  // Agrega esto temporalmente en App.jsx
-useEffect(() => {
-  console.log('Configuración de entorno:', {
-    VITE_API_URL: import.meta.env.VITE_API_URL,
-    VITE_BASE_URL: import.meta.env.VITE_BASE_URL,
-    NODE_ENV: import.meta.env.MODE
-  });
-}, []);
-  // --- Funciones CRUD para pasar al formulario ---
+  // Funciones CRUD para eventos
   const saveEvent = async (eventData) => {
-    console.log('Datos recibidos en saveEvent:', eventData);
-    let savedEvent;
-    
     try {
-      // Verificar si es FormData
-      const isFormData = eventData instanceof FormData;
-      
-      if (isFormData) {
-        const id = eventData.get('id');
-        
-        if (id) {
-          // Actualizar evento existente
-          savedEvent = await eventService.updateEvent(id, eventData);
-        } else {
-          // Crear nuevo evento
-          savedEvent = await eventService.createEvent(eventData);
-        }
+      let savedEvent;
+      if (eventData.id) {
+        savedEvent = await eventService.updateEvent(eventData.id, eventData);
+        toast.success('Evento actualizado correctamente');
       } else {
-        // Manejo para objeto regular (backward compatibility)
-        if (eventData.id) {
-          // Actualizar evento existente
-          savedEvent = await eventService.updateEvent(eventData.id, eventData);
-        } else {
-          // Crear nuevo evento
-          const { id, ...newEventData } = eventData;
-          savedEvent = await eventService.createEvent(newEventData);
-        }
+        savedEvent = await eventService.createEvent(eventData);
+        toast.success('Evento creado correctamente');
       }
-      
-      // Actualizar la lista de eventos
       await fetchEvents();
-      
-      // Cerrar el modal de administración después de guardar exitosamente
-      setIsAdminModalOpen(false);
-      
       return savedEvent;
     } catch (error) {
       console.error('Error al guardar el evento:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'No se pudo guardar el evento';
-      toast.error(`Error: ${errorMessage}`);
-      throw error; // Re-lanzar el error para que el formulario lo maneje
+      toast.error(`Error: ${error.message || 'No se pudo guardar el evento'}`);
+      throw error;
     }
   };
 
   const deleteEvent = async (id) => {
     try {
-      // Mostrar confirmación antes de eliminar
       const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este evento?');
       if (!confirmDelete) return false;
       
       await eventService.deleteEvent(id);
-      
-      // Mostrar notificación de éxito
-      toast.success('Evento eliminado exitosamente');
-      
-      // Actualizar la lista de eventos
       await fetchEvents();
-      
+      toast.success('Evento eliminado correctamente');
       return true;
     } catch (error) {
       console.error('Error al eliminar el evento:', error);
-      toast.error(`Error: ${error.message || 'No se pudo eliminar el evento'}`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast.error(`Error: ${error.message || 'No se pudo eliminar el evento'}`);
       throw error;
     }
   };
 
-  // --- Handlers de Navegación y Modales ---
-  const handleNavigation = (pageId) => {
-    setCurrentPage(pageId);
-    setIsMenuOpen(false);
-  };
-
-  const openPieceModal = (imgSrc, title, description) => {
-    setPieceModalContent({ imgSrc, title, description });
+  // Manejo del modal de pieza
+  const openPieceModal = (piece) => {
+    setPieceModalContent({
+      title: piece.title,
+      description: piece.description,
+      imageUrl: piece.imageUrl
+    });
     setIsPieceModalOpen(true);
   };
 
-  const closePieceModal = () => setIsPieceModalOpen(false);
+  // Componente de carga de suspensión
+  const SuspenseFallback = () => (
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '100vh',
+      flexDirection: 'column',
+      gap: '1rem'
+    }}>
+      <LoadingSpinner size="large" />
+      <p>Cargando...</p>
+    </div>
+  );
 
-  // NUEVO: Lógica para el flujo de admin
-  const handleAdminClick = () => {
-    if (isAdmin) {
-      setIsAdminModalOpen(true);
-    } else {
-      setIsLoginModalOpen(true);
-    }
-  };
-
-  const handleLoginSuccess = () => {
-    setIsAdmin(true);
-    setIsLoginModalOpen(false);
-    setIsAdminModalOpen(true); // Abrir el panel de admin directamente tras el login
-  };
-
-  // --- Renderizado Condicional de Páginas ---
-  const renderPage = () => {
-    switch (currentPage) {
-      case "home":
-        return <HomeSection events={events} isLoading={isEventsLoading} />;
-      case "colecciones":
-        return <ColeccionesSection openPieceModal={openPieceModal} />;
-      case "visita":
-        return <VisitaSection />;
-      default:
-        return (
-          <div className="container mx-auto px-4 py-20 text-center">
-            <h2
-              className="text-3xl font-serif mb-4"
-              style={{ color: COLORS.OCRE }}
-            >
-              Sección en Construcción
-            </h2>
-            <p className="text-lg" style={{ color: COLORS.TIERRA }}>
-              Página para <strong>{currentPage.toUpperCase()}</strong>.
-            </p>
-          </div>
-        );
-    }
-  };
-
-  // NUEVO: Array de navegación más completo
-  const navItems = [
-    "home",
-    "el_museo",
-    "colecciones",
-    "visita",
-    "educacion",
-    "agenda",
-    "contacto",
-  ];
+  // Componente de página con manejo de errores
+  const Page = ({ children }) => (
+    <ErrorBoundary>
+      <Layout>
+        {children}
+      </Layout>
+    </ErrorBoundary>
+  );
 
   return (
-    <div>
-      {/* ToastContainer para mostrar notificaciones */}
-      {/* Botón de prueba para los toasts - Solo para desarrollo */}
-      {process.env.NODE_ENV === 'development'&& false && (
-        <button 
-          onClick={() => {
-            toast.success('¡Notificación de prueba exitosa!');
-            toast.error('¡Error de prueba!');
-          }}
-          style={{
-            position: 'fixed',
-            bottom: '20px',
-            right: '20px',
-            zIndex: 1000,
-            backgroundColor: COLORS.OCRE,
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            padding: '8px 16px',
-            cursor: 'pointer',
-            boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
-          }}
-        >
-          Probar Notificaciones
-        </button>
-      )}
-      
-      {/* Configuración del ToastContainer */}
-      <ToastContainer 
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        style={{ marginTop: '70px' }}
-        toastStyle={{
-          backgroundColor: COLORS.OCRE,
-          color: '#fff',
-          fontSize: '14px',
-          padding: '12px 20px',
-        }}
-      />
-      <header className="main-header">
-        <div className="container header-container">
-          <h1 className="header-logo">Museo Regional Andino</h1>
-          <nav className="nav-desktop">
-            {/* NUEVO: Usamos el array completo de ítems */}
-            {navItems.map((page) => (
-              <a
-                key={page}
-                href="#"
-                onClick={() => handleNavigation(page)}
-                className={`nav-link ${currentPage === page ? "active" : ""}`}
-              >
-                {page.toUpperCase().replace("_", " ")}
-              </a>
-            ))}
-          </nav>
-          <div className="header-utils">
-            <button onClick={handleAdminClick} className="admin-button">
-              ADMIN
-            </button>
-
-            <button className="menu-button">
-              {/* Icono SVG de Hamburguesa */}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main style={{ paddingTop: "70px" }}>{renderPage()}</main>
-
-      <footer className="main-footer">
-        <div className="container footer-grid">
-          <div className="footer-section">
-            <h4>Museo Regional Andino</h4>
-            <p>
-              Nuestra misión es preservar y difundir el patrimonio cultural de
-              la Puna.
-            </p>
-          </div>
-          <div className="footer-section">
-            <h4>Contacto</h4>
-            <ul>
-              <li>Av. 9 de Julio s/n, Salta</li>
-              <li>(387) 123-4567</li>
-            </ul>
-          </div>
-        </div>
-      </footer>
-
-
-  {/* NUEVO: Modal de Login */}
-            <Modal title="Acceso de Administrador" isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)}>
-                <LoginModal onLogin={handleLoginSuccess} />
-            </Modal>
-            
-      <Modal
-        /* title="Administración de Eventos" */
-        isOpen={isAdminModalOpen}
-        onClose={() => setIsAdminModalOpen(false)}
-      >
-        <EventForm 
-          events={events} 
-          onSave={saveEvent} 
-          onDelete={deleteEvent}
-          onCreate={saveEvent}
-          onUpdate={(id, data) => saveEvent(data)}
-          onSaveSuccess={() => {
-            // Opcional: Cerrar el modal después de guardar exitosamente
-            // setIsAdminModalOpen(false);
-          }}
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      <AuthProvider>
+        <Router>
+          <ErrorBoundary>
+            <Suspense fallback={<SuspenseFallback />}>
+              <Routes>
+                <Route path="/" element={
+                  <Page>
+                    <HomePage 
+                      events={events}
+                      isLoading={isEventsLoading}
+                      onPieceClick={openPieceModal}
+                    />
+                  </Page>
+                } />
+                <Route path="/el-museo" element={
+                  <Page>
+                    <ElMuseoPage />
+                  </Page>
+                } />
+                <Route path="/coleccion" element={
+                  <Page>
+                    <ColeccionPage onPieceClick={openPieceModal} />
+                  </Page>
+                } />
+                <Route path="/visita" element={
+                  <Page>
+                    <VisitaPage />
+                  </Page>
+                } />
+                <Route path="/tecnologia" element={
+                  <Page>
+                    <TecnologiaPage />
+                  </Page>
+                } />
+                <Route path="/eventos" element={
+                  <Page>
+                    <EventosPage 
+                      events={events} 
+                      isLoading={isEventsLoading} 
+                      onSaveEvent={saveEvent}
+                      onDeleteEvent={deleteEvent}
+                    />
+                  </Page>
+                } />
+                <Route path="/eventos/:id" element={
+                  <Page>
+                    <EventoDetallePage />
+                  </Page>
+                } />
+                <Route path="/contacto" element={
+                  <Page>
+                    <ContactoPage />
+                  </Page>
+                } />
+                <Route path="*" element={
+                  <Page>
+                    <NotFoundPage />
+                  </Page>
+                } />
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
+        </Router>
+        <ToastContainer 
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
         />
-      </Modal>
+      </AuthProvider>
 
+      {/* Modal de Detalle de Pieza */}
       <Modal
-        title={pieceModalContent.title}
         isOpen={isPieceModalOpen}
         onClose={() => setIsPieceModalOpen(false)}
+        title={pieceModalContent.title}
       >
-        <img
-          src={pieceModalContent.imgSrc}
-          alt={pieceModalContent.title}
-          style={{
-            width: "100%",
-            borderRadius: "0.5rem",
-            marginBottom: "1rem",
-          }}
-        />
+        {pieceModalContent.imageUrl && (
+          <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
+            <img 
+              src={pieceModalContent.imageUrl} 
+              alt={pieceModalContent.title}
+              style={{ 
+                maxWidth: '100%', 
+                maxHeight: '300px', 
+                borderRadius: '4px',
+                marginBottom: '1rem'
+              }} 
+            />
+          </div>
+        )}
         <p>{pieceModalContent.description}</p>
       </Modal>
-    </div>
+    </ThemeProvider>
   );
 };
 

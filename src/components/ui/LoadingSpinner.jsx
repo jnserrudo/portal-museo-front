@@ -1,0 +1,36 @@
+import React from 'react';
+import styled, { keyframes } from 'styled-components';
+import { theme } from '../../styles/theme';
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const Spinner = styled.div`
+  display: inline-block;
+  width: ${({ size }) => {
+    switch (size) {
+      case 'small': return '20px';
+      case 'large': return '60px';
+      default: return '40px';
+    }
+  }};
+  height: ${({ size }) => {
+    switch (size) {
+      case 'small': return '20px';
+      case 'large': return '60px';
+      default: return '40px';
+    }
+  }};
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 3px solid ${theme.colors.primary};
+  animation: ${spin} 1s linear infinite;
+`;
+
+const LoadingSpinner = ({ size = 'medium', className }) => {
+  return <Spinner size={size} className={className} />;
+};
+
+export default LoadingSpinner;
