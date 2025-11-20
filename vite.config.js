@@ -3,10 +3,30 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
+  const isProduction = mode === 'production';
 
   return {
-    base: "/portal/",
+    base: isProduction ? '/portal/' : '/',
     plugins: [react()],
+    // Configuración para manejar rutas de activos
+    resolve: {
+      alias: {
+        '/@/': new URL('./src/', import.meta.url).pathname,
+      },
+    },
+    // Configuración para copiar archivos estáticos
+    build: {
+      assetsDir: 'assets',
+      outDir: 'dist',
+      sourcemap: !isProduction,
+      rollupOptions: {
+        output: {
+          assetFileNames: 'assets/[name]-[hash][extname]',
+          chunkFileNames: 'assets/[name]-[hash].js',
+          entryFileNames: 'assets/[name]-[hash].js',
+        },
+      },
+    },
     server: {
       ...(command === "serve" && {
         proxy: {

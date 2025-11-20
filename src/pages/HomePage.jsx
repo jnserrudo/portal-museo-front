@@ -5,6 +5,9 @@ import { FaArrowRight, FaCalendarAlt, FaMapMarkerAlt, FaClock } from 'react-icon
 import Button from '../components/ui/Button';
 import { theme } from '../styles/theme';
 
+// Importar la imagen
+import museoFrente from '/museo_frente.jpg';
+
 // Componentes estilizados
 const HeroSection = styled.section`
   position: relative;
@@ -16,7 +19,7 @@ const HeroSection = styled.section`
   text-align: center;
   color: ${theme.colors.text.light};
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), 
-              url('/museo_frente.jpg') center/cover no-repeat;
+              url(${museoFrente}) center/cover no-repeat;
   margin: 0;
   padding: 0;
   margin-top: -1px; /* Asegura que no haya espacio entre el header y el hero */
