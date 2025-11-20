@@ -4,9 +4,13 @@ import { toast } from 'react-toastify';
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const getApiUrl = (endpoint) => {
-  // Aseguramos que el endpoint no empiece con /
-  const cleanEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
-  return `${API_BASE_URL}/api/${cleanEndpoint}`; // Aseguramos que la ruta incluya /api/
+  // Eliminamos cualquier /api/ duplicado
+  const cleanEndpoint = endpoint.replace(/^\/api\//, '');
+  // Si la URL base ya termina en /api, no lo agregamos de nuevo
+  const baseUrl = API_BASE_URL.endsWith('/api') ? 
+    API_BASE_URL : 
+    `${API_BASE_URL}/api`;
+  return `${baseUrl}/${cleanEndpoint}`;
 };
 
 /**
