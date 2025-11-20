@@ -241,7 +241,7 @@ const Footer = () => {
       <FooterContent>
         <FooterSection>
           <FooterLogo to="/">
-            <img src="/logo-museo.png" alt="Museo Regional Andino" />
+            <img src={`${import.meta.env.BASE_URL}logo-museo.png`} alt="Museo Regional Andino" />
             <span>Museo Regional Andino</span>
           </FooterLogo>
           <FooterText>
