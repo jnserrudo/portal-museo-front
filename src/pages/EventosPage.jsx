@@ -3,7 +3,7 @@ import { format, parseISO, isAfter, isBefore, isToday } from 'date-fns';
 import { es } from 'date-fns/locale';
 import styled from 'styled-components';
 import { FaCalendarAlt, FaMapMarkerAlt, FaSearch, FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
-import { theme } from '../../styles/theme';
+import { theme } from '../styles/theme';
 import Button from '../components/ui/Button';
 import Modal from '../components/Modal';
 import EventForm from '../components/events/EventForm';
