@@ -8,22 +8,26 @@ export default defineConfig(({ command, mode }) => {
   return {
     base: isProduction ? '/portal/' : '/',
     plugins: [react()],
-    // Configuración para manejar rutas de activos
-    resolve: {
-      alias: {
-        '/@/': new URL('./src/', import.meta.url).pathname,
-      },
-    },
-    // Configuración para copiar archivos estáticos
+    publicDir: 'public',
     build: {
-      assetsDir: 'assets',
       outDir: 'dist',
+      assetsDir: 'assets',
       sourcemap: !isProduction,
+      // Copiar archivos estáticos de la carpeta public
+      copyPublicDir: true,
       rollupOptions: {
         output: {
-          assetFileNames: 'assets/[name]-[hash][extname]',
-          chunkFileNames: 'assets/[name]-[hash].js',
-          entryFileNames: 'assets/[name]-[hash].js',
+          // Mantener la estructura de directorios para los assets
+          assetFileNames: (assetInfo) => {
+            const info = assetInfo.name.split('.');
+            const ext = info[info.length - 1];
+            if (['png', 'jpg', 'jpeg', 'gif', 'svg'].includes(ext)) {
+              return `assets/images/[name]-[hash][extname]`;
+            }
+            return `assets/[name]-[hash][extname]`;
+          },
+          chunkFileNames: 'assets/js/[name]-[hash].js',
+          entryFileNames: 'assets/js/[name]-[hash].js',
         },
       },
     },

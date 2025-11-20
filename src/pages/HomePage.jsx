@@ -5,8 +5,8 @@ import { FaArrowRight, FaCalendarAlt, FaMapMarkerAlt, FaClock } from 'react-icon
 import Button from '../components/ui/Button';
 import { theme } from '../styles/theme';
 
-// Importar la imagen
-import museoFrente from '/museo_frente.jpg';
+// Ruta a la imagen usando BASE_URL para compatibilidad con entornos de desarrollo y producción
+const museoFrente = `${import.meta.env.BASE_URL}museo_frente.jpg`;
 
 // Componentes estilizados
 const HeroSection = styled.section`

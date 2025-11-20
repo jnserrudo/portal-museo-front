@@ -16,7 +16,7 @@ const HeroSection = styled.section`
   text-align: center;
   color: ${theme.colors.text.light};
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), 
-              url('/museo_frente.jpg') center/cover no-repeat;
+              url('${import.meta.env.BASE_URL}museo_frente.jpg') center/cover no-repeat;
   margin-bottom: ${theme.spacing.xl};
 `;
 
