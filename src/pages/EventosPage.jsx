@@ -6,7 +6,7 @@ import { FaCalendarAlt, FaMapMarkerAlt, FaSearch, FaPlus, FaEdit, FaTrash } from
 import { theme } from '../styles/theme';
 import Button from '../components/ui/Button';
 import Modal from '../components/Modal';
-import EventForm from '../components/events/EventForm';
+import EventForm from '../components/EventForm';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 
 const PageContainer = styled.div`
