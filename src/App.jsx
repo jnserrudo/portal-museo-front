@@ -145,7 +145,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <GlobalStyles />
       <AuthProvider>
-        <Router>
+        <Router basename="/portal">
           <ErrorBoundary>
             <Suspense fallback={<SuspenseFallback />}>
               <Routes>

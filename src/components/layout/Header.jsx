@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaPlus } from 'react-icons/fa';
 import { theme } from '../../styles/theme';
+import * as eventService from '../../api/eventService';
 import Button from '../ui/Button';
 import LoginModal from '../auth/LoginModal';
 import { AuthContext } from '../../context/AuthContext';
@@ -234,11 +235,7 @@ const Header = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('http://localhost:3001/eventos');
-        if (!response.ok) {
-          throw new Error('Error al cargar los eventos');
-        }
-        const data = await response.json();
+        const data = await eventService.getEvents();
         setEvents(data);
       } catch (error) {
         console.error('Error al cargar eventos:', error);
@@ -256,28 +253,20 @@ const Header = () => {
   // Función para guardar un evento
   const handleSaveEvent = async (eventData) => {
     try {
-      const method = eventData.id ? 'PUT' : 'POST';
-      const url = eventData.id 
-        ? `http://localhost:3001/eventos/${eventData.id}`
-        : 'http://localhost:3001/eventos';
-      
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(eventData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al guardar el evento');
+      let result;
+      if (eventData.id) {
+        // Actualizar evento existente
+        result = await eventService.updateEvent(eventData.id, eventData);
+        toast.success('Evento actualizado correctamente');
+      } else {
+        // Crear nuevo evento
+        result = await eventService.createEvent(eventData);
+        toast.success('Evento creado correctamente');
       }
-
-      toast.success(eventData.id ? 'Evento actualizado correctamente' : 'Evento creado correctamente');
-      return await response.json();
+      return result;
     } catch (error) {
       console.error('Error al guardar el evento:', error);
-      toast.error('Error al guardar el evento');
+      toast.error(error.message || 'Error al guardar el evento');
       throw error;
     }
   };
@@ -288,19 +277,12 @@ const Header = () => {
       const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este evento?');
       if (!confirmDelete) return false;
       
-      const response = await fetch(`http://localhost:3001/eventos/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al eliminar el evento');
-      }
-
+      await eventService.deleteEvent(id);
       toast.success('Evento eliminado correctamente');
       return true;
     } catch (error) {
       console.error('Error al eliminar el evento:', error);
-      toast.error('Error al eliminar el evento');
+      toast.error(error.message || 'Error al eliminar el evento');
       throw error;
     }
   };
@@ -308,8 +290,7 @@ const Header = () => {
   // Función para manejar el éxito al guardar
   const handleSaveSuccess = () => {
     // Recargar los eventos después de guardar
-    fetch('http://localhost:3001/eventos')
-      .then(res => res.json())
+    eventService.getEvents()
       .then(data => setEvents(data))
       .catch(err => console.error('Error al actualizar la lista de eventos:', err));
   };
