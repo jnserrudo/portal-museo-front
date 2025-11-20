@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FaHistory, FaLandmark, FaUsers, FaAward } from 'react-icons/fa';
-import { theme } from '../../styles/theme';
+import { theme } from '../styles/theme';
 
 const PageContainer = styled.div`
   padding: ${theme.spacing.xl} 0;
