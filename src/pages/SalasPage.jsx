@@ -14,7 +14,7 @@ const PageContainer = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${heroImage}) center/cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1)), url(${heroImage}) center/cover no-repeat;
   height: 40vh;
   min-height: 300px;
   display: flex;
@@ -29,6 +29,7 @@ const HeroSection = styled.section`
 const HeroTitle = styled.h1`
   font-size: 3rem;
   margin-bottom: ${theme.spacing.md};
+  color: ${theme.colors.text.light};
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   
   @media (max-width: 768px) {
@@ -119,7 +120,7 @@ const SalaContent = styled.div`
 
 const NavigationMenu = styled.nav`
   position: sticky;
-  top: 80px;
+  top: 10px;
   background: linear-gradient(135deg, ${theme.colors.primary}15 0%, ${theme.colors.accent}25 100%);
   padding: ${theme.spacing.lg} ${theme.spacing.sm};
   margin-bottom: ${theme.spacing.xl};
@@ -205,10 +206,11 @@ const MenuItem = styled.li`
 const MenuLink = styled.a`
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
   text-decoration: none;
   width: 200px;
-  height: 140px;
+  min-height: 140px;
   border-radius: ${theme.borderRadius.md};
   background: linear-gradient(
     to bottom,
@@ -220,7 +222,6 @@ const MenuLink = styled.a`
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   position: relative;
-  overflow: hidden;
   padding: ${theme.spacing.md};
   
   /* Title overlay */
@@ -232,7 +233,13 @@ const MenuLink = styled.a`
     z-index: 2;
     position: relative;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-    line-height: 1.2;
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    display: block;
+    max-width: 100%;
+    white-space: normal;
   }
   
   /* Hover effects */
