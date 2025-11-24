@@ -4,6 +4,7 @@ import { ThemeProvider } from "styled-components";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from "./context/AuthContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 
 // Estilos
@@ -17,6 +18,7 @@ import Modal from "./components/Modal";
 
 // Páginas (cargadas con lazy loading)
 const HomePage = lazy(() => import("./pages/HomePage"));
+const SalasPage = lazy(() => import("./pages/SalasPage"));
 const ElMuseoPage = lazy(() => import("./pages/ElMuseoPage"));
 const ColeccionPage = lazy(() => import("./pages/ColeccionPage"));
 const VisitaPage = lazy(() => import("./pages/VisitaPage"));
@@ -72,15 +74,25 @@ const App = () => {
   }, []);
 
   // Funciones CRUD para eventos
-  const saveEvent = async (eventData) => {
+  const saveEvent = async (eventData, explicitId = null) => {
     try {
       let savedEvent;
-      if (eventData.id) {
-        savedEvent = await eventService.updateEvent(eventData.id, eventData);
-        toast.success('Evento actualizado correctamente');
+      // Use explicit ID if provided, otherwise try to extract from FormData/Object
+      let id = explicitId;
+      
+      if (!id) {
+        const isFormData = eventData instanceof FormData;
+        id = isFormData ? eventData.get('id') : eventData.id;
+      }
+
+      console.log('saveEvent called. Explicit ID:', explicitId, 'Final ID:', id);
+
+      if (id !== null && id !== undefined && id !== '') {
+        savedEvent = await eventService.updateEvent(id, eventData);
+        // Toast handled in eventService
       } else {
         savedEvent = await eventService.createEvent(eventData);
-        toast.success('Evento creado correctamente');
+        // Toast handled in eventService
       }
       await fetchEvents();
       return savedEvent;
@@ -132,12 +144,16 @@ const App = () => {
     </div>
   );
 
+
+
   // Componente de página con manejo de errores
   const Page = ({ children }) => (
     <ErrorBoundary>
-      <Layout>
-        {children}
-      </Layout>
+      <LanguageProvider>
+        <Layout onRefreshEvents={fetchEvents}>
+          {children}
+        </Layout>
+      </LanguageProvider>
     </ErrorBoundary>
   );
 
@@ -145,7 +161,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <GlobalStyles />
       <AuthProvider>
-        <Router basename="/portal">
+        <Router basename={import.meta.env.BASE_URL}>
           <ErrorBoundary>
             <Suspense fallback={<SuspenseFallback />}>
               <Routes>
@@ -156,6 +172,11 @@ const App = () => {
                       isLoading={isEventsLoading}
                       onPieceClick={openPieceModal}
                     />
+                  </Page>
+                } />
+                <Route path="/salas" element={
+                  <Page>
+                    <SalasPage />
                   </Page>
                 } />
                 <Route path="/el-museo" element={

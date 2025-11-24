@@ -24,9 +24,11 @@ const getApiUrl = (endpoint) => {
 export const getEvents = async () => {
     try {
         const apiUrl = getApiUrl('eventos');
-        console.log('Solicitando eventos a:', apiUrl);
+        // Add timestamp to prevent caching
+        const urlWithTimestamp = `${apiUrl}?t=${new Date().getTime()}`;
+        console.log('Solicitando eventos a:', urlWithTimestamp);
         
-        const response = await fetch(apiUrl, {
+        const response = await fetch(urlWithTimestamp, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json'

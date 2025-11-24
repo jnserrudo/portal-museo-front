@@ -1,39 +1,80 @@
 import React from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
-import { FaHistory, FaLandmark, FaUsers, FaAward } from 'react-icons/fa';
+import { FaLandmark, FaHistory, FaAward, FaQuoteLeft } from 'react-icons/fa';
 import { theme } from '../styles/theme';
 
 const PageContainer = styled.div`
-  padding: ${theme.spacing.xl} 0;
+  padding-bottom: ${theme.spacing.xl};
   background-color: ${theme.colors.background.general};
 `;
 
+const HeroSection = styled.section`
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${import.meta.env.BASE_URL}sala-hero.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 50vh;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  margin-bottom: ${theme.spacing.xl};
+  position: relative;
+`;
+
+const HeroContent = styled.div`
+  max-width: 900px;
+  padding: 0 ${theme.spacing.md};
+  animation: fadeIn 1s ease-out;
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h1 {
+    font-size: ${theme.typography.sizes.h2};
+    margin-bottom: ${theme.spacing.md};
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    font-weight: ${theme.typography.weights.black};
+  }
+
+  p {
+    font-size: ${theme.typography.sizes.subtitle};
+    line-height: 1.6;
+    opacity: 0.95;
+  }
+`;
+
+const BadgeContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: ${theme.spacing.md};
+  margin-top: ${theme.spacing.lg};
+  flex-wrap: wrap;
+`;
+
+const Badge = styled.span`
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
 const Container = styled.div`
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 ${theme.spacing.md};
 `;
 
-const HeroSection = styled.section`
-  text-align: center;
-  margin-bottom: ${theme.spacing.xl};
-`;
-
-const Title = styled.h1`
-  font-size: ${theme.typography.sizes.h1};
-  color: ${theme.colors.primary};
-  margin-bottom: ${theme.spacing.md};
-`;
-
-const Subtitle = styled.p`
-  font-size: ${theme.typography.sizes.welcome};
-  color: ${theme.colors.text.dark};
-  max-width: 800px;
-  margin: 0 auto ${theme.spacing.xl};
-  line-height: 1.6;
-`;
-
-const ContentSection = styled.section`
+const Section = styled.section`
   margin-bottom: ${theme.spacing.xl};
 `;
 
@@ -43,17 +84,50 @@ const SectionTitle = styled.h2`
   margin-bottom: ${theme.spacing.lg};
   text-align: center;
   position: relative;
-  padding-bottom: ${theme.spacing.sm};
   
   &::after {
     content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 3px;
+    display: block;
+    width: 60px;
+    height: 4px;
     background-color: ${theme.colors.accent};
+    margin: ${theme.spacing.sm} auto 0;
+    border-radius: 2px;
+  }
+`;
+
+const MissionCard = styled.div`
+  background-color: white;
+  padding: ${theme.spacing.xl};
+  border-radius: ${theme.borderRadius.lg};
+  box-shadow: ${theme.shadows.medium};
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, ${theme.colors.primary}, ${theme.colors.accent});
+  }
+  
+  svg {
+    font-size: 3rem;
+    color: ${theme.colors.primary}40; /* Low opacity */
+    margin-bottom: ${theme.spacing.md};
+  }
+  
+  p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: ${theme.colors.text.dark};
+    max-width: 800px;
+    margin: 0 auto;
+    font-style: italic;
   }
 `;
 
@@ -61,160 +135,146 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: ${theme.spacing.lg};
-  margin-bottom: ${theme.spacing.xl};
 `;
 
-const Card = styled.div`
-  background-color: ${theme.colors.background.light};
-  border-radius: ${theme.borderRadius.md};
+const HistoryCard = styled.div`
+  background: white;
   padding: ${theme.spacing.lg};
+  border-radius: ${theme.borderRadius.md};
   box-shadow: ${theme.shadows.light};
-  transition: ${theme.transitions.default};
-  text-align: center;
+  border-left: 4px solid ${theme.colors.primary};
+  transition: transform 0.3s ease;
   
   &:hover {
     transform: translateY(-5px);
     box-shadow: ${theme.shadows.medium};
   }
-`;
-
-const IconWrapper = styled.div`
-  font-size: 2.5rem;
-  color: ${theme.colors.accent};
-  margin-bottom: ${theme.spacing.md};
-`;
-
-const CardTitle = styled.h3`
-  font-size: 1.5rem;
-  color: ${theme.colors.primary};
-  margin-bottom: ${theme.spacing.sm};
-`;
-
-const CardText = styled.p`
-  color: ${theme.colors.text.dark};
-  line-height: 1.6;
-`;
-
-const HistorySection = styled.div`
-  background-color: ${theme.colors.background.light};
-  padding: ${theme.spacing.xl};
-  border-radius: ${theme.borderRadius.md};
-  margin-bottom: ${theme.spacing.xl};
-  box-shadow: ${theme.shadows.light};
-`;
-
-const HistoryContent = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
+  
+  h3 {
+    color: ${theme.colors.primary};
+    font-size: 1.4rem;
+    margin-bottom: ${theme.spacing.sm};
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
   
   p {
-    margin-bottom: ${theme.spacing.md};
-    line-height: 1.8;
+    color: ${theme.colors.text.medium};
+    line-height: 1.6;
+  }
+`;
+
+const CollectionCard = styled.div`
+  background: white;
+  border-radius: ${theme.borderRadius.md};
+  overflow: hidden;
+  box-shadow: ${theme.shadows.medium};
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: ${theme.shadows.dark};
+  }
+  
+  div.content {
+    padding: ${theme.spacing.lg};
+  }
+  
+  h3 {
+    color: ${theme.colors.text.black};
+    margin-bottom: ${theme.spacing.sm};
+    font-size: 1.3rem;
+  }
+  
+  p {
+    color: ${theme.colors.text.medium};
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
+  div.icon-wrapper {
+    background-color: ${theme.colors.primary};
+    color: white;
+    padding: 15px;
+    display: inline-flex;
+    border-radius: 0 0 15px 0;
+    margin-bottom: ${theme.spacing.sm};
   }
 `;
 
 const ElMuseoPage = () => {
+  const { t } = useLanguage();
+
   return (
     <PageContainer>
+      <HeroSection>
+        <HeroContent>
+          <h1>{t('museum.hero.title')}</h1>
+          <p>{t('museum.hero.subtitle')}</p>
+          <BadgeContainer>
+            <Badge><FaLandmark /> {t('museum.badge.founded')}</Badge>
+            <Badge><FaHistory /> {t('museum.badge.history')}</Badge>
+            <Badge><FaAward /> {t('museum.badge.monument')}</Badge>
+          </BadgeContainer>
+        </HeroContent>
+      </HeroSection>
+
       <Container>
-        <HeroSection>
-          <Title>El Museo Regional Andino</Title>
-          <Subtitle>
-            Un espacio dedicado a preservar, investigar y difundir el patrimonio cultural de la región andina,
-            ofreciendo una experiencia educativa y enriquecedora para todos nuestros visitantes.
-          </Subtitle>
-        </HeroSection>
+        <Section>
+          <SectionTitle>{t('museum.mission.title')}</SectionTitle>
+          <MissionCard>
+            <FaQuoteLeft />
+            <p>
+              {t('museum.mission.content')}
+            </p>
+          </MissionCard>
+        </Section>
 
-        <ContentSection>
-          <SectionTitle>Nuestra Misión</SectionTitle>
+        <Section>
+          <SectionTitle>{t('museum.history.title')}</SectionTitle>
           <Grid>
-            <Card>
-              <IconWrapper>
-                <FaHistory />
-              </IconWrapper>
-              <CardTitle>Preservar</CardTitle>
-              <CardText>
-                Conservamos y protegemos el patrimonio cultural y natural de la región andina para las generaciones presentes y futuras.
-              </CardText>
-            </Card>
-            
-            <Card>
-              <IconWrapper>
-                <FaLandmark />
-              </IconWrapper>
-              <CardTitle>Investigar</CardTitle>
-              <CardText>
-                Desarrollamos investigaciones científicas que contribuyen al conocimiento y valoración de nuestro patrimonio cultural.
-              </CardText>
-            </Card>
-            
-            <Card>
-              <IconWrapper>
-                <FaUsers />
-              </IconWrapper>
-              <CardTitle>Difundir</CardTitle>
-              <CardText>
-                Compartimos el conocimiento a través de exposiciones, publicaciones y programas educativos para todos los públicos.
-              </CardText>
-            </Card>
+            <HistoryCard>
+              <h3><FaLandmark /> {t('museum.history.1998.title')}</h3>
+              <p>{t('museum.history.1998.content')}</p>
+            </HistoryCard>
+            <HistoryCard>
+              <h3><FaAward /> {t('museum.history.2018.title')}</h3>
+              <p>{t('museum.history.2018.content')}</p>
+            </HistoryCard>
+            <HistoryCard>
+              <h3><FaHistory /> {t('museum.history.2023.title')}</h3>
+              <p>{t('museum.history.2023.content')}</p>
+            </HistoryCard>
           </Grid>
-        </ContentSection>
+        </Section>
 
-        <ContentSection>
-          <SectionTitle>Nuestra Historia</SectionTitle>
-          <HistorySection>
-            <HistoryContent>
-              <p>
-                Fundado en 1985, el Museo Regional Andino nació con el propósito de rescatar y preservar el rico patrimonio cultural de la región andina. 
-                Desde sus inicios, se ha consolidado como un referente en la conservación y difusión de la historia, el arte y las tradiciones de nuestras comunidades.
-              </p>
-              <p>
-                A lo largo de los años, el museo ha crecido tanto en su colección como en su impacto social, ofreciendo exposiciones temporales y permanentes 
-                que muestran la riqueza cultural de la región, desde tiempos prehispánicos hasta la actualidad.
-              </p>
-              <p>
-                En 2020, el museo fue declarado Monumento Histórico Nacional en reconocimiento a su labor en la preservación del patrimonio cultural y su contribución 
-                a la educación y la cultura en la región.
-              </p>
-            </HistoryContent>
-          </HistorySection>
-        </ContentSection>
-
-        <ContentSection>
-          <SectionTitle>Reconocimientos</SectionTitle>
+        <Section>
+          <SectionTitle>{t('museum.collection.title')}</SectionTitle>
           <Grid>
-            <Card>
-              <IconWrapper>
-                <FaAward />
-              </IconWrapper>
-              <CardTitle>Premio Nacional de Patrimonio</CardTitle>
-              <CardText>
-                Galardonados en 2022 por nuestra destacada labor en la preservación del patrimonio cultural inmaterial de la región andina.
-              </CardText>
-            </Card>
-            
-            <Card>
-              <IconWrapper>
-                <FaAward />
-              </IconWrapper>
-              <CardTitle>Sello de Excelencia Turística</CardTitle>
-              <CardText>
-                Reconocimiento otorgado en 2021 por ofrecer una experiencia turística de calidad y accesible para todos los visitantes.
-              </CardText>
-            </Card>
-            
-            <Card>
-              <IconWrapper>
-                <FaAward />
-              </IconWrapper>
-              <CardTitle>Premio a la Innovación Educativa</CardTitle>
-              <CardText>
-                Distinción recibida en 2023 por nuestros programas educativos innovadores dirigidos a estudiantes de todas las edades.
-              </CardText>
-            </Card>
+            <CollectionCard>
+              <div className="icon-wrapper"><FaHistory size={24} /></div>
+              <div className="content">
+                <h3>{t('museum.collection.archeology.title')}</h3>
+                <p>{t('museum.collection.archeology.content')}</p>
+              </div>
+            </CollectionCard>
+            <CollectionCard>
+              <div className="icon-wrapper"><FaLandmark size={24} /></div>
+              <div className="content">
+                <h3>{t('museum.collection.geology.title')}</h3>
+                <p>{t('museum.collection.geology.content')}</p>
+              </div>
+            </CollectionCard>
+            <CollectionCard>
+              <div className="icon-wrapper"><FaHistory size={24} /></div>
+              <div className="content">
+                <h3>{t('museum.collection.textile.title')}</h3>
+                <p>{t('museum.collection.textile.content')}</p>
+              </div>
+            </CollectionCard>
           </Grid>
-        </ContentSection>
+        </Section>
       </Container>
     </PageContainer>
   );

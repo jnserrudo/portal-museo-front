@@ -1,12 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
-import { FaMapMarkerAlt, FaClock, FaTicketAlt, FaBus, FaWheelchair, FaParking, FaUtensils, FaCamera, FaInfoCircle } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaClock, FaTicketAlt, FaWifi, FaWheelchair, FaCamera, FaBus, FaCar, FaInfoCircle } from 'react-icons/fa';
 import { theme } from '../styles/theme';
-import Button from '../components/ui/Button';
 
 const PageContainer = styled.div`
-  padding: ${theme.spacing.xl} 0;
+  padding-bottom: ${theme.spacing.xl};
   background-color: ${theme.colors.background.general};
+`;
+
+const HeroSection = styled.section`
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${import.meta.env.BASE_URL}sala-hero.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 40vh;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  margin-bottom: ${theme.spacing.xl};
+`;
+
+const HeroContent = styled.div`
+  max-width: 800px;
+  padding: 0 ${theme.spacing.md};
+
+  h1 {
+    font-size: ${theme.typography.sizes.h2};
+    margin-bottom: ${theme.spacing.sm};
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+
+  p {
+    font-size: ${theme.typography.sizes.subtitle};
+    opacity: 0.9;
+  }
 `;
 
 const Container = styled.div`
@@ -15,389 +45,269 @@ const Container = styled.div`
   padding: 0 ${theme.spacing.md};
 `;
 
-const HeroSection = styled.section`
-  text-align: center;
-  margin-bottom: ${theme.spacing.xl};
-`;
-
-const Title = styled.h1`
-  font-size: ${theme.typography.sizes.h1};
-  color: ${theme.colors.primary};
-  margin-bottom: ${theme.spacing.md};
-`;
-
-const Subtitle = styled.p`
-  font-size: ${theme.typography.sizes.welcome};
-  color: ${theme.colors.text.dark};
-  max-width: 800px;
-  margin: 0 auto ${theme.spacing.xl};
-  line-height: 1.6;
-`;
-
-const ContentGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: ${theme.spacing.xl};
-  margin-bottom: ${theme.spacing.xl};
-  
-  @media (max-width: ${theme.breakpoints.desktop}) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const MainContent = styled.div`
-  background-color: ${theme.colors.background.light};
-  border-radius: ${theme.borderRadius.md};
-  padding: ${theme.spacing.xl};
-  box-shadow: ${theme.shadows.light};
-`;
-
-const Section = styled.section`
-  margin-bottom: ${theme.spacing.xl};
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-const SectionTitle = styled.h2`
-  font-size: ${theme.typography.sizes.h2};
-  color: ${theme.colors.primary};
-  margin-bottom: ${theme.spacing.lg};
-  display: flex;
-  align-items: center;
-  gap: ${theme.spacing.sm};
-  
-  svg {
-    color: ${theme.colors.accent};
-  }
-`;
-
 const InfoGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: ${theme.spacing.lg};
   margin-bottom: ${theme.spacing.xl};
 `;
 
 const InfoCard = styled.div`
-  background-color: white;
-  border-radius: ${theme.borderRadius.md};
+  background: white;
   padding: ${theme.spacing.lg};
-  box-shadow: ${theme.shadows.light};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: ${theme.transitions.default};
+  border-radius: ${theme.borderRadius.md};
+  box-shadow: ${theme.shadows.medium};
+  transition: transform 0.3s ease;
+  border-top: 4px solid ${theme.colors.primary};
   
   &:hover {
     transform: translateY(-5px);
-    box-shadow: ${theme.shadows.medium};
+    box-shadow: ${theme.shadows.dark};
   }
 `;
 
-const InfoIcon = styled.div`
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: ${theme.colors.primary}10;
+const CardHeader = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: ${theme.spacing.sm};
   margin-bottom: ${theme.spacing.md};
-  color: ${theme.colors.primary};
-  font-size: 1.5rem;
-`;
-
-const InfoTitle = styled.h3`
-  font-size: 1.2rem;
-  color: ${theme.colors.primary};
-  margin-bottom: ${theme.spacing.sm};
-`;
-
-const InfoText = styled.p`
-  color: ${theme.colors.text.dark};
-  margin-bottom: 0;
-`;
-
-const PriceTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin: ${theme.spacing.lg} 0;
   
-  th, td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #eee;
+  svg {
+    color: ${theme.colors.primary};
+    font-size: 2rem;
   }
   
-  th {
-    background-color: ${theme.colors.primary};
-    color: white;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  tr:hover {
-    background-color: #f1f1f1;
+  h2 {
+    font-size: 1.5rem;
+    color: ${theme.colors.primary};
+    margin: 0;
   }
 `;
 
-const Sidebar = styled.aside`
-  @media (max-width: ${theme.breakpoints.desktop}) {
-    order: -1;
-  }
-`;
-
-const MapContainer = styled.div`
-  width: 100%;
-  height: 300px;
-  background-color: #f0f0f0;
-  border-radius: ${theme.borderRadius.md};
-  overflow: hidden;
-  margin-bottom: ${theme.spacing.lg};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${theme.colors.text.muted};
-  font-size: 1.2rem;
-`;
-
-const HoursList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0 0 ${theme.spacing.lg} 0;
-  
-  li {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #eee;
-    
-    &:last-child {
-      border-bottom: none;
-    }
-    
-    span:first-child {
-      font-weight: ${theme.typography.weights.bold};
-    }
-  }
-`;
-
-const TipsList = styled.ul`
+const InfoList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
   
   li {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: ${theme.spacing.md};
+    margin-bottom: ${theme.spacing.sm};
+    padding-bottom: ${theme.spacing.sm};
+    border-bottom: 1px solid ${theme.colors.border || '#eee'};
     
-    svg {
-      color: ${theme.colors.accent};
-      margin-right: ${theme.spacing.sm};
-      margin-top: 0.25rem;
-      flex-shrink: 0;
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    strong {
+      display: block;
+      color: ${theme.colors.text.dark};
+      margin-bottom: 4px;
+    }
+    
+    span {
+      color: ${theme.colors.text.medium};
     }
   }
 `;
 
+const MapSection = styled.section`
+  margin-bottom: ${theme.spacing.xl};
+  background: white;
+  padding: ${theme.spacing.md};
+  border-radius: ${theme.borderRadius.md};
+  box-shadow: ${theme.shadows.medium};
+`;
+
+const MapTitle = styled.h2`
+  text-align: center;
+  color: ${theme.colors.primary};
+  margin-bottom: ${theme.spacing.md};
+  font-size: 2rem;
+`;
+
+const MapContainer = styled.div`
+  width: 100%;
+  height: 450px;
+  border-radius: ${theme.borderRadius.md};
+  overflow: hidden;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+  
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+`;
+
+const TipsSection = styled.section`
+  background-color: ${theme.colors.accent}20; /* 20% opacity accent */
+  padding: ${theme.spacing.xl} 0;
+  border-radius: ${theme.borderRadius.lg};
+  margin-bottom: ${theme.spacing.xl};
+`;
+
+const TipsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: ${theme.spacing.lg};
+  margin-top: ${theme.spacing.lg};
+`;
+
+const TipCard = styled.div`
+  text-align: center;
+  padding: ${theme.spacing.md};
+  
+  svg {
+    font-size: 2.5rem;
+    color: ${theme.colors.primary};
+    margin-bottom: ${theme.spacing.md};
+    background: white;
+    padding: 15px;
+    border-radius: 50%;
+    box-shadow: ${theme.shadows.light};
+  }
+  
+  h3 {
+    color: ${theme.colors.text.dark};
+    margin-bottom: ${theme.spacing.sm};
+  }
+  
+  p {
+    color: ${theme.colors.text.medium};
+    font-size: 0.95rem;
+  }
+`;
+
 const VisitaPage = () => {
-  const [activeTab, setActiveTab] = useState('horario');
-
-  const horarios = [
-    { dia: 'Martes a Viernes', horario: '9:00 - 18:00' },
-    { dia: 'Sábado', horario: '10:00 - 20:00' },
-    { dia: 'Domingo', horario: '10:00 - 18:00' },
-    { dia: 'Lunes', horario: 'Cerrado' },
-  ];
-
-  const precios = [
-    { categoria: 'Adultos', precio: '$500', descuento: '$400 (mayores de 65)' },
-    { categoria: 'Estudiantes', precio: '$250', descuento: 'Con acreditación' },
-    { categoria: 'Menores de 12 años', precio: 'Gratis', descuento: 'Acompañados de un adulto' },
-    { categoria: 'Grupos educativos', precio: '$200', descuento: 'Por persona, con reserva previa' },
-  ];
+  const { t } = useLanguage();
 
   return (
     <PageContainer>
+      <HeroSection>
+        <HeroContent>
+          <h1>{t('visit.hero.title')}</h1>
+          <p>{t('visit.hero.subtitle')}</p>
+        </HeroContent>
+      </HeroSection>
+
       <Container>
-        <HeroSection>
-          <Title>Planifica tu Visita</Title>
-          <Subtitle>
-            Descubre todo lo que necesitas saber para disfrutar al máximo de tu experiencia en el Museo Regional Andino.
-            Consulta horarios, precios, cómo llegar y recomendaciones para tu visita.
-          </Subtitle>
-        </HeroSection>
+        <InfoGrid>
+          {/* Horarios */}
+          <InfoCard>
+            <CardHeader>
+              <FaClock />
+              <h2>{t('visit.hours.title')}</h2>
+            </CardHeader>
+            <InfoList>
+              <li>
+                <strong>{t('visit.hours.weekdays')}</strong>
+                <span>{t('visit.hours.weekdays.time')}</span>
+              </li>
+              <li>
+                <strong>{t('visit.hours.weekends')}</strong>
+                <span>{t('visit.hours.weekends.time')}</span>
+              </li>
+              <li>
+                <strong>{t('visit.hours.monday')}</strong>
+                <span>{t('visit.hours.monday.status')}</span>
+              </li>
+              <li>
+                <strong>{t('visit.hours.holidays')}</strong>
+                <span>{t('visit.hours.holidays.status')}</span>
+              </li>
+            </InfoList>
+          </InfoCard>
 
-        <ContentGrid>
-          <MainContent>
-            <Section>
-              <SectionTitle>
-                <FaInfoCircle /> Información General
-              </SectionTitle>
-              
-              <InfoGrid>
-                <InfoCard>
-                  <InfoIcon>
-                    <FaClock />
-                  </InfoIcon>
-                  <InfoTitle>Horario</InfoTitle>
-                  <InfoText>Martes a Domingo</InfoText>
-                  <InfoText>9:00 - 18:00 hs</InfoText>
-                </InfoCard>
-                
-                <InfoCard>
-                  <InfoIcon>
-                    <FaTicketAlt />
-                  </InfoIcon>
-                  <InfoTitle>Entradas</InfoTitle>
-                  <InfoText>Adultos: $500</InfoText>
-                  <InfoText>Menores: Gratis</InfoText>
-                </InfoCard>
-                
-                <InfoCard>
-                  <InfoIcon>
-                    <FaBus />
-                  </InfoIcon>
-                  <InfoTitle>Cómo llegar</InfoTitle>
-                  <InfoText>Líneas de colectivo: 12, 34, 56</InfoText>
-                  <InfoText>Estación de tren a 3 cuadras</InfoText>
-                </InfoCard>
-              </InfoGrid>
-            </Section>
+          {/* Tarifas */}
+          <InfoCard>
+            <CardHeader>
+              <FaTicketAlt />
+              <h2>{t('visit.tickets.title')}</h2>
+            </CardHeader>
+            <InfoList>
+              <li>
+                <strong>{t('visit.tickets.general')}</strong>
+                <span>{t('visit.tickets.general.price')}</span>
+              </li>
+              <li>
+                <strong>{t('visit.tickets.residents')}</strong>
+                <span>{t('visit.tickets.residents.price')}</span>
+              </li>
+              <li>
+                <strong>{t('visit.tickets.students')}</strong>
+                <span>{t('visit.tickets.students.price')}</span>
+              </li>
+              <li>
+                <strong>{t('visit.tickets.kids')}</strong>
+                <span>{t('visit.tickets.kids.price')}</span>
+              </li>
+            </InfoList>
+          </InfoCard>
 
-            <Section>
-              <SectionTitle>
-                <FaClock /> Horarios
-              </SectionTitle>
-              
-              <HoursList>
-                {horarios.map((item, index) => (
-                  <li key={index}>
-                    <span>{item.dia}</span>
-                    <span>{item.horario}</span>
-                  </li>
-                ))}
-              </HoursList>
-              
-              <p style={{ color: theme.colors.primary, fontWeight: 'bold' }}>
-                * Último ingreso 30 minutos antes del cierre
-              </p>
-              
-              <p>
-                El museo permanece cerrado los días 1 de enero, 1 de mayo, 9 de julio y 25 de diciembre.
-              </p>
-            </Section>
+          {/* Ubicación */}
+          <InfoCard>
+            <CardHeader>
+              <FaMapMarkerAlt />
+              <h2>{t('visit.location.title')}</h2>
+            </CardHeader>
+            <InfoList>
+              <li>
+                <strong>{t('visit.location.address.label')}</strong>
+                <span>{t('visit.location.address.value')}</span>
+              </li>
+              <li>
+                <strong>{t('visit.location.province.label')}</strong>
+                <span>{t('visit.location.province.value')}</span>
+              </li>
+              <li>
+                <strong>{t('visit.location.howTo.label')}</strong>
+                <span>{t('visit.location.howTo.value')}</span>
+              </li>
+            </InfoList>
+          </InfoCard>
+        </InfoGrid>
 
-            <Section>
-              <SectionTitle>
-                <FaTicketAlt /> Tarifas
-              </SectionTitle>
-              
-              <PriceTable>
-                <thead>
-                  <tr>
-                    <th>Categoría</th>
-                    <th>Precio</th>
-                    <th>Descuentos</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {precios.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.categoria}</td>
-                      <td>{item.precio}</td>
-                      <td>{item.descuento}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </PriceTable>
-              
-              <div style={{ 
-                backgroundColor: '#e8f4fc', 
-                padding: '1rem', 
-                borderRadius: theme.borderRadius.sm,
-                marginTop: theme.spacing.lg
-              }}>
-                <p style={{ margin: 0, color: theme.colors.primary }}>
-                  <strong>Domingos:</strong> Entrada gratuita para todo público
-                </p>
-              </div>
-            </Section>
-          </MainContent>
-          
-          <Sidebar>
-            <Section>
-              <SectionTitle>
-                <FaMapMarkerAlt /> Ubicación
-              </SectionTitle>
-              
-              <MapContainer>
-                [Mapa interactivo del museo]
-              </MapContainer>
-              
-              <p style={{ marginBottom: theme.spacing.md }}>
-                <strong>Dirección:</strong> Av. Principal 1234, Ciudad, Provincia
-              </p>
-              
-              <p style={{ marginBottom: theme.spacing.lg }}>
-                <strong>Teléfono:</strong> +54 123 456 7890
-              </p>
-              
-              <Button variant="primary" fullWidth>
-                Cómo llegar
-              </Button>
-            </Section>
-            
-            <Section>
-              <SectionTitle>
-                <FaInfoCircle /> Recomendaciones
-              </SectionTitle>
-              
-              <TipsList>
-                <li>
-                  <FaInfoCircle />
-                  <span>Presentar DNI o documento de identidad al ingresar.</span>
-                </li>
-                <li>
-                  <FaCamera />
-                  <span>Se permite tomar fotografías sin flash.</span>
-                </li>
-                <li>
-                  <FaUtensils />
-                  <span>Zona de comedor disponible en el primer piso.</span>
-                </li>
-                <li>
-                  <FaWheelchair />
-                  <span>Accesibilidad garantizada en todas las instalaciones.</span>
-                </li>
-                <li>
-                  <FaParking />
-                  <span>Estacionamiento gratuito para visitantes.</span>
-                </li>
-              </TipsList>
-            </Section>
-            
-            <Section>
-              <h3 style={{ color: theme.colors.primary, marginBottom: theme.spacing.md }}>
-                Visitas Guiadas
-              </h3>
-              
-              <p style={{ marginBottom: theme.spacing.md }}>
-                Disfruta de visitas guiadas gratuitas todos los días a las 11:00 y 16:00 hs.
-              </p>
-              
-              <Button variant="accent" fullWidth>
-                Reservar Visita Guiada
-              </Button>
-            </Section>
-          </Sidebar>
-        </ContentGrid>
+        <MapSection>
+          <MapTitle>{t('visit.map.title')}</MapTitle>
+          <MapContainer>
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3636.567890123456!2d-66.3854321!3d-24.2256789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94047a5890123456%3A0x1234567890abcdef!2sSan%20Antonio%20de%20los%20Cobres%2C%20Salta!5e0!3m2!1ses!2sar!4v1633024800000!5m2!1ses!2sar" 
+              allowFullScreen="" 
+              loading="lazy"
+              title="Ubicación del Museo"
+            ></iframe>
+          </MapContainer>
+        </MapSection>
+
+        <TipsSection>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h2 style={{ color: theme.colors.primary, fontSize: '2rem' }}>{t('visit.tips.title')}</h2>
+            <p>{t('visit.tips.subtitle')}</p>
+          </div>
+          <TipsGrid>
+            <TipCard>
+              <FaWifi />
+              <h3>{t('visit.tips.wifi.title')}</h3>
+              <p>{t('visit.tips.wifi.desc')}</p>
+            </TipCard>
+            <TipCard>
+              <FaWheelchair />
+              <h3>{t('visit.tips.accessibility.title')}</h3>
+              <p>{t('visit.tips.accessibility.desc')}</p>
+            </TipCard>
+            <TipCard>
+              <FaCamera />
+              <h3>{t('visit.tips.photo.title')}</h3>
+              <p>{t('visit.tips.photo.desc')}</p>
+            </TipCard>
+            <TipCard>
+              <FaInfoCircle />
+              <h3>{t('visit.tips.altitude.title')}</h3>
+              <p>{t('visit.tips.altitude.desc')}</p>
+            </TipCard>
+          </TipsGrid>
+        </TipsSection>
+
       </Container>
     </PageContainer>
   );

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { COLORS } from '../constants/colors';
 import './EventForm.css';
 import ImageUploader from './ImageUploader';
 
-const EventForm = ({ events, onSave, onDelete, onUpdate, onCreate, onSaveSuccess }) => {
+const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCreate, onSaveSuccess }) => {
     const [formData, setFormData] = useState({
         id: '',
         titulo: '',
@@ -12,13 +11,41 @@ const EventForm = ({ events, onSave, onDelete, onUpdate, onCreate, onSaveSuccess
         lugar: '',
         imagenUrls: [],
         publicado: false,
-        autorId: 1 // Valor temporal para el administrador
+        autorId: 1
     });
     
     const [isEditing, setIsEditing] = useState(false);
     const [selectedEventId, setSelectedEventId] = useState('');
-    // Ya no necesitamos statusMessage ya que usamos notificaciones toast
     const [newImages, setNewImages] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Effect to populate form when event prop changes (from parent)
+    useEffect(() => {
+        if (event) {
+            console.log('EventForm received event prop:', event);
+            const fecha = new Date(event.fecha || event.date);
+            const fechaFormateada = !isNaN(fecha.getTime()) ? fecha.toISOString().split('T')[0] : '';
+            
+            setFormData({
+                ...event,
+                id: event.id,
+                titulo: event.titulo || event.title,
+                descripcion: event.descripcion || event.description,
+                fecha: fechaFormateada,
+                lugar: event.lugar || event.location,
+                imagenUrls: event.imagenUrls || (event.imageUrl ? [event.imageUrl] : []),
+                publicado: event.publicado !== undefined ? event.publicado : true,
+                autorId: event.autorId || 1
+            });
+            setIsEditing(true);
+            setSelectedEventId(event.id.toString());
+        } else {
+            // Only reset if we are not already editing via selector
+            if (!selectedEventId) {
+                handleReset();
+            }
+        }
+    }, [event]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -28,9 +55,7 @@ const EventForm = ({ events, onSave, onDelete, onUpdate, onCreate, onSaveSuccess
         }));
     };
 
-    // Maneja el cambio en las imágenes
     const handleImagesChange = (images) => {
-        // Separamos las URLs de las imágenes existentes de los nuevos archivos
         const existingImages = images.filter(img => !img.isNew).map(img => img.url);
         const newImageFiles = images.filter(img => img.isNew).map(img => img.file);
         
@@ -48,14 +73,12 @@ const EventForm = ({ events, onSave, onDelete, onUpdate, onCreate, onSaveSuccess
         if (id) {
             const eventToEdit = events.find(event => event.id.toString() === id);
             if (eventToEdit) {
-                // Convertir la fecha al formato YYYY-MM-DD para el input date
                 const fecha = new Date(eventToEdit.fecha);
-                const fechaFormateada = fecha.toISOString().split('T')[0];
+                const fechaFormateada = !isNaN(fecha.getTime()) ? fecha.toISOString().split('T')[0] : '';
                 
                 setFormData({
                     ...eventToEdit,
                     fecha: fechaFormateada,
-                    // Asegurarse de que siempre haya un autorId
                     autorId: eventToEdit.autorId || 1
                 });
                 setIsEditing(true);
@@ -83,50 +106,50 @@ const EventForm = ({ events, onSave, onDelete, onUpdate, onCreate, onSaveSuccess
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // Validar campos requeridos
+        if (isSubmitting) return; // Prevent double submission
+        
         if (!formData.titulo || !formData.descripcion || !formData.fecha) {
-            // setStatusMessage('Por favor, completa todos los campos obligatorios.');
             return;
         }
         
-        // Crear un objeto FormData para enviar los datos del formulario
+        setIsSubmitting(true);
+        
         const formDataToSend = new FormData();
         
-        // Agregar campos al FormData
         formDataToSend.append('titulo', formData.titulo);
         formDataToSend.append('descripcion', formData.descripcion);
         formDataToSend.append('fecha', formData.fecha);
         if (formData.lugar) formDataToSend.append('lugar', formData.lugar);
         formDataToSend.append('publicado', formData.publicado ? 'true' : 'false');
-        formDataToSend.append('autorId', '1'); // Valor temporal, debería venir de la autenticación
+        formDataToSend.append('autorId', '1');
         
-        // Si estamos editando, asegurarnos de incluir el ID
-        if (isEditing && formData.id) {
+        // CRITICAL: Include ID for updates
+        if (isEditing && formData.id !== null && formData.id !== undefined && formData.id !== '') {
             formDataToSend.append('id', formData.id);
+            console.log('UPDATING event with ID:', formData.id);
+        } else {
+            console.log('CREATING new event');
         }
         
-        // Añadir las imágenes seleccionadas
         if (newImages && newImages.length > 0) {
             newImages.forEach((file) => {
                 if (file instanceof File) {
                     formDataToSend.append('imagenes', file);
                 } else if (file.file) {
-                    // Si es un objeto con propiedad 'file' (como los que devuelve react-dropzone)
                     formDataToSend.append('imagenes', file.file);
                 }
             });
         } else if (isEditing && formData.imagenUrls && formData.imagenUrls.length > 0) {
-            // Si estamos editando y hay imágenes existentes, las enviamos como string JSON
             formDataToSend.append('imagenUrls', JSON.stringify(formData.imagenUrls));
         }
         
         try {
-            // Nota: Solo necesitamos llamar a onSave, ya que en App.jsx se manejan onCreate y onUpdate
             if (typeof onSave === 'function') {
-                await onSave(formDataToSend);
-                // Limpiar el formulario después de guardar exitosamente
+                // Pass ID explicitly as second argument
+                const eventId = (isEditing && formData.id) ? formData.id : null;
+                await onSave(formDataToSend, eventId);
+                
                 handleReset();
-                // Notificar al componente padre que la operación fue exitosa
                 if (typeof onSaveSuccess === 'function') {
                     onSaveSuccess();
                 }
@@ -135,51 +158,53 @@ const EventForm = ({ events, onSave, onDelete, onUpdate, onCreate, onSaveSuccess
             }
         } catch (error) {
             console.error('Error al guardar el evento:', error);
-            // setStatusMessage(`Error: ${error.message || 'No se pudo guardar el evento'}`);
-            // No lanzamos el error para evitar que se propague más allá del componente
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     const handleDeleteClick = async () => {
-        if (!formData.id || !window.confirm(`¿Estás seguro de que quieres eliminar "${formData.titulo}"?`)) return;
+        if (isSubmitting) return; // Prevent double clicks
+        
+        if (!formData.id) return;
+        
+        setIsSubmitting(true);
         
         try {
-            await onDelete(formData.id);
-            // setStatusMessage('Evento eliminado con éxito.');
-            handleReset();
+            // App.jsx's deleteEvent handles confirmation
+            const result = await onDelete(formData.id);
+            // If result is false, user cancelled confirmation
+            if (result) {
+                handleReset();
+                if (typeof onSaveSuccess === 'function') {
+                    onSaveSuccess();
+                }
+            }
         } catch (error) {
             console.error('Error al eliminar el evento:', error);
-            // setStatusMessage(`Error al eliminar: ${error.message || 'Error desconocido'}`);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
-    useEffect(() => {
-        // if (statusMessage) {
-        //     const timer = setTimeout(() => setStatusMessage(''), 5000);
-        //     return () => clearTimeout(timer);
-        // }
-    }, []);
+    useEffect(() => {}, []);
 
-    // Ordenar eventos por fecha descendente
-    const sortedEvents = [...events].sort((a, b) => 
-        new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+    const safeEvents = Array.isArray(events) ? events : [];
+    console.log(safeEvents);
+    const sortedEvents = [...safeEvents].sort((a, b) => 
+        new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
     );
+    console.log("sortedEvents", sortedEvents);
 
     return (
         <div className="form-wrapper">
             <h4 className="form-main-title">Administración de Eventos</h4>
-            
-            {/* {statusMessage && (
-                <div className={`form-status-message ${statusMessage.includes('Error') ? 'error' : 'success'}`}>
-                    {statusMessage}
-                </div>
-            )} */}
 
             <div className="form-selector-container">
                 <label htmlFor="select-event" className="form-label">
                     {isEditing ? 'Editar evento existente:' : 'Crear nuevo o seleccionar para editar:'}
                 </label>
-                <select id="select-event" value={selectedEventId} onChange={handleSelectEvent} className="form-select" style={{ borderColor: COLORS.OCRE }}>
+                <select id="select-event" value={selectedEventId} onChange={handleSelectEvent} className="form-select" style={{ borderColor: '#8B5A2B' }}>
                     <option value="">-- Crear un Nuevo Evento --</option>
                     {sortedEvents.map(event => (
                         <option key={`event-${event.id}`} value={event.id}>
@@ -189,8 +214,8 @@ const EventForm = ({ events, onSave, onDelete, onUpdate, onCreate, onSaveSuccess
                 </select>
             </div>
 
-            <form onSubmit={handleSubmit} className="event-form" style={{ borderColor: isEditing ? COLORS.SKY : COLORS.TIERRA }}>
-                <h5 className="form-title" style={{ color: isEditing ? COLORS.SKY : COLORS.TIERRA }}>
+            <form onSubmit={handleSubmit} className="event-form" style={{ borderColor: '#8B5A2B' }}>
+                <h5 className="form-title" style={{ color: '#8B5A2B' }}>
                     {isEditing ? `Editando: ${formData.titulo}` : 'Crear Nuevo Evento'}
                 </h5>
                 <p className="form-note">Los campos marcados con * son obligatorios</p>
@@ -275,22 +300,28 @@ const EventForm = ({ events, onSave, onDelete, onUpdate, onCreate, onSaveSuccess
                 </div>
 
                 <div className="form-actions">
-                    <button type="submit" className="save-button">
-                        {isEditing ? 'Actualizar Evento' : 'Crear Evento'}
+                    <button type="submit" className="save-button" disabled={isSubmitting}>
+                        {isSubmitting ? (
+                            isEditing ? 'Actualizando...' : 'Creando...'
+                        ) : (
+                            isEditing ? 'Actualizar Evento' : 'Crear Evento'
+                        )}
                     </button>
                     {isEditing && (
                         <button 
                             type="button" 
                             className="delete-button"
                             onClick={handleDeleteClick}
+                            disabled={isSubmitting}
                         >
-                            Eliminar Evento
+                            {isSubmitting ? 'Eliminando...' : 'Eliminar Evento'}
                         </button>
                     )}
                     <button 
                         type="button" 
                         onClick={handleReset} 
                         className="form-button form-button-reset"
+                        disabled={isSubmitting}
                     >
                         {isEditing ? 'Cancelar' : 'Limpiar'}
                     </button>

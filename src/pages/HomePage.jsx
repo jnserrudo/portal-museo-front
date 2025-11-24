@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { FaArrowRight, FaCalendarAlt, FaMapMarkerAlt, FaClock } from 'react-icons/fa';
+import { FaArrowRight, FaCalendarAlt, FaMapMarkerAlt, FaClock, FaTicketAlt } from 'react-icons/fa';
+import { format, parseISO, parse, isValid, compareAsc } from 'date-fns';
+import { es } from 'date-fns/locale';
 import Button from '../components/ui/Button';
+import Modal from '../components/Modal';
 import { theme } from '../styles/theme';
 
-// Ruta a la imagen usando BASE_URL para compatibilidad con entornos de desarrollo y producción
+// Ruta a la imagen usando BASE_URL
 const museoFrente = `${import.meta.env.BASE_URL}museo_frente.jpg`;
 
-// Componentes estilizados
 const HeroSection = styled.section`
   position: relative;
   height: 90vh;
@@ -22,7 +25,7 @@ const HeroSection = styled.section`
               url(${museoFrente}) center/cover no-repeat;
   margin: 0;
   padding: 0;
-  margin-top: -1px; /* Asegura que no haya espacio entre el header y el hero */
+  margin-top: -1px;
 `;
 
 const HeroContent = styled.div`
@@ -30,11 +33,11 @@ const HeroContent = styled.div`
   padding: 0 ${theme.spacing.md};
   z-index: 1;
   margin: 0;
-  transform: translateY(-10px); /* Pequeño ajuste vertical */
+  transform: translateY(-10px);
 `;
 
 const HeroTitle = styled.h1`
-  font-size: 2.5rem;
+  font-size: ${theme.typography.sizes.h2};
   margin: 0 0 0.5rem 0;
   color: ${theme.colors.text.light};
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -124,8 +127,9 @@ const FeatureTitle = styled.h3`
   color: ${theme.colors.primary};
 `;
 
-const FeatureText = styled.p`
+const FeatureDescription = styled.p`
   color: ${theme.colors.text.dark};
+  line-height: 1.6;
   margin-bottom: ${theme.spacing.md};
 `;
 
@@ -143,6 +147,7 @@ const EventCard = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  cursor: pointer;
   
   &:hover {
     transform: translateY(-5px);
@@ -151,13 +156,22 @@ const EventCard = styled.div`
 `;
 
 const EventImage = styled.div.attrs({
-  // Extraer la prop imageUrl para que no se pase al DOM
   style: ({ $imageUrl }) => ({
-    background: $imageUrl ? `url(${$imageUrl}) center/cover no-repeat` : 'none',
+    background: $imageUrl ? `url(${$imageUrl}) center/cover no-repeat` : 'linear-gradient(135deg, #8B5A2B20, #e3c2a140)',
     height: '200px'
   })
 })`
-  // Estilos adicionales si son necesarios
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${theme.colors.primary};
+  
+  ${props => !props.$imageUrl && `
+    svg {
+      font-size: 3rem;
+      opacity: 0.5;
+    }
+  `}
 `;
 
 const EventContent = styled.div`
@@ -186,9 +200,14 @@ const EventTitle = styled.h3`
 `;
 
 const EventDescription = styled.p`
-  color: ${theme.colors.text.dark};
-  margin-bottom: ${theme.spacing.md};
+  color: ${theme.colors.text.muted};
+  line-height: 1.6;
   flex: 1;
+  margin-bottom: ${theme.spacing.md};
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 `;
 
 const EventLocation = styled.div`
@@ -203,7 +222,6 @@ const EventLocation = styled.div`
   }
 `;
 
-// Sección CTA (Call to Action)
 const CtaSection = styled.section`
   padding: ${theme.spacing.xxl} 0;
   background-color: ${theme.colors.primary};
@@ -218,7 +236,7 @@ const CtaSection = styled.section`
 `;
 
 const CtaTitle = styled.h2`
-  font-size: 2.5rem;
+  font-size: ${theme.typography.sizes.h2};
   margin-bottom: ${theme.spacing.md};
   color: ${theme.colors.text.light};
   font-weight: ${theme.typography.weights.bold};
@@ -239,7 +257,59 @@ const CtaText = styled.p`
   }
 `;
 
-// Datos de ejemplo para las características
+const ModalContentWrapper = styled.div`
+  padding: ${theme.spacing.lg};
+`;
+
+const ModalImageWrapper = styled.div`
+  width: 100%;
+  max-height: 400px;
+  overflow: hidden;
+  border-radius: ${theme.borderRadius.md};
+  margin-bottom: ${theme.spacing.lg};
+  background-color: ${theme.colors.background.section};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalImage = styled.img`
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+  display: block;
+`;
+
+const ModalTitle = styled.h2`
+  font-size: 2rem;
+  color: ${theme.colors.primary};
+  margin-bottom: ${theme.spacing.md};
+`;
+
+const ModalMetaGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: ${theme.spacing.md};
+  margin-bottom: ${theme.spacing.lg};
+  background-color: ${theme.colors.background.general};
+  padding: ${theme.spacing.md};
+  border-radius: ${theme.borderRadius.md};
+`;
+
+const MetaItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.spacing.sm};
+  color: ${theme.colors.primary};
+  font-weight: 500;
+  
+  svg {
+    color: ${theme.colors.primary};
+    font-size: 1.2rem;
+  }
+`;
+
 const features = [
   {
     id: 1,
@@ -262,71 +332,152 @@ const features = [
 ];
 
 const HomePage = ({ events = [], isLoading = false }) => {
+  const { t } = useLanguage();
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [viewEvent, setViewEvent] = useState(null);
+
+  const processedEvents = useMemo(() => {
+    if (!Array.isArray(events)) return [];
+    
+    const normalized = events.map(event => ({
+      id: event.id,
+      title: event.titulo || event.title,
+      description: event.descripcion || event.description,
+      date: event.fecha || event.date,
+      time: event.hora || event.time,
+      location: event.lugar || event.location,
+      imageUrl: (event.imagenUrls && event.imagenUrls.length > 0) 
+        ? `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${event.imagenUrls[0]}`
+        : event.imageUrl || null
+    }));
+
+    return normalized.sort((a, b) => {
+      const dateAStr = a.date;
+      const dateBStr = b.date;
+      
+      if (!dateAStr) return 1;  // sin fecha va al final
+      if (!dateBStr) return -1; // sin fecha va al final
+
+      try {
+        // Intentar parsear como ISO primero (YYYY-MM-DD)
+        let dateA = parseISO(dateAStr);
+        let dateB = parseISO(dateBStr);
+
+        // Si no es válido como ISO, intentar como DD/MM/YYYY
+        if (!isValid(dateA)) {
+          dateA = parse(dateAStr, 'dd/MM/yyyy', new Date());
+        }
+        if (!isValid(dateB)) {
+          dateB = parse(dateBStr, 'dd/MM/yyyy', new Date());
+        }
+        
+        if (isValid(dateA) && isValid(dateB)) {
+          return compareAsc(dateA, dateB); // más cercano primero (orden ascendente)
+        }
+      } catch (e) {
+        console.error('Error parsing dates:', e);
+      }
+      // Fallback: ordenar string ascendente para fechas más cercanas primero
+      return dateAStr.localeCompare(dateBStr);
+    });
+  }, [events]);
+
+  const formatFullDate = (dateStr) => {
+    try {
+      if (!dateStr) return 'Fecha por confirmar';
+      
+      // Intentar parsear como ISO primero
+      let date = parseISO(dateStr);
+      
+      // Si no es válido, intentar DD/MM/YYYY
+      if (!isValid(date)) {
+        date = parse(dateStr, 'dd/MM/yyyy', new Date());
+      }
+      
+      if (!isValid(date)) return dateStr;
+      return format(date, "EEEE d 'de' MMMM, yyyy", { locale: es });
+    } catch (e) {
+      return dateStr;
+    }
+  };
+
+  const handleEventClick = (event) => {
+    setViewEvent(event);
+    setIsDetailOpen(true);
+  };
+
   return (
     <>
-      {/* Hero Section */}
       <HeroSection>
         <HeroContent>
-          <HeroTitle>Bienvenidos al Museo Regional Andino</HeroTitle>
-          <HeroSubtitle>Descubre la riqueza cultural y el patrimonio de nuestra región</HeroSubtitle>
+          <HeroTitle>{t('home.hero.title')}</HeroTitle>
+          <HeroSubtitle>{t('home.hero.subtitle')}</HeroSubtitle>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Button as={Link} to="/visita" variant="accent" size="large">
-              Planifica tu Visita
+              {t('home.hero.cta')}
             </Button>
-            <Button as={Link} to="/coleccion" variant="outline" size="large" style={{ color: theme.colors.text.light, borderColor: theme.colors.text.light }}>
-              Explora la Colección
+            <Button as={Link} to="/salas" variant="outline" size="large" style={{ 
+              color: 'white', 
+              borderColor: 'white'
+            }}>
+              {t('home.hero.rooms')}
             </Button>
           </div>
         </HeroContent>
       </HeroSection>
 
-      {/* Features Section */}
       <FeaturesSection>
-        <SectionTitle>¿Por qué visitarnos?</SectionTitle>
-        <FeaturesGrid>
-          {features.map((feature) => (
-            <FeatureCard key={feature.id}>
-              <FeatureIcon>{feature.icon}</FeatureIcon>
-              <FeatureTitle>{feature.title}</FeatureTitle>
-              <FeatureText>{feature.description}</FeatureText>
+        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: `0 ${theme.spacing.md}` }}>
+          <SectionTitle>{t('home.features.title')}</SectionTitle>
+          <FeaturesGrid>
+            <FeatureCard>
+              <FeatureIcon><FaMapMarkerAlt /></FeatureIcon>
+              <FeatureTitle>{t('home.features.location.title')}</FeatureTitle>
+              <FeatureDescription>{t('home.features.location.desc')}</FeatureDescription>
             </FeatureCard>
-          ))}
-        </FeaturesGrid>
+            <FeatureCard>
+              <FeatureIcon><FaClock /></FeatureIcon>
+              <FeatureTitle>{t('home.features.hours.title')}</FeatureTitle>
+              <FeatureDescription>{t('home.features.hours.desc')}</FeatureDescription>
+            </FeatureCard>
+            <FeatureCard>
+              <FeatureIcon><FaCalendarAlt /></FeatureIcon>
+              <FeatureTitle>{t('home.features.events.title')}</FeatureTitle>
+              <FeatureDescription>{t('home.features.events.desc')}</FeatureDescription>
+            </FeatureCard>
+          </FeaturesGrid>
+        </div>
       </FeaturesSection>
 
-      {/* Events Section */}
       <EventsSection>
-        <div className="container">
-          <SectionTitle>Próximos Eventos</SectionTitle>
+        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: `0 ${theme.spacing.md}` }}>
+          <SectionTitle>{t('home.events.title')}</SectionTitle>
           {isLoading ? (
             <div style={{ textAlign: 'center', padding: '2rem' }}>
-              <p>Cargando eventos...</p>
+              <p>{t('common.loading')}</p>
             </div>
-          ) : events.length > 0 ? (
+          ) : processedEvents.length > 0 ? (
             <>
               <FeaturesGrid>
-                {events.slice(0, 3).map((event) => {
-                  const eventDate = new Date(event.fecha);
-                  const formattedDate = eventDate.toLocaleDateString('es-ES', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                  });
+                {processedEvents.slice(0, 3).map((event) => {
+                  const formattedDate = formatFullDate(event.date);
                   
                   return (
-                    <EventCard key={event.id}>
-                      <EventImage $imageUrl={event.imagenUrl || '/images/evento-default.jpg'} />
+                    <EventCard key={event.id} onClick={() => handleEventClick(event)}>
+                      <EventImage $imageUrl={event.imageUrl}>
+                        {!event.imageUrl && <FaCalendarAlt />}
+                      </EventImage>
                       <EventContent>
                         <EventDate>
                           <FaCalendarAlt /> {formattedDate}
                         </EventDate>
-                        <EventTitle>{event.titulo}</EventTitle>
-                        <EventDescription>{event.descripcion}</EventDescription>
+                        <EventTitle>{event.title}</EventTitle>
+                        <EventDescription>{event.description}</EventDescription>
                         <EventLocation>
-                          <FaMapMarkerAlt /> {event.lugar || 'Museo Regional Andino'}
+                          <FaMapMarkerAlt /> {event.location || 'Museo Regional Andino'}
                         </EventLocation>
-                        <Button as={Link} to={`/eventos/${event.id}`} variant="primary" fullWidth>
-                          Más Información <FaArrowRight style={{ marginLeft: '0.5rem' }} />
+                        <Button variant="primary" fullWidth>
+                          {t('common.viewDetails')} <FaArrowRight style={{ marginLeft: '0.5rem' }} />
                         </Button>
                       </EventContent>
                     </EventCard>
@@ -335,34 +486,74 @@ const HomePage = ({ events = [], isLoading = false }) => {
               </FeaturesGrid>
               <div style={{ textAlign: 'center', marginTop: theme.spacing.xl }}>
                 <Button as={Link} to="/eventos" variant="primary" size="large">
-                  Ver todos los eventos
+                  {t('home.events.viewAll')}
                 </Button>
               </div>
             </>
           ) : (
             <div style={{ textAlign: 'center', padding: '2rem' }}>
-              <p>No hay eventos programados por el momento.</p>
+              <p>{t('home.events.empty')}</p>
               <Button as={Link} to="/eventos" variant="primary" size="large" style={{ marginTop: '1rem' }}>
-                Ver eventos pasados
+                {t('home.events.viewSection')}
               </Button>
             </div>
           )}
         </div>
       </EventsSection>
 
-      {/* CTA Section */}
       <CtaSection>
         <div className="container">
-          <CtaTitle>¿Listo para vivir una experiencia única?</CtaTitle>
+          <CtaTitle>{t('home.cta.title')}</CtaTitle>
           <CtaText>
-            Descubre la magia del arte y la cultura andina en nuestro museo. 
-            Planifica tu visita hoy mismo y sumérgete en la historia de nuestra región.
+            {t('home.cta.desc')}
           </CtaText>
           <Button as={Link} to="/visita" variant="accent" size="large">
-            Planificar Visita
+            {t('home.cta.button')}
           </Button>
         </div>
       </CtaSection>
+
+      <Modal
+        isOpen={isDetailOpen}
+        onClose={() => setIsDetailOpen(false)}
+        title={t('event.detail.title')}
+        size="lg"
+        maxWidth="800px"
+      >
+        {viewEvent && (
+          <ModalContentWrapper>
+            {viewEvent.imageUrl && (
+              <ModalImageWrapper>
+                <ModalImage 
+                  src={viewEvent.imageUrl} 
+                  alt={viewEvent.title}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+              </ModalImageWrapper>
+            )}
+            
+            <ModalTitle>{viewEvent.title}</ModalTitle>
+            
+            <ModalMetaGrid>
+              <MetaItem>
+                <FaCalendarAlt /> {formatFullDate(viewEvent.date)}
+              </MetaItem>
+              <MetaItem>
+                <FaClock /> {viewEvent.time || 'Horario a confirmar'}
+              </MetaItem>
+              <MetaItem>
+                <FaMapMarkerAlt /> {viewEvent.location || 'Lugar a confirmar'}
+              </MetaItem>
+            </ModalMetaGrid>
+
+            <div style={{ lineHeight: '1.8', color: theme.colors.text.muted, fontSize: '1.1rem' }}>
+              {viewEvent.description}
+            </div>
+          </ModalContentWrapper>
+        )}
+      </Modal>
     </>
   );
 };

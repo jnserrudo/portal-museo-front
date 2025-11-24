@@ -18,10 +18,15 @@ const MainContent = styled.main`
   width: 100%;
 `;
 
-const Layout = ({ children, isAdmin, onLoginClick, onLogout }) => {
+const Layout = ({ children, isAdmin, onLoginClick, onLogout, onRefreshEvents }) => {
   return (
     <LayoutContainer>
-      <Header isAdmin={isAdmin} onLoginClick={onLoginClick} onLogout={onLogout} />
+      <Header 
+        isAdmin={isAdmin} 
+        onLoginClick={onLoginClick} 
+        onLogout={onLogout} 
+        onRefreshEvents={onRefreshEvents} 
+      />
       <MainContent>
         {children}
       </MainContent>
