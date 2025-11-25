@@ -34,10 +34,16 @@ const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 ${theme.spacing.md};
   height: 100%;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  
+  @media (min-width: ${theme.breakpoints.tablet}) {
+    flex-wrap: nowrap;
+  }
 `;
 
 const Logo = styled(Link)`
@@ -51,6 +57,7 @@ const Logo = styled(Link)`
   padding: 0.2rem 0;
   white-space: nowrap;
   margin-right: 1rem;
+  flex-shrink: 0;
 
   img {
     height: 36px;
@@ -76,6 +83,9 @@ const NavLinks = styled.ul.attrs({
   margin: 0;
   padding: 0;
   align-items: center;
+  flex-shrink: 0;
+  flex-grow: 1;
+  justify-content: center;
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     position: fixed;
@@ -168,6 +178,9 @@ const AuthButtons = styled.div`
   display: flex;
   gap: ${theme.spacing.sm};
   align-items: center;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 
   @media (max-width: ${theme.breakpoints.tablet}) {
     display: none;
