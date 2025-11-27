@@ -106,9 +106,18 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        if (isSubmitting) return; // Prevent double submission
+        console.log('🎯 [EVENTO] ========== INICIO SUBMIT ==========');
+        console.log('📝 [EVENTO] Datos del formulario:', formData);
+        console.log('🔄 [EVENTO] ¿Es edición?:', isEditing);
+        console.log('🆔 [EVENTO] ID del evento:', formData.id);
+        
+        if (isSubmitting) {
+            console.warn('⚠️ [EVENTO] Submit bloqueado - ya hay una petición en curso');
+            return;
+        }
         
         if (!formData.titulo || !formData.descripcion || !formData.fecha) {
+            console.error('❌ [EVENTO] Faltan campos requeridos');
             return;
         }
         
@@ -118,7 +127,17 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
         
         formDataToSend.append('titulo', formData.titulo);
         formDataToSend.append('descripcion', formData.descripcion);
-        formDataToSend.append('fecha', formData.fecha);
+        
+        // FIX TIMEZONE: Crear fecha local a mediodía para evitar problemas de timezone
+        console.log('📅 [EVENTO] Fecha original del input:', formData.fecha);
+        const fechaLocal = new Date(formData.fecha + 'T12:00:00');
+        const fechaISO = fechaLocal.toISOString();
+        console.log('📅 [EVENTO] Fecha local creada:', fechaLocal);
+        console.log('📅 [EVENTO] Fecha ISO a enviar:', fechaISO);
+        console.log('📅 [EVENTO] Timezone offset:', fechaLocal.getTimezoneOffset());
+        
+        formDataToSend.append('fecha', fechaISO);
+        
         if (formData.lugar) formDataToSend.append('lugar', formData.lugar);
         formDataToSend.append('publicado', formData.publicado ? 'true' : 'false');
         formDataToSend.append('autorId', '1');
@@ -126,40 +145,74 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
         // CRITICAL: Include ID for updates
         if (isEditing && formData.id !== null && formData.id !== undefined && formData.id !== '') {
             formDataToSend.append('id', formData.id);
-            console.log('UPDATING event with ID:', formData.id);
+            console.log('✏️ [EVENTO] ACTUALIZANDO evento con ID:', formData.id);
         } else {
-            console.log('CREATING new event');
+            console.log('➕ [EVENTO] CREANDO nuevo evento');
         }
         
+        // Manejo de imágenes
+        console.log('🖼️ [EVENTO] Nuevas imágenes:', newImages);
+        console.log('🖼️ [EVENTO] URLs existentes:', formData.imagenUrls);
+        
         if (newImages && newImages.length > 0) {
-            newImages.forEach((file) => {
+            console.log(`🖼️ [EVENTO] Agregando ${newImages.length} imagen(es) nueva(s)`);
+            newImages.forEach((file, index) => {
                 if (file instanceof File) {
+                    console.log(`  📎 [EVENTO] Imagen ${index + 1}:`, {
+                        name: file.name,
+                        size: file.size,
+                        type: file.type
+                    });
                     formDataToSend.append('imagenes', file);
                 } else if (file.file) {
+                    console.log(`  📎 [EVENTO] Imagen ${index + 1} (wrapped):`, {
+                        name: file.file.name,
+                        size: file.file.size,
+                        type: file.file.type
+                    });
                     formDataToSend.append('imagenes', file.file);
                 }
             });
         } else if (isEditing && formData.imagenUrls && formData.imagenUrls.length > 0) {
+            console.log('🖼️ [EVENTO] Manteniendo URLs existentes:', formData.imagenUrls);
             formDataToSend.append('imagenUrls', JSON.stringify(formData.imagenUrls));
+        } else {
+            console.log('🖼️ [EVENTO] Sin imágenes');
+        }
+        
+        // Log del FormData completo
+        console.log('📦 [EVENTO] FormData a enviar:');
+        for (let [key, value] of formDataToSend.entries()) {
+            if (value instanceof File) {
+                console.log(`  ${key}:`, `[File: ${value.name}]`);
+            } else {
+                console.log(`  ${key}:`, value);
+            }
         }
         
         try {
             if (typeof onSave === 'function') {
                 // Pass ID explicitly as second argument
                 const eventId = (isEditing && formData.id) ? formData.id : null;
-                await onSave(formDataToSend, eventId);
+                console.log('💾 [EVENTO] Llamando a onSave con ID:', eventId);
+                
+                const result = await onSave(formDataToSend, eventId);
+                console.log('✅ [EVENTO] Respuesta de onSave:', result);
                 
                 handleReset();
                 if (typeof onSaveSuccess === 'function') {
+                    console.log('🎉 [EVENTO] Llamando a onSaveSuccess');
                     onSaveSuccess();
                 }
             } else {
                 throw new Error('No se encontró ninguna función para guardar el evento');
             }
         } catch (error) {
-            console.error('Error al guardar el evento:', error);
+            console.error('💥 [EVENTO] Error al guardar:', error);
+            console.error('💥 [EVENTO] Error stack:', error.stack);
         } finally {
             setIsSubmitting(false);
+            console.log('🏁 [EVENTO] ========== FIN SUBMIT ==========');
         }
     };
 

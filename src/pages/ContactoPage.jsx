@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaWhatsapp, FaInstagram, FaFacebook, FaPaperPlane } from 'react-icons/fa';
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaWhatsapp, FaInstagram, FaFacebook, FaPaperPlane, FaYoutube } from 'react-icons/fa';
 import { theme } from '../styles/theme';
 import Button from '../components/ui/Button';
+import { toast, ToastContainer } from 'react-toastify';
 
 const PageContainer = styled.div`
   padding-bottom: ${theme.spacing.xl};
@@ -11,7 +12,7 @@ const PageContainer = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${import.meta.env.BASE_URL}sala-hero.jpg');
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${import.meta.env.BASE_URL}museo_frente.jpg');
   background-size: cover;
   background-position: center;
   height: 40vh;
@@ -32,6 +33,7 @@ const HeroContent = styled.div`
     font-size: ${theme.typography.sizes.h2};
     margin-bottom: ${theme.spacing.sm};
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    color: white;
   }
 
   p {
@@ -68,6 +70,10 @@ const InfoCard = styled.div`
   border-radius: ${theme.borderRadius.md};
   box-shadow: ${theme.shadows.medium};
   border-left: 4px solid ${theme.colors.primary};
+  
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    padding: ${theme.spacing.md};
+  }
 `;
 
 const InfoTitle = styled.h2`
@@ -147,6 +153,10 @@ const FormColumn = styled.div`
   padding: ${theme.spacing.xl};
   border-radius: ${theme.borderRadius.lg};
   box-shadow: ${theme.shadows.medium};
+  
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    padding: ${theme.spacing.md};
+  }
 `;
 
 const FormTitle = styled.h2`
@@ -202,14 +212,102 @@ const MapSection = styled.div`
 
 const ContactoPage = () => {
   const { t } = useLanguage();
+  const form = useRef();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    nombre: '',
+  email: '',
+    asunto: '',
+    mensaje: ''
+  });
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const sendEmail = async (e) => {
     e.preventDefault();
-    alert(t('contact.form.success'));
+    console.log('🚀 [CONTACTO] Iniciando envío de formulario...');
+    console.log('📋 [CONTACTO] Datos del formulario:', formData);
+    
+    setLoading(true);
+
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const endpoint = `${apiUrl}/api/email/enviar`;
+    
+    const payload = {
+      nombreCompleto: formData.nombre,
+      emailRemitente: formData.email,
+      asunto: formData.asunto,
+      mensaje: formData.mensaje
+    };
+    
+    console.log('🌐 [CONTACTO] URL del endpoint:', endpoint);
+    console.log('📦 [CONTACTO] Payload a enviar:', payload);
+
+    try {
+      console.log('⏳ [CONTACTO] Enviando petición fetch...');
+      
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+
+      console.log('📡 [CONTACTO] Respuesta recibida - Status:', response.status);
+      console.log('📡 [CONTACTO] Respuesta recibida - OK:', response.ok);
+      console.log('📡 [CONTACTO] Headers de respuesta:', Object.fromEntries(response.headers.entries()));
+
+      const data = await response.json();
+      console.log('📄 [CONTACTO] Data parseada:', data);
+
+      if (data.success) {
+        console.log('✅ [CONTACTO] Email enviado exitosamente');
+        setLoading(false);
+        toast.success('¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        setFormData({ nombre: '', email: '', asunto: '', mensaje: '' });
+      } else {
+        console.error('❌ [CONTACTO] Error del servidor:', data.message);
+        setLoading(false);
+        toast.error(data.message || 'Hubo un error al enviar el mensaje. Intenta nuevamente.', {
+          position: "top-center",
+          autoClose: 5000,
+          theme: "colored",
+        });
+      }
+    } catch (error) {
+      console.error('💥 [CONTACTO] Error en catch:', error);
+      console.error('💥 [CONTACTO] Error name:', error.name);
+      console.error('💥 [CONTACTO] Error message:', error.message);
+      console.error('💥 [CONTACTO] Error stack:', error.stack);
+      
+      setLoading(false);
+      toast.error('Error de conexión con el servidor. Por favor, intenta nuevamente.', {
+        position: "top-center",
+        autoClose: 5000,
+        theme: "colored",
+      });
+    }
   };
 
   return (
     <PageContainer>
+      <ToastContainer />
       <HeroSection>
         <HeroContent>
           <h1>{t('contact.hero.title')}</h1>
@@ -229,25 +327,25 @@ const ContactoPage = () => {
                 </li>
                 <li>
                   <FaPhone />
-                  <a href="tel:+543871234567">+54 387 123-4567</a>
+                  <a href="tel:+543875020900">(387) 5020900</a>
                 </li>
                 <li>
                   <FaEnvelope />
-                  <a href="mailto:info@museoandino.gob.ar">info@museoandino.gob.ar</a>
+                  <a href="mailto:museoregionalandino@gmail.com">museoregionalandino@gmail.com</a>
                 </li>
               </ContactList>
 
               <SocialSection>
                 <h3>{t('contact.social.title')}</h3>
                 <SocialIcons>
-                  <a href="https://wa.me/543871234567" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-                    <FaWhatsapp />
+                  <a href="https://www.facebook.com/people/Museo-Regional-Andino/100075671035620/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                    <FaFacebook />
                   </a>
-                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <a href="https://www.instagram.com/museoandino/?hl=es" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                     <FaInstagram />
                   </a>
-                  <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                    <FaFacebook />
+                  <a href="https://www.youtube.com/@museoregionalandino4593" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                    <FaYoutube />
                   </a>
                 </SocialIcons>
               </SocialSection>
@@ -265,25 +363,62 @@ const ContactoPage = () => {
 
           <FormColumn>
             <FormTitle>{t('contact.form.title')}</FormTitle>
-            <form onSubmit={handleSubmit}>
+            <form ref={form} onSubmit={sendEmail}>
               <FormGroup>
                 <label htmlFor="nombre">{t('contact.form.name.label')}</label>
-                <input type="text" id="nombre" required placeholder={t('contact.form.name.placeholder')} />
+                <input 
+                  type="text" 
+                  id="nombre"
+                  name="nombre" 
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  required 
+                  placeholder={t('contact.form.name.placeholder')} 
+                />
               </FormGroup>
               <FormGroup>
                 <label htmlFor="email">{t('contact.form.email.label')}</label>
-                <input type="email" id="email" required placeholder={t('contact.form.email.placeholder')} />
+                <input 
+                  type="email" 
+                  id="email"
+                  name="email" 
+                  value={formData.email}
+                  onChange={handleChange}
+                  required 
+                  placeholder={t('contact.form.email.placeholder')} 
+                />
               </FormGroup>
               <FormGroup>
                 <label htmlFor="asunto">{t('contact.form.subject.label')}</label>
-                <input type="text" id="asunto" required placeholder={t('contact.form.subject.placeholder')} />
+                <input 
+                  type="text" 
+                  id="asunto"
+                  name="asunto" 
+                  value={formData.asunto}
+                  onChange={handleChange}
+                  required 
+                  placeholder={t('contact.form.subject.placeholder')} 
+                />
               </FormGroup>
               <FormGroup>
                 <label htmlFor="mensaje">{t('contact.form.message.label')}</label>
-                <textarea id="mensaje" required placeholder={t('contact.form.message.placeholder')}></textarea>
+                <textarea 
+                  id="mensaje"
+                  name="mensaje" 
+                  value={formData.mensaje}
+                  onChange={handleChange}
+                  required 
+                  placeholder={t('contact.form.message.placeholder')}
+                ></textarea>
               </FormGroup>
-              <Button variant="primary" fullWidth type="submit" startIcon={<FaPaperPlane />}>
-                {t('contact.form.submit')}
+              <Button 
+                variant="primary" 
+                fullWidth 
+                type="submit" 
+                disabled={loading}
+                startIcon={!loading && <FaPaperPlane />}
+              >
+                {loading ? t('common.loading') : t('contact.form.submit')}
               </Button>
             </form>
           </FormColumn>

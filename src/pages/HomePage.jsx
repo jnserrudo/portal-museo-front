@@ -94,7 +94,7 @@ const SectionTitle = styled.h2`
 
 const FeaturesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: ${theme.spacing.lg};
   max-width: 1200px;
   margin: 0 auto;
@@ -336,20 +336,37 @@ const HomePage = ({ events = [], isLoading = false }) => {
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [viewEvent, setViewEvent] = useState(null);
 
+  // Helper function to normalize image URLs
+  const normalizeImageUrl = (imageUrl) => {
+    if (!imageUrl) return null;
+    
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const cleanPath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+    return `${baseUrl}${cleanPath}`;
+  };
+
   const processedEvents = useMemo(() => {
     if (!Array.isArray(events)) return [];
     
-    const normalized = events.map(event => ({
-      id: event.id,
-      title: event.titulo || event.title,
-      description: event.descripcion || event.description,
-      date: event.fecha || event.date,
-      time: event.hora || event.time,
-      location: event.lugar || event.location,
-      imageUrl: (event.imagenUrls && event.imagenUrls.length > 0) 
-        ? `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${event.imagenUrls[0]}`
-        : event.imageUrl || null
-    }));
+    const normalized = events.map(event => {
+      const imageUrl = (event.imagenUrls && event.imagenUrls.length > 0) 
+        ? event.imagenUrls[0] 
+        : event.imageUrl || null;
+      
+      return {
+        id: event.id,
+        title: event.titulo || event.title,
+        description: event.descripcion || event.description,
+        date: event.fecha || event.date,
+        time: event.hora || event.time,
+        location: event.lugar || event.location,
+        imageUrl: normalizeImageUrl(imageUrl)
+      };
+    });
 
     return normalized.sort((a, b) => {
       const dateAStr = a.date;
@@ -412,17 +429,37 @@ const HomePage = ({ events = [], isLoading = false }) => {
         <HeroContent>
           <HeroTitle>{t('home.hero.title')}</HeroTitle>
           <HeroSubtitle>{t('home.hero.subtitle')}</HeroSubtitle>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Button as={Link} to="/visita" variant="accent" size="large">
+          <HeroButtons>
+            <Button 
+              variant="primary" 
+              size="large" 
+              onClick={() => navigate('/visita')}
+            >
               {t('home.hero.cta')}
             </Button>
-            <Button as={Link} to="/salas" variant="outline" size="large" style={{ 
-              color: 'white', 
-              borderColor: 'white'
-            }}>
+            <Button 
+              variant="outline" 
+              size="large" 
+              onClick={() => navigate('/visita-virtual')}
+              style={{ 
+                color: 'white', 
+                borderColor: 'white',
+                '&:hover': {
+                  backgroundColor: 'white',
+                  color: theme.colors.primary
+                }
+              }}
+            >
+              {t('nav.virtualTour')}
+            </Button>
+            <Button 
+              variant="secondary" 
+              size="large" 
+              onClick={() => navigate('/salas')}
+            >
               {t('home.hero.rooms')}
             </Button>
-          </div>
+          </HeroButtons>
         </HeroContent>
       </HeroSection>
 

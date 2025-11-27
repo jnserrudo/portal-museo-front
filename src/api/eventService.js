@@ -67,14 +67,14 @@ export const getEvents = async () => {
  */
 export const createEvent = async (formData) => {
     try {
-        console.log('Enviando datos al servidor...');
+        console.log('📤 [API] Enviando datos al servidor...');
         
         // Mostrar el contenido del FormData para depuración
         const formDataObj = {};
         for (let [key, value] of formData.entries()) {
             formDataObj[key] = value;
         }
-        console.log('Contenido de FormData:', formDataObj);
+        console.log('📦 [API] Contenido de FormData:', formDataObj);
         
         const response = await fetch(getApiUrl('eventos'), {
             method: 'POST',
@@ -97,8 +97,14 @@ export const createEvent = async (formData) => {
             throw new Error(`Error al parsear la respuesta del servidor: ${text}`);
         }
         
+        console.log('📡 [API] Respuesta del servidor:', {
+            ok: response.ok,
+            status: response.status,
+            data: responseData
+        });
+        
         if (!response.ok) {
-            console.error('Error en la respuesta del servidor:', {
+            console.error('❌ [API] Error en la respuesta del servidor:', {
                 status: response.status,
                 statusText: response.statusText,
                 data: responseData
@@ -106,6 +112,7 @@ export const createEvent = async (formData) => {
             
             const errorMessage = responseData.message || responseData.error || `Error al crear el evento (${response.status})`;
             
+            console.log('🔔 [API] Mostrando toast de ERROR');
             // Mostrar notificación de error
             toast.error(errorMessage, {
               position: "top-right",
@@ -118,9 +125,20 @@ export const createEvent = async (formData) => {
             
             throw new Error(errorMessage);
         }
-        console.log('Respuesta del servidor:', responseData);
+        
+        console.log('✅ [API] Evento creado exitosamente');
+        console.log('📄 [API] Datos del evento:', responseData.data);
+        
+        // Verificar estructura de la respuesta
+        if (!responseData.data || !responseData.data.titulo) {
+            console.warn('⚠️ [API] Estructura de respuesta inesperada:', responseData);
+        }
+        
+        const eventoTitulo = responseData.data?.titulo || 'Nuevo evento';
+        console.log(`🔔 [API] Mostrando toast de ÉXITO para: "${eventoTitulo}"`);
+        
         // Mostrar notificación de éxito
-        toast.success(`Evento "${responseData.data.titulo}" creado exitosamente`, {
+        toast.success(`Evento "${eventoTitulo}" creado exitosamente`, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -130,9 +148,11 @@ export const createEvent = async (formData) => {
           progress: undefined,
         });
         
+        console.log('✨ [API] Toast de éxito ejecutado');
+        
         return responseData;
     } catch (error) {
-        console.error('Error en createEvent:', {
+        console.error('💥 [API] Error en createEvent:', {
             message: error.message,
             stack: error.stack,
             formData: formData ? Object.fromEntries(formData.entries()) : null
@@ -149,14 +169,14 @@ export const createEvent = async (formData) => {
  */
 export const updateEvent = async (id, formData) => {
     try {
-        console.log(`Actualizando evento con ID: ${id}`);
+        console.log(`📤 [API] Actualizando evento con ID: ${id}`);
         
         // Mostrar el contenido del FormData para depuración
         const formDataObj = {};
         for (let [key, value] of formData.entries()) {
             formDataObj[key] = value;
         }
-        console.log('Contenido de FormData para actualización:', formDataObj);
+        console.log('📦 [API] Contenido de FormData para actualización:', formDataObj);
         
         const response = await fetch(getApiUrl(`eventos/${id}`), {
             method: 'PUT',
@@ -178,8 +198,14 @@ export const updateEvent = async (id, formData) => {
             throw new Error(`Error al parsear la respuesta del servidor: ${text}`);
         }
         
+        console.log('📡 [API] Respuesta del servidor:', {
+            ok: response.ok,
+            status: response.status,
+            data: responseData
+        });
+        
         if (!response.ok) {
-            console.error('Error en la respuesta del servidor al actualizar:', {
+            console.error('❌ [API] Error en la respuesta del servidor al actualizar:', {
                 status: response.status,
                 statusText: response.statusText,
                 data: responseData
@@ -187,6 +213,7 @@ export const updateEvent = async (id, formData) => {
             
             const errorMessage = responseData.message || responseData.error || `Error al actualizar el evento (${response.status})`;
             
+            console.log('🔔 [API] Mostrando toast de ERROR');
             // Mostrar notificación de error
             toast.error(errorMessage, {
               position: "top-right",
@@ -200,8 +227,19 @@ export const updateEvent = async (id, formData) => {
             throw new Error(errorMessage);
         }
         
+        console.log('✅ [API] Evento actualizado exitosamente');
+        console.log('📄 [API] Datos del evento:', responseData.data);
+        
+        // Verificar estructura de la respuesta
+        if (!responseData.data || !responseData.data.titulo) {
+            console.warn('⚠️ [API] Estructura de respuesta inesperada:', responseData);
+        }
+        
+        const eventoTitulo = responseData.data?.titulo || 'Evento';
+        console.log(`🔔 [API] Mostrando toast de ÉXITO para: "${eventoTitulo}"`);
+        
         // Mostrar notificación de éxito
-        toast.success(`Evento "${responseData.data.titulo}" actualizado exitosamente`, {
+        toast.success(`Evento "${eventoTitulo}" actualizado exitosamente`, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -211,9 +249,11 @@ export const updateEvent = async (id, formData) => {
           progress: undefined,
         });
         
+        console.log('✨ [API] Toast de éxito ejecutado');
+        
         return responseData;
     } catch (error) {
-        console.error('Error en updateEvent:', {
+        console.error('💥 [API] Error en updateEvent:', {
             message: error.message,
             stack: error.stack,
             formData: formData ? Object.fromEntries(formData.entries()) : null

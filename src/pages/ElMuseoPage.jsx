@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
-import { FaLandmark, FaHistory, FaAward, FaQuoteLeft } from 'react-icons/fa';
+import { FaLandmark, FaHistory, FaAward, FaMapMarkerAlt, FaClock, FaTicketAlt, FaConciergeBell, FaWheelchair, FaInfoCircle, FaCheck } from 'react-icons/fa';
 import { theme } from '../styles/theme';
 
 const PageContainer = styled.div`
@@ -10,7 +10,7 @@ const PageContainer = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${import.meta.env.BASE_URL}sala-hero.jpg');
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${import.meta.env.BASE_URL}museo_frente.jpg');
   background-size: cover;
   background-position: center;
   height: 50vh;
@@ -39,6 +39,7 @@ const HeroContent = styled.div`
     margin-bottom: ${theme.spacing.md};
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     font-weight: ${theme.typography.weights.black};
+    color: white;
   }
 
   p {
@@ -74,75 +75,36 @@ const Container = styled.div`
   padding: 0 ${theme.spacing.md};
 `;
 
-const Section = styled.section`
-  margin-bottom: ${theme.spacing.xl};
-`;
-
-const SectionTitle = styled.h2`
-  font-size: ${theme.typography.sizes.h2};
-  color: ${theme.colors.primary};
-  margin-bottom: ${theme.spacing.lg};
-  text-align: center;
-  position: relative;
-  
-  &::after {
-    content: '';
-    display: block;
-    width: 60px;
-    height: 4px;
-    background-color: ${theme.colors.accent};
-    margin: ${theme.spacing.sm} auto 0;
-    border-radius: 2px;
-  }
-`;
-
-const MissionCard = styled.div`
+const AboutSection = styled.section`
   background-color: white;
   padding: ${theme.spacing.xl};
   border-radius: ${theme.borderRadius.lg};
   box-shadow: ${theme.shadows.medium};
+  margin-bottom: ${theme.spacing.xl};
   text-align: center;
-  position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    background: linear-gradient(90deg, ${theme.colors.primary}, ${theme.colors.accent});
-  }
-  
-  svg {
-    font-size: 3rem;
-    color: ${theme.colors.primary}40; /* Low opacity */
-    margin-bottom: ${theme.spacing.md};
-  }
   
   p {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     line-height: 1.8;
     color: ${theme.colors.text.dark};
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
-    font-style: italic;
   }
 `;
 
-const Grid = styled.div`
+const InfoGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: ${theme.spacing.lg};
+  margin-bottom: ${theme.spacing.xl};
 `;
 
-const HistoryCard = styled.div`
+const InfoCard = styled.div`
   background: white;
   padding: ${theme.spacing.lg};
   border-radius: ${theme.borderRadius.md};
   box-shadow: ${theme.shadows.light};
-  border-left: 4px solid ${theme.colors.primary};
+  border-top: 4px solid ${theme.colors.primary};
   transition: transform 0.3s ease;
   
   &:hover {
@@ -152,54 +114,35 @@ const HistoryCard = styled.div`
   
   h3 {
     color: ${theme.colors.primary};
-    font-size: 1.4rem;
-    margin-bottom: ${theme.spacing.sm};
+    font-size: 1.3rem;
+    margin-bottom: ${theme.spacing.md};
     display: flex;
     align-items: center;
     gap: 10px;
-  }
-  
-  p {
-    color: ${theme.colors.text.medium};
-    line-height: 1.6;
+    border-bottom: 1px solid ${theme.colors.accent};
+    padding-bottom: ${theme.spacing.xs};
   }
 `;
 
-const CollectionCard = styled.div`
-  background: white;
-  border-radius: ${theme.borderRadius.md};
-  overflow: hidden;
-  box-shadow: ${theme.shadows.medium};
-  transition: all 0.3s ease;
+const InfoList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
   
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: ${theme.shadows.dark};
-  }
-  
-  div.content {
-    padding: ${theme.spacing.lg};
-  }
-  
-  h3 {
-    color: ${theme.colors.text.black};
+  li {
     margin-bottom: ${theme.spacing.sm};
-    font-size: 1.3rem;
-  }
-  
-  p {
-    color: ${theme.colors.text.medium};
-    font-size: 0.95rem;
-    line-height: 1.6;
-  }
-  
-  div.icon-wrapper {
-    background-color: ${theme.colors.primary};
-    color: white;
-    padding: 15px;
-    display: inline-flex;
-    border-radius: 0 0 15px 0;
-    margin-bottom: ${theme.spacing.sm};
+    color: ${theme.colors.text.dark};
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+    
+    svg {
+      color: ${theme.colors.primary};
+      margin-top: 4px;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
   }
 `;
 
@@ -211,70 +154,71 @@ const ElMuseoPage = () => {
       <HeroSection>
         <HeroContent>
           <h1>{t('museum.hero.title')}</h1>
-          <p>{t('museum.hero.subtitle')}</p>
+          {/* <p>{t('museum.hero.subtitle')}</p>
           <BadgeContainer>
             <Badge><FaLandmark /> {t('museum.badge.founded')}</Badge>
             <Badge><FaHistory /> {t('museum.badge.history')}</Badge>
             <Badge><FaAward /> {t('museum.badge.monument')}</Badge>
-          </BadgeContainer>
+          </BadgeContainer> */}
         </HeroContent>
       </HeroSection>
 
       <Container>
-        <Section>
-          <SectionTitle>{t('museum.mission.title')}</SectionTitle>
-          <MissionCard>
-            <FaQuoteLeft />
-            <p>
-              {t('museum.mission.content')}
-            </p>
-          </MissionCard>
-        </Section>
+        <AboutSection>
+          <p>{t('museum.about.content')}</p>
+        </AboutSection>
 
-        <Section>
-          <SectionTitle>{t('museum.history.title')}</SectionTitle>
-          <Grid>
-            <HistoryCard>
-              <h3><FaLandmark /> {t('museum.history.1998.title')}</h3>
-              <p>{t('museum.history.1998.content')}</p>
-            </HistoryCard>
-            <HistoryCard>
-              <h3><FaAward /> {t('museum.history.2018.title')}</h3>
-              <p>{t('museum.history.2018.content')}</p>
-            </HistoryCard>
-            <HistoryCard>
-              <h3><FaHistory /> {t('museum.history.2023.title')}</h3>
-              <p>{t('museum.history.2023.content')}</p>
-            </HistoryCard>
-          </Grid>
-        </Section>
+        <InfoGrid>
+          {/* Ubicación y Horarios */}
+          <InfoCard>
+            <h3><FaMapMarkerAlt /> {t('museum.info.location.label')}</h3>
+            <p>{t('museum.info.location.value')}</p>
+            
+            <h3 style={{ marginTop: '1.5rem' }}><FaClock /> {t('museum.info.hours.label')}</h3>
+            <p>{t('museum.info.hours.value')}</p>
+          </InfoCard>
 
-        <Section>
-          <SectionTitle>{t('museum.collection.title')}</SectionTitle>
-          <Grid>
-            <CollectionCard>
-              <div className="icon-wrapper"><FaHistory size={24} /></div>
-              <div className="content">
-                <h3>{t('museum.collection.archeology.title')}</h3>
-                <p>{t('museum.collection.archeology.content')}</p>
-              </div>
-            </CollectionCard>
-            <CollectionCard>
-              <div className="icon-wrapper"><FaLandmark size={24} /></div>
-              <div className="content">
-                <h3>{t('museum.collection.geology.title')}</h3>
-                <p>{t('museum.collection.geology.content')}</p>
-              </div>
-            </CollectionCard>
-            <CollectionCard>
-              <div className="icon-wrapper"><FaHistory size={24} /></div>
-              <div className="content">
-                <h3>{t('museum.collection.textile.title')}</h3>
-                <p>{t('museum.collection.textile.content')}</p>
-              </div>
-            </CollectionCard>
-          </Grid>
-        </Section>
+          {/* Visita */}
+          <InfoCard>
+            <h3><FaTicketAlt /> {t('museum.info.visit.label')}</h3>
+            <InfoList>
+              <li><FaCheck /> {t('museum.info.visit.value')}</li>
+              <li><FaInfoCircle /> {t('museum.info.visit.exemptions')}</li>
+            </InfoList>
+          </InfoCard>
+
+          {/* Servicios */}
+          <InfoCard>
+            <h3><FaConciergeBell /> {t('museum.info.services.label')}</h3>
+            <InfoList>
+              <li><FaCheck /> {t('museum.info.services.guide')}</li>
+              <li><FaCheck /> {t('museum.info.services.gardens')}</li>
+              <li><FaCheck /> {t('museum.info.services.archive')}</li>
+              <li><FaCheck /> {t('museum.info.services.library')}</li>
+              <li><FaCheck /> {t('museum.info.services.wifi')}</li>
+              <li><FaCheck /> {t('museum.info.services.rest')}</li>
+            </InfoList>
+          </InfoCard>
+
+          {/* Accesibilidad */}
+          <InfoCard>
+            <h3><FaWheelchair /> {t('museum.info.accessibility.label')}</h3>
+            <InfoList>
+              <li><FaCheck /> {t('museum.info.accessibility.ramps')}</li>
+              <li><FaCheck /> {t('museum.info.accessibility.bathrooms')}</li>
+            </InfoList>
+          </InfoCard>
+
+          {/* Características */}
+          <InfoCard>
+            <h3><FaInfoCircle /> {t('museum.info.features.label')}</h3>
+            <InfoList>
+              <li><FaCheck /> {t('museum.info.features.type')}</li>
+              <li><FaCheck /> {t('museum.info.features.collection')}</li>
+              <li><FaCheck /> {t('museum.info.features.dependence')}</li>
+            </InfoList>
+          </InfoCard>
+        </InfoGrid>
       </Container>
     </PageContainer>
   );

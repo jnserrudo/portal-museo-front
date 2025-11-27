@@ -71,6 +71,11 @@ const SearchContainer = styled.div`
   position: relative;
   min-width: 300px;
   
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    min-width: 100%;
+    width: 100%;
+  }
+  
   input {
     width: 100%;
     padding: 12px 20px 12px 45px;
@@ -123,7 +128,7 @@ const MonthHeader = styled.h2`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: ${theme.spacing.lg};
   
   @media (max-width: ${theme.breakpoints.mobile}) {
@@ -364,57 +369,91 @@ const EventosPage = ({
 
   // --- Data Processing ---
 
-  // Safe events array & normalize backend data structure
-  const safeEvents = useMemo(() => {
+  // Helper function to normalize image URLs
+  const normalizeImageUrl = (imageUrl) => {
+    if (!imageUrl) {
+      console.log('🖼️ [URL] No hay URL de imagen');
+      return null;
+    }
+    
+    // Si ya es una URL completa, devolverla tal cual
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      console.log('🖼️ [URL] URL absoluta detectada:', imageUrl);
+      return imageUrl;
+    }
+    
+    // Si es una ruta relativa, agregar la URL base
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    // Asegurar que no haya doble slash
+    const cleanPath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+    const fullUrl = `${baseUrl}${cleanPath}`;
+    
+    console.log('🖼️ [URL] Construyendo URL completa:');
+    console.log('  Base URL:', baseUrl);
+    console.log('  Path relativo:', imageUrl);
+    console.log('  Path limpio:', cleanPath);
+    console.log('  URL final:', fullUrl);
+    
+    return fullUrl;
+  };
+
+  const processedEvents = useMemo(() => {
     if (!Array.isArray(events)) return [];
     
-    // Map backend structure to frontend structure
-    return events.map(event => ({
-      id: event.id,
-      title: event.titulo || event.title,
-      description: event.descripcion || event.description,
-      date: event.fecha || event.date,
-      time: event.hora || event.time,
-      location: event.lugar || event.location,
-      // Handle imagenUrls array from backend
-      imageUrl: (event.imagenUrls && event.imagenUrls.length > 0) 
-        ? `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${event.imagenUrls[0]}`
-        : event.imageUrl ||  null // Fallback will be handled in render
-    }));
-  }, [events]);
+    console.log('🔄 [EVENTOS] Procesando eventos:', events.length);
+    
+    const normalized = events.map((event, index) => {
+      const imageUrl = (event.imagenUrls && event.imagenUrls.length > 0) 
+        ? event.imagenUrls[0] 
+        : event.imageUrl || null;
+      
+      const normalizedImageUrl = normalizeImageUrl(imageUrl);
+      
+      console.log(`📋 [EVENTO ${index + 1}] "${event.titulo || event.title}":`, {
+        id: event.id,
+        fecha: event.fecha || event.date,
+        imagenOriginal: imageUrl,
+        imagenNormalizada: normalizedImageUrl
+      });
+      
+      return {
+        id: event.id,
+        title: event.titulo || event.title,
+        description: event.descripcion || event.description,
+        date: event.fecha || event.date,
+        time: event.hora || event.time,
+        location: event.lugar || event.location,
+        imageUrl: normalizedImageUrl
+      };
+    });
 
-  // Filter and Sort
-  const processedEvents = useMemo(() => {
-    let filtered = safeEvents.filter(event => {
+    let filtered = normalized.filter(event => {
       const title = event.title || '';
       const desc = event.description || '';
       const term = searchTerm.toLowerCase();
       return title.toLowerCase().includes(term) || desc.toLowerCase().includes(term);
     });
 
-    // Sort by date ascending (nearest first)
     return filtered.sort((a, b) => {
       const dateAStr = a.date;
       const dateBStr = b.date;
       
-      // Events without dates go to the end
-      if (!dateAStr) return 1;
-      if (!dateBStr) return -1;
+      if (!dateAStr) return 1;  // sin fecha va al final
+      if (!dateBStr) return -1; // sin fecha va al final
 
       try {
         const dateA = parseISO(dateAStr);
         const dateB = parseISO(dateBStr);
+        
         if (isValid(dateA) && isValid(dateB)) {
-          // Ascending order - nearest date first
-          return dateA - dateB;
+          return dateA - dateB; // más recientes primero (ascending)
         }
       } catch (e) {
         console.error('Error parsing dates:', e);
       }
-      // Fallback: compare strings in natural order (earlier dates first)
-      return dateAStr.localeCompare(dateBStr);
+      return dateAStr.localeCompare(dateBStr); // Fallback: compare strings
     });
-  }, [safeEvents, searchTerm]);
+  }, [events, searchTerm]);
 
   // Group by Month
   const eventsByMonth = useMemo(() => {

@@ -10,7 +10,7 @@ const PageContainer = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${import.meta.env.BASE_URL}sala-hero.jpg');
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${import.meta.env.BASE_URL}museo_frente.jpg');
   background-size: cover;
   background-position: center;
   height: 40vh;
@@ -31,11 +31,13 @@ const HeroContent = styled.div`
     font-size: ${theme.typography.sizes.h2};
     margin-bottom: ${theme.spacing.sm};
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    color: white;
   }
 
   p {
     font-size: ${theme.typography.sizes.subtitle};
     opacity: 0.9;
+    color: white;
   }
 `;
 

@@ -80,22 +80,34 @@ export const translations = {
     'museum.badge.founded': 'Fundado en 1998',
     'museum.badge.history': 'Historia Viva',
     'museum.badge.monument': 'Monumento Histórico 2018',
-    'museum.mission.title': 'Nuestra Misión',
-    'museum.mission.content': '"Preservar, investigar y difundir el patrimonio cultural, arqueológico y geológico de la región de los Andes."',
-    'museum.history.title': 'Hitos Históricos',
-    'museum.history.1998.title': '1998 - Fundación',
-    'museum.history.1998.content': 'El museo abre sus puertas como una iniciativa comunitaria.',
-    'museum.history.2018.title': '2018 - Reconocimiento',
-    'museum.history.2018.content': 'Declarado Monumento Histórico Nacional.',
-    'museum.history.2023.title': '2023 - Innovación',
-    'museum.history.2023.content': 'Incorporación de tecnologías inmersivas y realidad aumentada.',
-    'museum.collection.title': 'Nuestra Colección',
-    'museum.collection.archeology.title': 'Arqueología Andina',
-    'museum.collection.archeology.content': 'Piezas cerámicas, líticas y textiles.',
-    'museum.collection.geology.title': 'Geología y Mineralogía',
-    'museum.collection.geology.content': 'Una extensa muestra de la riqueza mineral de la región.',
-    'museum.collection.textile.title': 'Historia del Barracán',
-    'museum.collection.textile.content': 'Exhibición dedicada al tejido tradicional de picote y barracán.',
+    'museum.about.content': 'El “Museo Regional Andino” se encuentra en San Antonio de los Cobres, Salta. Funciona en un edificio declarado Monumento Histórico Nacional en el año 2018, creado en el siglo XX con la Gobernación de los Andes e inaugurado en el año 2019 como museo para conservar y difundir la historia de la gente de la puna. Su colección posee objetos históricas y textiles ancestrales realizados a manualmente en telar aplicados a trajes rurales y regionales, piezas etnográficas de la Puna Salteña y tejidos de barracán de fines del siglo XIX. La colección del Museo cuenta con textiles ancestrales realizados manualmente en telar.',
+    
+    'museum.info.location.label': 'Ubicación',
+    'museum.info.location.value': 'Av. Brígido Zabaleta, San Antonio de los Cobres, Salta',
+    
+    'museum.info.hours.label': 'Días y Horarios',
+    'museum.info.hours.value': 'Martes a Domingos de 10:00 a 18:00hs',
+    
+    'museum.info.visit.label': 'Visita',
+    'museum.info.visit.value': 'Entrada Paga',
+    'museum.info.visit.exemptions': 'Niños y personas especiales no pagan, descuento a jubilados.',
+    
+    'museum.info.services.label': 'Servicios al visitante',
+    'museum.info.services.guide': 'Guía interactiva',
+    'museum.info.services.gardens': 'Áreas verdes/Jardines',
+    'museum.info.services.archive': 'Archivo de acceso público',
+    'museum.info.services.library': 'Biblioteca',
+    'museum.info.services.wifi': 'WIFI libre',
+    'museum.info.services.rest': 'Áreas de descanso',
+    
+    'museum.info.accessibility.label': 'Accesibilidad',
+    'museum.info.accessibility.ramps': 'Rampas de acceso',
+    'museum.info.accessibility.bathrooms': 'Baños accesibles',
+    
+    'museum.info.features.label': 'Características',
+    'museum.info.features.type': 'Tipo de institución: Museo',
+    'museum.info.features.collection': 'Tipo de colección: Historia',
+    'museum.info.features.dependence': 'Dependencia: Entidad pública/Municipal',
     
     // VisitaPage
     'visit.hero.title': 'Planifica tu Visita',
@@ -161,6 +173,18 @@ export const translations = {
     'common.back': 'Volver',
     'common.viewDetails': 'Ver Detalles',
     'common.search': 'Buscar eventos...',
+    
+    // Virtual Tour
+    'nav.virtualTour': 'Visita Virtual',
+    'virtualTour.hero.title': 'Visita Virtual',
+    'virtualTour.hero.subtitle': 'Recorre nuestro museo desde donde estés. Explora cada sala y descubre nuestras colecciones a través de imágenes y videos.',
+    'virtualTour.filter.all': 'Todo',
+    'virtualTour.filter.images': 'Imágenes',
+    'virtualTour.filter.videos': 'Videos',
+    'virtualTour.type.image': 'Imagen',
+    'virtualTour.type.video': 'Video',
+    'virtualTour.empty.title': 'Contenido próximamente',
+    'virtualTour.empty.message': 'Estamos preparando el contenido multimedia de la visita virtual. Vuelve pronto para explorar nuestro museo.',
   },
   en: {
     // Header
@@ -233,26 +257,39 @@ export const translations = {
     
     // ElMuseoPage
     'museum.hero.title': 'Museo Regional Andino',
-    'museum.hero.subtitle': 'Custodios del patrimonio cultural y natural de la Puna Argentina. Un espacio de encuentro con nuestra historia, identidad y futuro.',
+    'museum.hero.subtitle': 'Custodios del patrimonio cultural y natural de la Puna Argentina.',
     'museum.badge.founded': 'Fundado en 1998',
     'museum.badge.history': 'Historia Viva',
     'museum.badge.monument': 'Monumento Histórico 2018',
-    'museum.mission.title': 'Nuestra Misión',
-    'museum.mission.content': '"Preservar, investigar y difundir el patrimonio cultural, arqueológico y geológico de la región de los Andes, promoviendo el conocimiento y la valoración de nuestra identidad para las generaciones presentes y futuras."',
-    'museum.history.title': 'Hitos Históricos',
-    'museum.history.1998.title': '1998 - Fundación',
-    'museum.history.1998.content': 'El museo abre sus puertas como una iniciativa comunitaria para resguardar los hallazgos arqueológicos locales.',
-    'museum.history.2018.title': '2018 - Reconocimiento',
-    'museum.history.2018.content': 'Declarado Monumento Histórico Nacional por su invaluable aporte a la preservación de la cultura andina.',
-    'museum.history.2023.title': '2023 - Innovación',
-    'museum.history.2023.content': 'Incorporación de tecnologías inmersivas y realidad aumentada a través del proyecto PFI, modernizando la experiencia museística.',
-    'museum.collection.title': 'Nuestra Colección',
-    'museum.collection.archeology.title': 'Arqueología Andina',
-    'museum.collection.archeology.content': 'Piezas cerámicas, líticas y textiles que narran la vida cotidiana y ceremonial de los pueblos originarios de la Puna.',
-    'museum.collection.geology.title': 'Geología y Mineralogía',
-    'museum.collection.geology.content': 'Una extensa muestra de la riqueza mineral de la región, incluyendo ejemplares únicos de boratos y minerales metalíferos.',
-    'museum.collection.textile.title': 'Historia del Barracán',
-    'museum.collection.textile.content': 'Exhibición dedicada al tejido tradicional de picote y barracán, técnicas ancestrales que perduran en nuestras comunidades.',
+    
+    'museum.about.content': 'El “Museo Regional Andino” se encuentra en San Antonio de los Cobres, Salta. Funciona en un edificio declarado Monumento Histórico Nacional en el año 2018, creado en el siglo XX con la Gobernación de los Andes e inaugurado en el año 2019 como museo para conservar y difundir la historia de la gente de la puna. Su colección posee objetos históricas y textiles ancestrales realizados a manualmente en telar aplicados a trajes rurales y regionales, piezas etnográficas de la Puna Salteña y tejidos de barracán de fines del siglo XIX. La colección del Museo cuenta con textiles ancestrales realizados manualmente en telar.',
+    
+    'museum.info.location.label': 'Ubicación',
+    'museum.info.location.value': 'Av. Brígido Zabaleta, San Antonio de los Cobres, Salta',
+    
+    'museum.info.hours.label': 'Días y Horarios',
+    'museum.info.hours.value': 'Martes a Domingos de 10:00 a 18:00hs',
+    
+    'museum.info.visit.label': 'Visita',
+    'museum.info.visit.value': 'Entrada Paga',
+    'museum.info.visit.exemptions': 'Niños y personas especiales no pagan, descuento a jubilados.',
+    
+    'museum.info.services.label': 'Servicios al visitante',
+    'museum.info.services.guide': 'Guía interactiva',
+    'museum.info.services.gardens': 'Áreas verdes/Jardines',
+    'museum.info.services.archive': 'Archivo de acceso público',
+    'museum.info.services.library': 'Biblioteca',
+    'museum.info.services.wifi': 'WIFI libre',
+    'museum.info.services.rest': 'Áreas de descanso',
+    
+    'museum.info.accessibility.label': 'Accesibilidad',
+    'museum.info.accessibility.ramps': 'Rampas de acceso',
+    'museum.info.accessibility.bathrooms': 'Baños accesibles',
+    
+    'museum.info.features.label': 'Características',
+    'museum.info.features.type': 'Tipo de institución: Museo',
+    'museum.info.features.collection': 'Tipo de colección: Historia',
+    'museum.info.features.dependence': 'Dependencia: Entidad pública/Municipal',
     
     // Events
     'events.subtitle': 'Discover our activities and exhibitions',
@@ -300,39 +337,6 @@ export const translations = {
     'salas.territory.content': 'The National Territory of Los Andes was a political-administrative unit officially created on <strong>January 9, 1900</strong> through Law No. 3906, with the objective of consolidating Argentine sovereignty over the Puna de Atacama region. Its capital was designated in <strong>San Antonio de los Cobres</strong>. National Territories were areas integrated into the country but not yet organized as provinces, and the National Executive Power appointed governors and secretaries in charge of administration. The creation of the territory was linked to the <strong>War of the Pacific (1879–1884)</strong>. In 1889, Bolivia ceded to Argentina rights over part of the disputed territory. Finally, the <strong>Buchanan Award (1899)</strong> partially resolved the conflict with Chile, leaving <strong>63,000 km² integrated into Argentina</strong>, giving rise to the National Territory of Los Andes. Localities such as Susques, Santa Rosa de Pastos Grandes, and Antofagasta de la Sierra became part of Argentina.',
     
     'salas.governance.title': 'Governance of Los Andes Room',
-    'salas.governance.content': 'In the early 20th century, <strong>Daniel Cerri was appointed first governor</strong>. His administration laid the administrative foundations and allowed exploring the territory, identifying <strong>mineral resources such as borates, lithium, and copper</strong>, and understanding the geography and climate of the Andean Puna. The Governance promoted fundamental scientific expeditions, such as those of <strong>Juan Ambrosetti (1904–1905)</strong> on archeology and registration of pre-Hispanic sites, and <strong>Eric Boman (1910)</strong> on ethnography and studies on indigenous peoples. Their research showed that the region had a long cultural history and significant economic potential. In <strong>1943, the National Territory of Los Andes was dissolved</strong> and its regions were incorporated into neighboring provinces: Salta (Department of Los Andes), Jujuy (Susques), and Catamarca (Antofagasta de la Sierra). Thus, the current provincial map of northwestern Argentina was consolidated.',
-    
-    'salas.sac.title': 'San Antonio de los Cobres Today Room',
-    'salas.sac.content': '<strong>San Antonio de los Cobres</strong>, with about <strong>7,000 inhabitants and more than 11,000 km²</strong>, maintains deep roots in Andean culture. Its name honors <strong>San Antonio de Padua</strong>, whose image is venerated every <strong>June 13</strong> during the patron saint festival.<br /><br /><strong>Andean weaving</strong>, done on rustic or waist looms and with techniques such as five-needle weaving, transmits identity, history, and ancestral knowledge, using materials such as <strong>llama and sheep wool</strong>.<br /><br />Education has a central place: the <strong>Domingo Faustino Sarmiento School, founded in 1903</strong>, continues to be a regional reference for the transmission of knowledge and cultural values.<br /><br />The <strong>Pachamama Festival</strong>, celebrated on <strong>August 1</strong>, reflects the spiritual connection with the land, with offerings that thank nature for food, health, and shelter.<br /><br />The account of geologist <strong>Luis Brackebusch in 1870</strong> recalls the traditional life of the town, its stone houses and festivities, showing the continuity of ancestral practices and beliefs that still endure.',
-    
-    //ElMuseoPage
-    'museum.hero.title': 'Andean Regional Museum',
-    'museum.hero.subtitle': 'Guardians of the cultural and natural heritage of the Argentine Puna. A meeting space with our history, identity, and future.',
-    'museum.badge.founded': 'Founded in 1998',
-    'museum.badge.history': 'Living History',
-    'museum.badge.monument': 'Historical Monument 2018',
-    'museum.mission.title': 'Our Mission',
-    'museum.mission.content': '"To preserve, research, and disseminate the cultural, archaeological, and geological heritage of the Andes region, promoting knowledge and appreciation of our identity for present and future generations."',
-    'museum.history.title': 'Historical Milestones',
-    'museum.history.1998.title': '1998 - Foundation',
-    'museum.history.1998.content': 'The museum opens its doors as a community initiative to safeguard local archaeological findings.',
-    'museum.history.2018.title': '2018 - Recognition',
-    'museum.history.2018.content': 'Declared a National Historical Monument for its invaluable contribution to the preservation of Andean culture.',
-    'museum.history.2023.title': '2023 - Innovation',
-    'museum.history.2023.content': 'Incorporation of immersive technologies and augmented reality through the PFI project, modernizing the museum experience.',
-    'museum.collection.title': 'Our Collection',
-    'museum.collection.archeology.title': 'Andean Archeology',
-    'museum.collection.archeology.content': 'Ceramic, lithic, and textile pieces that narrate the daily and ceremonial life of the indigenous peoples of the Puna.',
-    'museum.collection.geology.title': 'Geology and Mineralogy',
-    'museum.collection.geology.content': 'An extensive display of the region\'s mineral wealth, including unique specimens of borates and metalliferous minerals.',
-    'museum.collection.textile.title': 'History of Barracán',
-    'museum.collection.textile.content': 'Exhibition dedicated to the traditional weaving of picote and barracán, ancestral techniques that endure in our communities.',
-    
-    // VisitaPage
-    'visit.hero.title': 'Plan Your Visit',
-    'visit.hero.subtitle': 'All the information you need to enjoy your experience at the Andean Regional Museum.',
-    'visit.hours.title': 'Hours',
-    'visit.hours.weekdays': 'Tuesday to Friday',
     'visit.hours.weekdays.time': '09:00 - 18:00',
     'visit.hours.weekends': 'Saturdays and Sundays',
     'visit.hours.weekends.time': '10:00 - 19:00',
@@ -380,18 +384,6 @@ export const translations = {
     'contact.form.email.placeholder': 'youremail@example.com',
     'contact.form.subject.label': 'Subject',
     'contact.form.subject.placeholder': 'Reason for your inquiry',
-    'contact.form.message.label': 'Message',
-    'contact.form.message.placeholder': 'Write your message here...',
-    'contact.form.submit': 'Send Message',
-    'contact.form.success': 'Message sent successfully (Simulated)',
-    
-    
-    // Common
-    'common.loading': 'Loading...',
-    'common.error': 'An error occurred',
-    'common.readMore': 'Read more',
-    'common.back': 'Back',
-    'common.viewDetails': 'View Details',
     'common.search': 'Search events...',
   }
 };

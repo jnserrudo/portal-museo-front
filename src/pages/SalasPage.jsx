@@ -41,6 +41,10 @@ const ContentContainer = styled.div`
   max-width: 1000px;
   margin: 0 auto;
   padding: 0 ${theme.spacing.md} ${theme.spacing.xxl};
+  
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    padding: 0 ${theme.spacing.sm} ${theme.spacing.xl};
+  }
 `;
 
 const IntroSection = styled.div`
@@ -70,6 +74,11 @@ const SalaSection = styled.section`
 
   &:hover {
     transform: translateY(-5px);
+  }
+  
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    padding: ${theme.spacing.md};
+    margin-bottom: ${theme.spacing.xl};
   }
 `;
 

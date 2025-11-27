@@ -22,6 +22,7 @@ const SalasPage = lazy(() => import("./pages/SalasPage"));
 const ElMuseoPage = lazy(() => import("./pages/ElMuseoPage"));
 const ColeccionPage = lazy(() => import("./pages/ColeccionPage"));
 const VisitaPage = lazy(() => import("./pages/VisitaPage"));
+const VisitaVirtualPage = lazy(() => import("./pages/VisitaVirtualPage"));
 const TecnologiaPage = lazy(() => import("./pages/TecnologiaPage"));
 const EventosPage = lazy(() => import("./pages/EventosPage"));
 const EventoDetallePage = lazy(() => import("./pages/EventoDetallePage"));
@@ -217,6 +218,11 @@ const App = () => {
                 <Route path="/contacto" element={
                   <Page>
                     <ContactoPage />
+                  </Page>
+                } />
+                <Route path="/visita-virtual" element={
+                  <Page>
+                    <VisitaVirtualPage />
                   </Page>
                 } />
                 <Route path="*" element={
