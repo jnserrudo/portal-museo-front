@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowRight, FaCalendarAlt, FaMapMarkerAlt, FaClock, FaTicketAlt } from 'react-icons/fa';
 import { format, parseISO, parse, isValid, compareAsc } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -64,6 +64,25 @@ const HeroSubtitle = styled.p`
   @media (max-width: 768px) {
     font-size: 1rem;
     margin-bottom: 0.8rem;
+  }
+`;
+
+const HeroButtons = styled.div`
+  display: flex;
+  gap: ${theme.spacing.md};
+  justify-content: center;
+  margin-top: ${theme.spacing.xl};
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    gap: ${theme.spacing.sm};
+    width: 100%;
+
+    button {
+      width: 100%;
+    }
   }
 `;
 
@@ -333,6 +352,7 @@ const features = [
 
 const HomePage = ({ events = [], isLoading = false }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [viewEvent, setViewEvent] = useState(null);
 

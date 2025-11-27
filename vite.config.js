@@ -44,10 +44,6 @@ export default defineConfig(({ command, mode }) => {
         },
       }),
     },
-    build: {
-      outDir: "dist",
-      assetsDir: "assets",
-      sourcemap: true,
-    },
+
   };
 });
