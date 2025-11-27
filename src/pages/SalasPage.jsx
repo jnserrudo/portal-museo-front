@@ -116,14 +116,49 @@ const SalaTitle = styled.h2`
   }
 `;
 
+const SalaContentWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: ${theme.spacing.xl};
+  align-items: start;
+  
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    grid-template-columns: 1fr;
+    gap: ${theme.spacing.lg};
+  }
+`;
+
 const SalaContent = styled.div`
   font-size: 1.1rem;
   line-height: 1.8;
   color: ${theme.colors.text.muted};
+  text-align: justify;
   
   strong {
     color: ${theme.colors.primary};
     font-weight: 600;
+  }
+`;
+
+const SalaImage = styled.div`
+  width: 100%;
+  border-radius: ${theme.borderRadius.md};
+  overflow: hidden;
+  box-shadow: ${theme.shadows.medium};
+  position: sticky;
+  top: 100px;
+  align-self: start;
+  
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+  
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    position: relative;
+    top: 0;
   }
 `;
 
@@ -321,7 +356,8 @@ const SalasPage = () => {
       id: 'experiencia-inmersiva',
       title: t('salas.immersive.title'),
       icon: <FaMountain />,
-      image: `${import.meta.env.BASE_URL}geologia.jpg`,
+      image: `${import.meta.env.BASE_URL}salas/portal_sala_experiencia_inmersiva.png`,
+      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_experiencia_inmersiva.png`,
       content: <span dangerouslySetInnerHTML={{ __html: t('salas.immersive.content') }} />
     },
     {
@@ -329,6 +365,7 @@ const SalasPage = () => {
       title: t('salas.geology.title'),
       icon: <FaGem />,
       image: `${import.meta.env.BASE_URL}geologia.jpg`,
+      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_geologia.JPG`,
       content: <span dangerouslySetInnerHTML={{ __html: t('salas.geology.content') }} />
     },
     {
@@ -336,6 +373,7 @@ const SalasPage = () => {
       title: t('salas.biodiversity.title'),
       icon: <FaLeaf />,
       image: `${import.meta.env.BASE_URL}biodiversidad.jpg`,
+      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_biodiversidad.JPG`,
       content: <span dangerouslySetInnerHTML={{ __html: t('salas.biodiversity.content') }} />
     },
     {
@@ -343,6 +381,7 @@ const SalasPage = () => {
       title: t('salas.archeology.title'),
       icon: <FaHistory />,
       image: `${import.meta.env.BASE_URL}arqueologia.JPG`,
+      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_arqueologia.JPG`,
       content: <span dangerouslySetInnerHTML={{ __html: t('salas.archeology.content') }} />
     },
     {
@@ -350,6 +389,7 @@ const SalasPage = () => {
       title: t('salas.mining.title'),
       icon: <FaGem />,
       image: `${import.meta.env.BASE_URL}minerologia_y_mineria.jpg`,
+      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_mineria.JPG`,
       content: <span dangerouslySetInnerHTML={{ __html: t('salas.mining.content') }} />
     },
     {
@@ -357,6 +397,7 @@ const SalasPage = () => {
       title: t('salas.c14.title'),
       icon: <FaTrain />,
       image: `${import.meta.env.BASE_URL}ramalc14_tarjeta.jpg`,
+      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_ramal.JPG`,
       content: <span dangerouslySetInnerHTML={{ __html: t('salas.c14.content') }} />
     },
     {
@@ -364,6 +405,7 @@ const SalasPage = () => {
       title: t('salas.history.title'),
       icon: <FaLandmark />,
       image: `${import.meta.env.BASE_URL}historia_museo.JPG`,
+      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_historia.JPG`,
       content: <span dangerouslySetInnerHTML={{ __html: t('salas.history.content') }} />
     },
     {
@@ -371,6 +413,7 @@ const SalasPage = () => {
       title: t('salas.territory.title'),
       icon: <FaMapMarkerAlt />,
       image: `${import.meta.env.BASE_URL}territorio_andes_tarjeta.JPG`,
+      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_territorio_andes.JPG`,
       content: <span dangerouslySetInnerHTML={{ __html: t('salas.territory.content') }} />
     },
     {
@@ -378,6 +421,7 @@ const SalasPage = () => {
       title: t('salas.governance.title'),
       icon: <FaLandmark />,
       image: `${import.meta.env.BASE_URL}historia_museo.png`,
+      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_gobernacion_andes.JPG`,
       content: <span dangerouslySetInnerHTML={{ __html: t('salas.governance.content') }} />
     },
     {
@@ -385,6 +429,7 @@ const SalasPage = () => {
       title: t('salas.sac.title'),
       icon: <FaMapMarkerAlt />,
       image: `${import.meta.env.BASE_URL}territorio_andes.jpg`,
+      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_san_antonio.JPG`,
       content: <span dangerouslySetInnerHTML={{ __html: t('salas.sac.content') }} />
     }
   ];
@@ -426,9 +471,14 @@ const SalasPage = () => {
               <SalaIcon>{sala.icon}</SalaIcon>
               <SalaTitle>{sala.title}</SalaTitle>
             </SalaHeader>
-            <SalaContent>
-              {sala.content}
-            </SalaContent>
+            <SalaContentWrapper>
+              <SalaContent>
+                {sala.content}
+              </SalaContent>
+              <SalaImage>
+                <img src={sala.detailImage} alt={sala.title} />
+              </SalaImage>
+            </SalaContentWrapper>
           </SalaSection>
         ))}
       </ContentContainer>
