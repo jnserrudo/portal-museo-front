@@ -344,11 +344,21 @@ const HomePage = ({ events = [], isLoading = false }) => {
       return imageUrl;
     }
     
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    
     let cleanPath = imageUrl;
     if (!cleanPath.startsWith('/')) {
       cleanPath = `/${cleanPath}`;
+    }
+
+    // Si la imagen está en /uploads/ y tenemos configurada una URL base para uploads
+    const uploadsBaseUrl = import.meta.env.VITE_UPLOADS_BASE_URL;
+    if (cleanPath.startsWith('/uploads/') && uploadsBaseUrl) {
+      const base = uploadsBaseUrl.endsWith('/') ? uploadsBaseUrl.slice(0, -1) : uploadsBaseUrl;
+      return `${base}${cleanPath}`;
+    }
+    
+    let baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    if (baseUrl.endsWith('/')) {
+      baseUrl = baseUrl.slice(0, -1);
     }
     
     return `${baseUrl}${cleanPath}`;

@@ -369,7 +369,6 @@ const EventosPage = ({
 
   // --- Data Processing ---
 
-  // Helper function to normalize image URLs
   const normalizeImageUrl = (imageUrl) => {
     if (!imageUrl) {
       console.log('⚠️ [URL] Imagen no definida, retornando null');
@@ -377,24 +376,31 @@ const EventosPage = ({
     }
     
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      // console.log('🖼️ [URL] URL absoluta detectada:', imageUrl);
       return imageUrl;
     }
     
-    // Si es una ruta relativa, agregar la URL base
-    // En producción, VITE_API_URL debe estar definido en el .env
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    
-    // Asegurar que no haya doble slash y limpiar la ruta
-    // Algunos backends devuelven rutas con 'public/' o 'uploads/' duplicado
+    // Limpiar path y asegurar que empiece con slash
     let cleanPath = imageUrl;
     if (!cleanPath.startsWith('/')) {
       cleanPath = `/${cleanPath}`;
     }
+
+    // Si la imagen está en /uploads/ y tenemos configurada una URL base para uploads
+    // Usar esa configuración (para Nginx alias)
+    const uploadsBaseUrl = import.meta.env.VITE_UPLOADS_BASE_URL;
+    if (cleanPath.startsWith('/uploads/') && uploadsBaseUrl) {
+      // Eliminar slash final de la base si existe
+      const base = uploadsBaseUrl.endsWith('/') ? uploadsBaseUrl.slice(0, -1) : uploadsBaseUrl;
+      return `${base}${cleanPath}`;
+    }
+    
+    // Fallback: Usar VITE_API_URL
+    let baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    if (baseUrl.endsWith('/')) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
     
     const fullUrl = `${baseUrl}${cleanPath}`;
-    
-    // console.log('🖼️ [URL] Construyendo URL completa:', fullUrl);
     return fullUrl;
   };
 
