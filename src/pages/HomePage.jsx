@@ -345,7 +345,12 @@ const HomePage = ({ events = [], isLoading = false }) => {
     }
     
     const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    const cleanPath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+    
+    let cleanPath = imageUrl;
+    if (!cleanPath.startsWith('/')) {
+      cleanPath = `/${cleanPath}`;
+    }
+    
     return `${baseUrl}${cleanPath}`;
   };
 

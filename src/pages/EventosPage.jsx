@@ -372,28 +372,29 @@ const EventosPage = ({
   // Helper function to normalize image URLs
   const normalizeImageUrl = (imageUrl) => {
     if (!imageUrl) {
-      console.log('🖼️ [URL] No hay URL de imagen');
+      console.log('⚠️ [URL] Imagen no definida, retornando null');
       return null;
     }
     
-    // Si ya es una URL completa, devolverla tal cual
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      console.log('🖼️ [URL] URL absoluta detectada:', imageUrl);
+      // console.log('🖼️ [URL] URL absoluta detectada:', imageUrl);
       return imageUrl;
     }
     
     // Si es una ruta relativa, agregar la URL base
+    // En producción, VITE_API_URL debe estar definido en el .env
     const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    // Asegurar que no haya doble slash
-    const cleanPath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+    
+    // Asegurar que no haya doble slash y limpiar la ruta
+    // Algunos backends devuelven rutas con 'public/' o 'uploads/' duplicado
+    let cleanPath = imageUrl;
+    if (!cleanPath.startsWith('/')) {
+      cleanPath = `/${cleanPath}`;
+    }
+    
     const fullUrl = `${baseUrl}${cleanPath}`;
     
-    console.log('🖼️ [URL] Construyendo URL completa:');
-    console.log('  Base URL:', baseUrl);
-    console.log('  Path relativo:', imageUrl);
-    console.log('  Path limpio:', cleanPath);
-    console.log('  URL final:', fullUrl);
-    
+    // console.log('🖼️ [URL] Construyendo URL completa:', fullUrl);
     return fullUrl;
   };
 
