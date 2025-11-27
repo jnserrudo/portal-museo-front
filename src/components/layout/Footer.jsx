@@ -291,20 +291,12 @@ const Footer = () => {
           <h3>Horario</h3>
           <OpeningHours>
             <HoursItem>
+              <span>Martes a Domingos:</span>
+              <span>10:00 - 18:00</span>
+            </HoursItem>
+            <HoursItem>
               <span>Lunes:</span>
               <span>Cerrado</span>
-            </HoursItem>
-            <HoursItem>
-              <span>Martes a Viernes:</span>
-              <span>9:00 - 18:00</span>
-            </HoursItem>
-            <HoursItem>
-              <span>Sábado:</span>
-              <span>10:00 - 20:00</span>
-            </HoursItem>
-            <HoursItem>
-              <span>Domingo:</span>
-              <span>10:00 - 18:00</span>
             </HoursItem>
           </OpeningHours>
         </FooterSection>
@@ -314,15 +306,15 @@ const Footer = () => {
           <ContactInfo>
             <ContactItem>
               <FaMapMarkerAlt />
-              <span>Av. Principal 1234, Ciudad, Provincia</span>
+              <span>Av. Brígido Zabaleta, San Antonio de los Cobres, Salta</span>
             </ContactItem>
             <ContactItem>
               <FaPhone />
-              <span>+54 123 456 7890</span>
+              <span>(387) 5020900</span>
             </ContactItem>
             <ContactItem>
               <FaEnvelope />
-              <span>info@museoregionalandino.com</span>
+              <span>museoregionalandino@gmail.com</span>
             </ContactItem>
           </ContactInfo>
         </FooterSection>

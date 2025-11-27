@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
-import { FaMapMarkerAlt, FaClock, FaTicketAlt, FaWifi, FaWheelchair, FaCamera, FaBus, FaCar, FaInfoCircle } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaClock, FaTicketAlt, FaWifi, FaWheelchair, FaCamera, FaBus, FaCar, FaInfoCircle, FaBook, FaTree, FaArchive, FaCouch } from 'react-icons/fa';
 import { theme } from '../styles/theme';
 
 const PageContainer = styled.div`
@@ -59,7 +59,6 @@ const InfoCard = styled.div`
   padding: ${theme.spacing.lg};
   border-radius: ${theme.borderRadius.md};
   box-shadow: ${theme.shadows.medium};
-  transition: transform 0.3s ease;
   border-top: 4px solid ${theme.colors.primary};
   
   &:hover {
@@ -86,28 +85,35 @@ const CardHeader = styled.div`
   }
 `;
 
-const InfoList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
+const InfoContent = styled.div`
+  color: ${theme.colors.text.dark};
+  line-height: 1.8;
   
-  li {
+  p {
     margin-bottom: ${theme.spacing.sm};
-    padding-bottom: ${theme.spacing.sm};
-    border-bottom: 1px solid ${theme.colors.border || '#eee'};
     
     &:last-child {
-      border-bottom: none;
+      margin-bottom: 0;
     }
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: ${theme.spacing.md} 0 0 0;
     
-    strong {
-      display: block;
-      color: ${theme.colors.text.dark};
-      margin-bottom: 4px;
-    }
-    
-    span {
-      color: ${theme.colors.text.medium};
+    li {
+      margin-bottom: ${theme.spacing.sm};
+      padding-left: ${theme.spacing.md};
+      position: relative;
+      
+      &::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: ${theme.colors.primary};
+        font-weight: bold;
+      }
     }
   }
 `;
@@ -141,42 +147,50 @@ const MapContainer = styled.div`
   }
 `;
 
-const TipsSection = styled.section`
-  background-color: ${theme.colors.accent}20; /* 20% opacity accent */
+const ServicesSection = styled.section`
+  background-color: ${theme.colors.background.section};
   padding: ${theme.spacing.xl} 0;
   border-radius: ${theme.borderRadius.lg};
   margin-bottom: ${theme.spacing.xl};
 `;
 
-const TipsGrid = styled.div`
+const SectionTitle = styled.h2`
+  text-align: center;
+  color: ${theme.colors.primary};
+  font-size: 2rem;
+  margin-bottom: ${theme.spacing.xl};
+`;
+
+const ServicesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: ${theme.spacing.lg};
   margin-top: ${theme.spacing.lg};
 `;
 
-const TipCard = styled.div`
+const ServiceCard = styled.div`
   text-align: center;
-  padding: ${theme.spacing.md};
+  padding: ${theme.spacing.lg};
+  background: white;
+  border-radius: ${theme.borderRadius.md};
+  box-shadow: ${theme.shadows.light};
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: ${theme.shadows.medium};
+  }
   
   svg {
-    font-size: 2.5rem;
+    font-size: 3rem;
     color: ${theme.colors.primary};
     margin-bottom: ${theme.spacing.md};
-    background: white;
-    padding: 15px;
-    border-radius: 50%;
-    box-shadow: ${theme.shadows.light};
   }
   
   h3 {
     color: ${theme.colors.text.dark};
     margin-bottom: ${theme.spacing.sm};
-  }
-  
-  p {
-    color: ${theme.colors.text.medium};
-    font-size: 0.95rem;
+    font-size: 1.1rem;
   }
 `;
 
@@ -200,24 +214,9 @@ const VisitaPage = () => {
               <FaClock />
               <h2>{t('visit.hours.title')}</h2>
             </CardHeader>
-            <InfoList>
-              <li>
-                <strong>{t('visit.hours.weekdays')}</strong>
-                <span>{t('visit.hours.weekdays.time')}</span>
-              </li>
-              <li>
-                <strong>{t('visit.hours.weekends')}</strong>
-                <span>{t('visit.hours.weekends.time')}</span>
-              </li>
-              <li>
-                <strong>{t('visit.hours.monday')}</strong>
-                <span>{t('visit.hours.monday.status')}</span>
-              </li>
-              <li>
-                <strong>{t('visit.hours.holidays')}</strong>
-                <span>{t('visit.hours.holidays.status')}</span>
-              </li>
-            </InfoList>
+            <InfoContent>
+              <p>{t('visit.hours.schedule')}</p>
+            </InfoContent>
           </InfoCard>
 
           {/* Tarifas */}
@@ -226,24 +225,12 @@ const VisitaPage = () => {
               <FaTicketAlt />
               <h2>{t('visit.tickets.title')}</h2>
             </CardHeader>
-            <InfoList>
-              <li>
-                <strong>{t('visit.tickets.general')}</strong>
-                <span>{t('visit.tickets.general.price')}</span>
-              </li>
-              <li>
-                <strong>{t('visit.tickets.residents')}</strong>
-                <span>{t('visit.tickets.residents.price')}</span>
-              </li>
-              <li>
-                <strong>{t('visit.tickets.students')}</strong>
-                <span>{t('visit.tickets.students.price')}</span>
-              </li>
-              <li>
-                <strong>{t('visit.tickets.kids')}</strong>
-                <span>{t('visit.tickets.kids.price')}</span>
-              </li>
-            </InfoList>
+            <InfoContent>
+              <p><strong>{t('visit.tickets.info')}</strong></p>
+              <ul>
+                <li>{t('visit.tickets.exemptions')}</li>
+              </ul>
+            </InfoContent>
           </InfoCard>
 
           {/* Ubicación */}
@@ -252,20 +239,11 @@ const VisitaPage = () => {
               <FaMapMarkerAlt />
               <h2>{t('visit.location.title')}</h2>
             </CardHeader>
-            <InfoList>
-              <li>
-                <strong>{t('visit.location.address.label')}</strong>
-                <span>{t('visit.location.address.value')}</span>
-              </li>
-              <li>
-                <strong>{t('visit.location.province.label')}</strong>
-                <span>{t('visit.location.province.value')}</span>
-              </li>
-              <li>
-                <strong>{t('visit.location.howTo.label')}</strong>
-                <span>{t('visit.location.howTo.value')}</span>
-              </li>
-            </InfoList>
+            <InfoContent>
+              <p><strong>{t('visit.location.address.label')}:</strong> {t('visit.location.address.value')}</p>
+              <p><strong>{t('visit.location.province.label')}:</strong> {t('visit.location.province.value')}</p>
+              <p><strong>{t('visit.location.howTo.label')}:</strong> {t('visit.location.howTo.value')}</p>
+            </InfoContent>
           </InfoCard>
         </InfoGrid>
 
@@ -281,34 +259,68 @@ const VisitaPage = () => {
           </MapContainer>
         </MapSection>
 
-        <TipsSection>
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h2 style={{ color: theme.colors.primary, fontSize: '2rem' }}>{t('visit.tips.title')}</h2>
-            <p>{t('visit.tips.subtitle')}</p>
-          </div>
-          <TipsGrid>
-            <TipCard>
-              <FaWifi />
-              <h3>{t('visit.tips.wifi.title')}</h3>
-              <p>{t('visit.tips.wifi.desc')}</p>
-            </TipCard>
-            <TipCard>
+        <ServicesSection>
+          <Container>
+            <SectionTitle>{t('visit.services.title')}</SectionTitle>
+            <ServicesGrid>
+              <ServiceCard>
+                <FaInfoCircle />
+                <h3>{t('visit.services.guide')}</h3>
+              </ServiceCard>
+              <ServiceCard>
+                <FaTree />
+                <h3>{t('visit.services.gardens')}</h3>
+              </ServiceCard>
+              <ServiceCard>
+                <FaArchive />
+                <h3>{t('visit.services.archive')}</h3>
+              </ServiceCard>
+              <ServiceCard>
+                <FaBook />
+                <h3>{t('visit.services.library')}</h3>
+              </ServiceCard>
+              <ServiceCard>
+                <FaWifi />
+                <h3>{t('visit.services.wifi')}</h3>
+              </ServiceCard>
+              <ServiceCard>
+                <FaCouch />
+                <h3>{t('visit.services.rest')}</h3>
+              </ServiceCard>
+            </ServicesGrid>
+          </Container>
+        </ServicesSection>
+
+        <InfoGrid>
+          {/* Accesibilidad */}
+          <InfoCard>
+            <CardHeader>
               <FaWheelchair />
-              <h3>{t('visit.tips.accessibility.title')}</h3>
-              <p>{t('visit.tips.accessibility.desc')}</p>
-            </TipCard>
-            <TipCard>
-              <FaCamera />
-              <h3>{t('visit.tips.photo.title')}</h3>
-              <p>{t('visit.tips.photo.desc')}</p>
-            </TipCard>
-            <TipCard>
+              <h2>{t('visit.accessibility.title')}</h2>
+            </CardHeader>
+            <InfoContent>
+              <ul>
+                <li>{t('visit.accessibility.ramps')}</li>
+                <li>{t('visit.accessibility.bathrooms')}</li>
+              </ul>
+            </InfoContent>
+          </InfoCard>
+
+          {/* Características */}
+          <InfoCard>
+            <CardHeader>
               <FaInfoCircle />
-              <h3>{t('visit.tips.altitude.title')}</h3>
-              <p>{t('visit.tips.altitude.desc')}</p>
-            </TipCard>
-          </TipsGrid>
-        </TipsSection>
+              <h2>{t('visit.features.title')}</h2>
+            </CardHeader>
+            <InfoContent>
+              <ul>
+                <li>{t('visit.features.type')}</li>
+                <li>{t('visit.features.collection')}</li>
+                <li>{t('visit.features.dependence')}</li>
+              </ul>
+            </InfoContent>
+          </InfoCard>
+        </InfoGrid>
 
       </Container>
     </PageContainer>
