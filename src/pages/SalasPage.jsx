@@ -131,13 +131,8 @@ const SalaContentWrapper = styled.div`
 const SalaContent = styled.div`
   font-size: 1.1rem;
   line-height: 1.8;
-  color: ${theme.colors.text.muted};
+  color: ${theme.colors.text.dark};
   text-align: justify;
-  
-  strong {
-    color: ${theme.colors.primary};
-    font-weight: 600;
-  }
 `;
 
 const SalaImage = styled.div`

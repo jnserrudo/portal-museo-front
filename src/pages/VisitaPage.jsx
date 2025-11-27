@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
-import { FaMapMarkerAlt, FaClock, FaTicketAlt, FaWifi, FaWheelchair, FaCamera, FaBus, FaCar, FaInfoCircle, FaBook, FaTree, FaArchive, FaCouch } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaClock, FaTicketAlt, FaWifi, FaWheelchair, FaCamera, FaBus, FaCar, FaInfoCircle, FaBook, FaTree, FaArchive, FaCouch, FaCheck, FaGlobe, FaRoute } from 'react-icons/fa';
 import { theme } from '../styles/theme';
 
 const PageContainer = styled.div`
@@ -58,62 +58,64 @@ const InfoCard = styled.div`
   background: white;
   padding: ${theme.spacing.lg};
   border-radius: ${theme.borderRadius.md};
-  box-shadow: ${theme.shadows.medium};
+  box-shadow: ${theme.shadows.light};
   border-top: 4px solid ${theme.colors.primary};
+  transition: transform 0.3s ease;
   
   &:hover {
     transform: translateY(-5px);
-    box-shadow: ${theme.shadows.dark};
+    box-shadow: ${theme.shadows.medium};
   }
-`;
-
-const CardHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.spacing.sm};
-  margin-bottom: ${theme.spacing.md};
+  
+  h2, h3 {
+    color: ${theme.colors.primary};
+    font-size: 1.3rem;
+    margin-bottom: ${theme.spacing.md};
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid ${theme.colors.accent};
+    padding-bottom: ${theme.spacing.xs};
+  }
   
   svg {
     color: ${theme.colors.primary};
-    font-size: 2rem;
-  }
-  
-  h2 {
     font-size: 1.5rem;
-    color: ${theme.colors.primary};
-    margin: 0;
   }
-`;
-
-const InfoContent = styled.div`
-  color: ${theme.colors.text.dark};
-  line-height: 1.8;
   
   p {
+    color: ${theme.colors.text.dark};
+    line-height: 1.8;
     margin-bottom: ${theme.spacing.sm};
     
     &:last-child {
       margin-bottom: 0;
     }
   }
+`;
+
+const InfoList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
   
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: ${theme.spacing.md} 0 0 0;
+  li {
+    margin-bottom: ${theme.spacing.sm};
+    color: ${theme.colors.text.dark};
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
     
-    li {
-      margin-bottom: ${theme.spacing.sm};
-      padding-left: ${theme.spacing.md};
-      position: relative;
-      
-      &::before {
-        content: '•';
-        position: absolute;
-        left: 0;
-        color: ${theme.colors.primary};
-        font-weight: bold;
-      }
+    svg {
+      color: ${theme.colors.primary};
+      margin-top: 4px;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+    
+    &::before {
+      display: none;
     }
   }
 `;
@@ -210,40 +212,27 @@ const VisitaPage = () => {
         <InfoGrid>
           {/* Horarios */}
           <InfoCard>
-            <CardHeader>
-              <FaClock />
-              <h2>{t('visit.hours.title')}</h2>
-            </CardHeader>
-            <InfoContent>
-              <p>{t('visit.hours.schedule')}</p>
-            </InfoContent>
+            <h3><FaClock /> {t('visit.hours.title')}</h3>
+            <p>{t('visit.hours.schedule')}</p>
           </InfoCard>
 
           {/* Tarifas */}
           <InfoCard>
-            <CardHeader>
-              <FaTicketAlt />
-              <h2>{t('visit.tickets.title')}</h2>
-            </CardHeader>
-            <InfoContent>
-              <p><strong>{t('visit.tickets.info')}</strong></p>
-              <ul>
-                <li>{t('visit.tickets.exemptions')}</li>
-              </ul>
-            </InfoContent>
+            <h3><FaTicketAlt /> {t('visit.tickets.title')}</h3>
+            <InfoList>
+              <li><FaCheck /> {t('visit.tickets.info')}</li>
+              <li><FaCheck /> {t('visit.tickets.exemptions')}</li>
+            </InfoList>
           </InfoCard>
 
           {/* Ubicación */}
           <InfoCard>
-            <CardHeader>
-              <FaMapMarkerAlt />
-              <h2>{t('visit.location.title')}</h2>
-            </CardHeader>
-            <InfoContent>
-              <p><strong>{t('visit.location.address.label')}:</strong> {t('visit.location.address.value')}</p>
-              <p><strong>{t('visit.location.province.label')}:</strong> {t('visit.location.province.value')}</p>
-              <p><strong>{t('visit.location.howTo.label')}:</strong> {t('visit.location.howTo.value')}</p>
-            </InfoContent>
+            <h3><FaMapMarkerAlt /> {t('visit.location.title')}</h3>
+            <InfoList>
+              <li><FaMapMarkerAlt /> {t('visit.location.address.value')}</li>
+              <li><FaGlobe /> {t('visit.location.province.value')}</li>
+              <li><FaRoute /> {t('visit.location.howTo.value')}</li>
+            </InfoList>
           </InfoCard>
         </InfoGrid>
 
@@ -294,31 +283,21 @@ const VisitaPage = () => {
         <InfoGrid>
           {/* Accesibilidad */}
           <InfoCard>
-            <CardHeader>
-              <FaWheelchair />
-              <h2>{t('visit.accessibility.title')}</h2>
-            </CardHeader>
-            <InfoContent>
-              <ul>
-                <li>{t('visit.accessibility.ramps')}</li>
-                <li>{t('visit.accessibility.bathrooms')}</li>
-              </ul>
-            </InfoContent>
+            <h3><FaWheelchair /> {t('visit.accessibility.title')}</h3>
+            <InfoList>
+              <li><FaCheck /> {t('visit.accessibility.ramps')}</li>
+              <li><FaCheck /> {t('visit.accessibility.bathrooms')}</li>
+            </InfoList>
           </InfoCard>
 
           {/* Características */}
           <InfoCard>
-            <CardHeader>
-              <FaInfoCircle />
-              <h2>{t('visit.features.title')}</h2>
-            </CardHeader>
-            <InfoContent>
-              <ul>
-                <li>{t('visit.features.type')}</li>
-                <li>{t('visit.features.collection')}</li>
-                <li>{t('visit.features.dependence')}</li>
-              </ul>
-            </InfoContent>
+            <h3><FaInfoCircle /> {t('visit.features.title')}</h3>
+            <InfoList>
+              <li><FaCheck /> {t('visit.features.type')}</li>
+              <li><FaCheck /> {t('visit.features.collection')}</li>
+              <li><FaCheck /> {t('visit.features.dependence')}</li>
+            </InfoList>
           </InfoCard>
         </InfoGrid>
 

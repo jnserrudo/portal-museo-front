@@ -139,20 +139,6 @@ const MediaOverlay = styled.div`
 `;
 
 const PlayIcon = styled.div`
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${theme.colors.primary};
-  font-size: 1.5rem;
-`;
-
-const MediaType = styled.div`
-  position: absolute;
-  top: ${theme.spacing.sm};
   right: ${theme.spacing.sm};
   padding: ${theme.spacing.xs} ${theme.spacing.sm};
   background-color: rgba(0, 0, 0, 0.7);

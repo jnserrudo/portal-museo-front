@@ -132,9 +132,9 @@ const CardTitle = styled.h3`
   margin-bottom: ${theme.spacing.sm};
 `;
 
-const CardDescription = styled.p`
+const PieceDescription = styled.p`
   color: ${theme.colors.text.dark};
-  margin-bottom: ${theme.spacing.md};
+  line-height: 1.6;${theme.spacing.md};
   font-size: 0.95rem;
   line-height: 1.6;
 `;

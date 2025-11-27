@@ -4,10 +4,10 @@ export const theme = {
     primaryHover: '#a67c52', // Marrón Claro (Hover)
     accent: '#e3c2a1', // Beige Claro (Fondos)
     text: {
-      light: '#f8f9fa', // Blanco Roto (texto claro)
-      dark: '#343a40', // Gris Oscuro (texto secundario)
-      muted: '#6c757d', // Gris Claro (texto deshabilitado)
-      black: '#000000', // Negro (texto principal)
+      light: '#ffffff', // Blanco para texto sobre fondos oscuros
+      dark: '#2c2c2c', // Negro para todo el contenido (reemplaza grises)
+      muted: '#2c2c2c', // Negro para contenido (eliminando grises)
+      black: '#2c2c2c', // Negro unificado
     },
     background: {
       light: '#ffffff', // Blanco Puro

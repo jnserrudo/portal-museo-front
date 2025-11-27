@@ -336,7 +336,7 @@ const ContactoPage = () => {
               </ContactList>
 
               <SocialSection>
-                <h3>{t('contact.social.title')}</h3>
+                <InfoTitle>{t('contact.social.title')}</InfoTitle>
                 <SocialIcons>
                   <a href="https://www.facebook.com/people/Museo-Regional-Andino/100075671035620/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                     <FaFacebook />

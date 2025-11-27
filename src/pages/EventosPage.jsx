@@ -49,7 +49,7 @@ const Title = styled.h1`
 `;
 
 const Subtitle = styled.p`
-  color: ${theme.colors.text.muted};
+  color: ${theme.colors.text.dark};
   font-size: 1.1rem;
   margin: 0;
 `;
@@ -243,7 +243,7 @@ const CardMeta = styled.div`
   flex-direction: column;
   gap: ${theme.spacing.xs};
   margin-bottom: ${theme.spacing.md};
-  color: ${theme.colors.text.muted};
+  color: ${theme.colors.text.dark};
   font-size: 0.95rem;
   
   div {
@@ -553,7 +553,7 @@ const EventosPage = ({
     return (
       <PageContainer>
         <LoadingSpinner size="large" />
-        <p style={{ marginTop: '1rem', color: theme.colors.text.muted, textAlign: 'center' }}>{t('common.loading')}</p>
+        <p style={{ marginTop: '1rem', color: theme.colors.text.dark, textAlign: 'center' }}>{t('common.loading')}</p>
       </PageContainer>
     );
   }
@@ -592,7 +592,7 @@ const EventosPage = ({
         </Header>
 
         {Object.entries(eventsByMonth).length === 0 ? (
-           <div style={{ textAlign: 'center', padding: '4rem', color: theme.colors.text.muted }}>
+           <div style={{ textAlign: 'center', padding: '4rem', color: theme.colors.text.dark }}>
              <FaCalendarAlt size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
              <h3>{t('events.noEventsTitle')}</h3>
              <p>{t('events.noEventsMessage')}</p>
@@ -729,7 +729,7 @@ const EventosPage = ({
                 </MetaItem>
               </ModalMetaGrid>
 
-              <div style={{ lineHeight: '1.8', color: theme.colors.text.muted, fontSize: '1.1rem' }}>
+              <div style={{ lineHeight: '1.8', color: theme.colors.text.dark, fontSize: '1.1rem' }}>
                 {viewEvent.description}
               </div>
             </ModalContentWrapper>

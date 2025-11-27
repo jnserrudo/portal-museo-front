@@ -219,7 +219,7 @@ const EventTitle = styled.h3`
 `;
 
 const EventDescription = styled.p`
-  color: ${theme.colors.text.muted};
+  color: ${theme.colors.text.dark};
   line-height: 1.6;
   flex: 1;
   margin-bottom: ${theme.spacing.md};
@@ -232,7 +232,7 @@ const EventDescription = styled.p`
 const EventLocation = styled.div`
   display: flex;
   align-items: center;
-  color: ${theme.colors.text.muted};
+  color: ${theme.colors.text.dark};
   font-size: 0.9rem;
   margin-bottom: ${theme.spacing.md};
   
@@ -242,7 +242,7 @@ const EventLocation = styled.div`
 `;
 
 const CtaSection = styled.section`
-  padding: ${theme.spacing.xxl} 0;
+  padding: 2rem 0;
   background-color: ${theme.colors.primary};
   color: ${theme.colors.text.light};
   text-align: center;
@@ -498,7 +498,7 @@ const HomePage = ({ events = [], isLoading = false }) => {
         </HeroContent>
       </HeroSection>
 
-      <FeaturesSection>
+      {/* <FeaturesSection>
         <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: `0 ${theme.spacing.md}` }}>
           <SectionTitle>{t('home.features.title')}</SectionTitle>
           <FeaturesGrid>
@@ -520,7 +520,7 @@ const HomePage = ({ events = [], isLoading = false }) => {
           </FeaturesGrid>
         </div>
       </FeaturesSection>
-
+ */}
       <EventsSection>
         <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: `0 ${theme.spacing.md}` }}>
           <SectionTitle>{t('home.events.title')}</SectionTitle>
@@ -620,7 +620,7 @@ const HomePage = ({ events = [], isLoading = false }) => {
               </MetaItem>
             </ModalMetaGrid>
 
-            <div style={{ lineHeight: '1.8', color: theme.colors.text.muted, fontSize: '1.1rem' }}>
+            <div style={{ lineHeight: '1.8', color: theme.colors.text.dark, fontSize: '1.1rem' }}>
               {viewEvent.description}
             </div>
           </ModalContentWrapper>
