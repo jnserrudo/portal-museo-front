@@ -260,14 +260,14 @@ const VisitaPage = () => {
                 <FaTree />
                 <h3>{t('visit.services.gardens')}</h3>
               </ServiceCard>
-              <ServiceCard>
+              {/* <ServiceCard>
                 <FaArchive />
                 <h3>{t('visit.services.archive')}</h3>
               </ServiceCard>
               <ServiceCard>
                 <FaBook />
                 <h3>{t('visit.services.library')}</h3>
-              </ServiceCard>
+              </ServiceCard> */}
               <ServiceCard>
                 <FaWifi />
                 <h3>{t('visit.services.wifi')}</h3>

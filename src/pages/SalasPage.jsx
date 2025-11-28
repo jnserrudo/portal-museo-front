@@ -441,9 +441,9 @@ const SalasPage = () => {
       </HeroSection>
 
       <ContentContainer>
-        <IntroSection>
+        {/* <IntroSection>
           <IntroText dangerouslySetInnerHTML={{ __html: t('salas.intro') }} />
-        </IntroSection>
+        </IntroSection> */}
 
         <NavigationMenu>
           <MenuTitle>{t('salas.nav.title')}</MenuTitle>
