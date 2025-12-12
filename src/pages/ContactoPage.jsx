@@ -323,7 +323,7 @@ const ContactoPage = () => {
               <ContactList>
                 <li>
                   <FaMapMarkerAlt />
-                  <span>Av. San Martín s/n, San Antonio de los Cobres, Salta</span>
+                  <span>Av. San Martín 22, San Antonio de los Cobres, Salta</span>
                 </li>
                 <li>
                   <FaPhone />

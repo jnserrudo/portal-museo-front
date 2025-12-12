@@ -194,24 +194,24 @@ const TecnologiaPage = () => {
       icon: <FaVrCardboard />,
       description: 'Sumérgete en recreaciones históricas y entornos inmersivos que te transportarán al pasado. Nuestros recorridos en RV te permiten experimentar la historia como nunca antes.'
     },
-    {
+   /*  {
       id: 'inteligencia-artificial',
       title: 'Inteligencia Artificial',
       icon: <FaBrain />,
       description: 'Nuestro asistente virtual está disponible 24/7 para responder tus preguntas sobre las exhibiciones. Además, ofrecemos recomendaciones personalizadas según tus intereses.'
-    },
+    }, */
     {
       id: 'aplicaciones-interactivas',
       title: 'Aplicaciones Interactivas',
       icon: <FaLaptopCode />,
       description: 'Explora nuestra colección digital con herramientas interactivas que te permiten examinar piezas en detalle, acceder a información adicional y participar en experiencias únicas.'
     },
-    {
+    /* {
       id: 'guia-robotica',
       title: 'Guía Robótica',
       icon: <FaRobot />,
       description: 'Conoce a nuestros guías robóticos que te acompañarán en un recorrido personalizado por el museo, ofreciendo información detallada y respondiendo a tus preguntas en tiempo real.'
-    },
+    }, */
     {
       id: 'experiencias-inmersivas',
       title: 'Experiencias Inmersivas',
@@ -232,7 +232,7 @@ const TecnologiaPage = () => {
         </HeroSection>
 
         <Section>
-          <SectionTitle>Nuestras Soluciones Tecnológicas</SectionTitle>
+          <SectionTitle>Soporte Tecnológico</SectionTitle>
           <TechGrid>
             {technologies.map((tech) => (
               <TechCard key={tech.id}>

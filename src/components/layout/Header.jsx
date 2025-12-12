@@ -69,9 +69,7 @@ const Logo = styled(Link)`
   }
 `;
 
-const MenuContainer = styled.div.attrs({
-  isOpen: props => props.$isOpen ? 'true' : undefined
-})`
+const MenuContainer = styled.div`
   display: flex;
   align-items: center;
   flex-grow: 1;

@@ -269,18 +269,18 @@ const Footer = () => {
             <FooterLinkItem>
               <FooterLink to="/el-museo">Sobre Nosotros</FooterLink>
             </FooterLinkItem>
-            <FooterLinkItem>
+           {/*  <FooterLinkItem>
               <FooterLink to="/coleccion">Nuestra Colección</FooterLink>
-            </FooterLinkItem>
+            </FooterLinkItem> */}
             <FooterLinkItem>
               <FooterLink to="/visita">Planifica tu Visita</FooterLink>
             </FooterLinkItem>
             <FooterLinkItem>
               <FooterLink to="/eventos">Eventos</FooterLink>
             </FooterLinkItem>
-            <FooterLinkItem>
+            {/* <FooterLinkItem>
               <FooterLink to="/tecnologia">Tecnología</FooterLink>
-            </FooterLinkItem>
+            </FooterLinkItem> */}
             <FooterLinkItem>
               <FooterLink to="/contacto">Contacto</FooterLink>
             </FooterLinkItem>
@@ -306,7 +306,7 @@ const Footer = () => {
           <ContactInfo>
             <ContactItem>
               <FaMapMarkerAlt />
-              <span>Av. Brígido Zabaleta, San Antonio de los Cobres, Salta</span>
+              <span>Av. Brígido Zabaleta 22, San Antonio de los Cobres, Salta</span>
             </ContactItem>
             <ContactItem>
               <FaPhone />
