@@ -230,8 +230,8 @@ const ProgressIndicator = styled.div`
   }
 `;
 
-const VirtualTourView = ({ museumMap, initialImageId = 'G0011623' }) => {
-  const [currentImageId, setCurrentImageId] = useState(initialImageId);
+const VirtualTourView = ({ museumMap, initialImageId }) => {
+  const [currentImageId, setCurrentImageId] = useState(initialImageId || museumMap[0]?.id);
   const [isMappingMode, setIsMappingMode] = useState(false);
   const [lastCoords, setLastCoords] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
