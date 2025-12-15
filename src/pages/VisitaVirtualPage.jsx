@@ -64,6 +64,11 @@ const FilterSection = styled.div`
   gap: ${theme.spacing.md};
   margin-bottom: ${theme.spacing.xl};
   flex-wrap: wrap;
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    gap: ${theme.spacing.sm};
+    padding: 0 ${theme.spacing.xs};
+  }
 `;
 
 const FilterButton = styled.button`
@@ -78,6 +83,8 @@ const FilterButton = styled.button`
   display: flex;
   align-items: center;
   gap: ${theme.spacing.xs};
+  min-height: 44px;
+  white-space: nowrap;
   
   &:hover {
     transform: translateY(-2px);
@@ -86,6 +93,16 @@ const FilterButton = styled.button`
   
   svg {
     font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    padding: ${theme.spacing.xs} ${theme.spacing.md};
+    font-size: 0.85rem;
+    
+    svg {
+      font-size: 1rem;
+    }
   }
 `;
 

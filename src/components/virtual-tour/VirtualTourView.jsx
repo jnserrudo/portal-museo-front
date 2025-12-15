@@ -111,9 +111,10 @@ const HotspotButton = styled.button`
 
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+    border-width: 1.5px;
   }
 `;
 
@@ -129,9 +130,11 @@ const Controls = styled.div`
   flex-wrap: wrap;
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    padding: 0.75rem;
-    gap: 0.5rem;
+    padding: 0.8rem 0.6rem;
+    gap: 0.8rem;
     font-size: 0.85rem;
+    flex-direction: column;
+    align-items: stretch;
   }
 `;
 
@@ -144,9 +147,11 @@ const ControlButton = styled.button`
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
   font-size: 0.9rem;
+  min-height: 44px;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
@@ -158,8 +163,13 @@ const ControlButton = styled.button`
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    width: 100%;
+    
+    svg {
+      font-size: 1.1rem;
+    }
   }
 `;
 
@@ -188,17 +198,18 @@ const InfoPanel = styled.div`
   }
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    top: 10px;
-    left: 10px;
+    top: 8px;
+    left: 8px;
+    right: 8px;
     padding: 8px 12px;
-    max-width: 200px;
+    max-width: calc(100% - 16px);
 
     h3 {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     p {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
   }
 `;
@@ -222,11 +233,15 @@ const ProgressIndicator = styled.div`
   text-align: center;
   font-size: 0.9rem;
   opacity: 0.8;
+  font-weight: ${theme.typography.weights.medium};
 
   @media (max-width: ${theme.breakpoints.mobile}) {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     width: 100%;
     order: -1;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 0.4rem;
   }
 `;
 
@@ -405,27 +420,54 @@ const VirtualTourView = ({ museumMap, initialImageId }) => {
           {isMappingMode && <p>Modo Mapeo: Ctrl+M para salir</p>}
         </InfoPanel>
 
-        {currentImage.hotspots && currentImage.hotspots.map((hotspot, index) => (
-          <HotspotButton
-            key={`${hotspot.targetId}-${index}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleNavigate(hotspot.targetId);
-            }}
-            style={{
-              left: `${hotspot.coords[0]}%`,
-              top: `${hotspot.coords[1]}%`,
-              transform: 'translate(-50%, -50%)',
-            }}
-            $isFullscreen={isFullscreen}
-          >
-            {hotspot.icon === 'prev' ? <FaStepBackward /> : 
-             hotspot.icon === 'next' ? <FaStepForward /> : 
-             hotspot.icon === 'prev-room' ? <FaFastBackward /> : 
-             hotspot.icon === 'next-room' ? <FaFastForward /> : 
-             <FaStepForward />}
-          </HotspotButton>
-        ))}
+        {currentImage.hotspots && currentImage.hotspots.map((hotspot, index) => {
+          // Adjust coordinates for mobile to prevent overlapping
+          let adjustedX = hotspot.coords[0];
+          let adjustedY = hotspot.coords[1];
+          
+          // On mobile, spread out buttons that are too close
+          if (window.innerWidth <= 768) {
+            const hotspots = currentImage.hotspots;
+            
+            // Define button sets with better spacing for mobile
+            const isAtBottom = adjustedY > 80; // Bottom positioned buttons
+            
+            if (isAtBottom) {
+              // Reorganize bottom buttons to prevent overlap
+              if (hotspot.icon === 'prev-room') {
+                adjustedX = 20; // Far left
+              } else if (hotspot.icon === 'prev') {
+                adjustedX = 40; // Mid-left
+              } else if (hotspot.icon === 'next') {
+                adjustedX = 60; // Mid-right
+              } else if (hotspot.icon === 'next-room') {
+                adjustedX = 80; // Far right
+              }
+            }
+          }
+          
+          return (
+            <HotspotButton
+              key={`${hotspot.targetId}-${index}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNavigate(hotspot.targetId);
+              }}
+              style={{
+                left: `${adjustedX}%`,
+                top: `${adjustedY}%`,
+                transform: 'translate(-50%, -50%)',
+              }}
+              $isFullscreen={isFullscreen}
+            >
+              {hotspot.icon === 'prev' ? <FaStepBackward /> : 
+               hotspot.icon === 'next' ? <FaStepForward /> : 
+               hotspot.icon === 'prev-room' ? <FaFastBackward /> : 
+               hotspot.icon === 'next-room' ? <FaFastForward /> : 
+               <FaStepForward />}
+            </HotspotButton>
+          );
+        })}
 
         {isMappingMode && lastCoords && (
           <MappingInfo>
