@@ -14,8 +14,8 @@ const museoFrente = `${import.meta.env.BASE_URL}museo_frente.jpg`;
 
 const HeroSection = styled.section`
   position: relative;
-  height: 90vh;
-  min-height: 450px;
+  height: 50vh;
+  min-height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,7 +95,7 @@ const SectionTitle = styled.h2`
   text-align: center;
   font-size: ${theme.typography.sizes.h2};
   color: ${theme.colors.primary};
-  margin-bottom: ${theme.spacing.xl};
+  margin-bottom: ${theme.spacing.md};
   position: relative;
   padding-bottom: ${theme.spacing.sm};
   
@@ -153,7 +153,7 @@ const FeatureDescription = styled.p`
 `;
 
 const EventsSection = styled.section`
-  padding: ${theme.spacing.xl} 0;
+  padding: ${theme.spacing.md} 0;
   background-color: ${theme.colors.background.light};
 `;
 
@@ -498,31 +498,8 @@ const HomePage = ({ events = [], isLoading = false }) => {
         </HeroContent>
       </HeroSection>
 
-      {/* <FeaturesSection>
-        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: `0 ${theme.spacing.md}` }}>
-          <SectionTitle>{t('home.features.title')}</SectionTitle>
-          <FeaturesGrid>
-            <FeatureCard>
-              <FeatureIcon><FaMapMarkerAlt /></FeatureIcon>
-              <FeatureTitle>{t('home.features.location.title')}</FeatureTitle>
-              <FeatureDescription>{t('home.features.location.desc')}</FeatureDescription>
-            </FeatureCard>
-            <FeatureCard>
-              <FeatureIcon><FaClock /></FeatureIcon>
-              <FeatureTitle>{t('home.features.hours.title')}</FeatureTitle>
-              <FeatureDescription>{t('home.features.hours.desc')}</FeatureDescription>
-            </FeatureCard>
-            <FeatureCard>
-              <FeatureIcon><FaCalendarAlt /></FeatureIcon>
-              <FeatureTitle>{t('home.features.events.title')}</FeatureTitle>
-              <FeatureDescription>{t('home.features.events.desc')}</FeatureDescription>
-            </FeatureCard>
-          </FeaturesGrid>
-        </div>
-      </FeaturesSection>
- */}
       <EventsSection>
-        <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: `0 ${theme.spacing.md}` }}>
+        <div className="container" style={{ maxWidth: '1400px', margin: '0 auto', padding: `0 ${theme.spacing.xl}` }}>
           <SectionTitle>{t('home.events.title')}</SectionTitle>
           {isLoading ? (
             <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -530,8 +507,8 @@ const HomePage = ({ events = [], isLoading = false }) => {
             </div>
           ) : processedEvents.length > 0 ? (
             <>
-              <FeaturesGrid>
-                {processedEvents.slice(0, 3).map((event) => {
+              <FeaturesGrid style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '30px', maxWidth: '100%' }}>
+                {processedEvents.slice(0, 4).map((event) => {
                   const formattedDate = formatFullDate(event.date);
                   
                   return (

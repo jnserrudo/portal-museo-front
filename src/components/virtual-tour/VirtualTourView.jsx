@@ -829,8 +829,8 @@ const VirtualTourView = ({ museumMap, initialImageId }) => {
 
           {isMappingMode && lastCoords && (
             <MappingInfo>
-              Last Click: [{lastCoords.x}, {lastCoords.y}]<br/>
-              (Copiado al portapapeles)
+              <div>Last Click: [{lastCoords.x}, {lastCoords.y}]</div>
+              <div>(Copiado al portapapeles)</div>
             </MappingInfo>
           )}
         </TourWrapper>

@@ -28,6 +28,7 @@ const EventosPage = lazy(() => import("./pages/EventosPage"));
 const EventoDetallePage = lazy(() => import("./pages/EventoDetallePage"));
 const ContactoPage = lazy(() => import("./pages/ContactoPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+const AdminEventosPage = lazy(() => import("./pages/AdminEventosPage"));
 
 // Servicios
 import * as eventService from "./api/eventService";
@@ -218,6 +219,11 @@ const App = () => {
                 <Route path="/contacto" element={
                   <Page>
                     <ContactoPage />
+                  </Page>
+                } />
+                <Route path="/admin/eventos" element={
+                  <Page>
+                    <AdminEventosPage />
                   </Page>
                 } />
                 <Route path="/visita-virtual" element={

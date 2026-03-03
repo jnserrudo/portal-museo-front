@@ -7,7 +7,6 @@ import { FaCalendarAlt, FaMapMarkerAlt, FaSearch, FaPlus, FaEdit, FaTrash, FaClo
 import { theme } from '../styles/theme';
 import Button from '../components/ui/Button';
 import Modal from '../components/Modal';
-import EventForm from '../components/EventForm';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { useAuth } from '../context/AuthContext';
 
@@ -359,12 +358,9 @@ const EventosPage = ({
   onSaveEvent, 
   onDeleteEvent 
 }) => {
-  const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const [currentEvent, setCurrentEvent] = useState(null);
   const [viewEvent, setViewEvent] = useState(null);
 
   // --- Data Processing ---
@@ -495,33 +491,6 @@ const EventosPage = ({
     setIsDetailOpen(true);
   };
 
-  const handleEdit = (e, event) => {
-    e.stopPropagation();
-    setCurrentEvent(event);
-    setIsFormOpen(true);
-  };
-
-  const handleDelete = async (e, id) => {
-    e.stopPropagation();
-    if (window.confirm(t('events.confirmDelete'))) {
-      try {
-        await onDeleteEvent(id);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
-  const handleSubmit = async (eventData) => {
-    try {
-      await onSaveEvent(eventData);
-      setIsFormOpen(false);
-      setCurrentEvent(null);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   // --- Render Helpers ---
 
   const formatDateBadge = (dateStr) => {
@@ -576,18 +545,6 @@ const EventosPage = ({
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </SearchContainer>
-            {isAuthenticated && (
-              <Button 
-                variant="primary" 
-                onClick={() => {
-                  setCurrentEvent(null);
-                  setIsFormOpen(true);
-                }}
-                startIcon={<FaPlus />}
-              >
-                {t('events.new')}
-              </Button>
-            )}
           </Controls>
         </Header>
 
@@ -661,26 +618,6 @@ const EventosPage = ({
                           <ActionButton onClick={(e) => { e.stopPropagation(); handleCardClick(event); }}>
                             {t('common.viewDetails')} <FaTicketAlt />
                           </ActionButton>
-                          {isAuthenticated && (
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                              <Button 
-                                variant="outline" 
-                                size="small" 
-                                onClick={(e) => handleEdit(e, event)}
-                                style={{ padding: '4px 8px' }}
-                              >
-                                <FaEdit />
-                              </Button>
-                              <Button 
-                                variant="danger" 
-                                size="small" 
-                                onClick={(e) => handleDelete(e, event.id)}
-                                style={{ padding: '4px 8px' }}
-                              >
-                                <FaTrash />
-                              </Button>
-                            </div>
-                          )}
                         </CardFooter>
                       </CardContent>
                     </Card>
@@ -735,29 +672,6 @@ const EventosPage = ({
             </ModalContentWrapper>
           </div>
         )}
-      </Modal>
-
-      {/* Modal de Edición */}
-      <Modal
-        isOpen={isFormOpen}
-        onClose={() => {
-          setIsFormOpen(false);
-          setCurrentEvent(null);
-        }}
-        title={currentEvent ? t('events.edit') : t('events.new')}
-        maxWidth="600px"
-      >
-        <EventForm 
-          key={currentEvent ? currentEvent.id : 'new-event'}
-          events={processedEvents}
-          event={currentEvent}
-          onSave={handleSubmit}
-          onDelete={onDeleteEvent}
-          onSaveSuccess={() => {
-            setIsFormOpen(false);
-            setCurrentEvent(null);
-          }}
-        />
       </Modal>
     </PageContainer>
   );

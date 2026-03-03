@@ -9,7 +9,6 @@ import Button from '../ui/Button';
 import LoginModal from '../auth/LoginModal';
 import { AuthContext } from '../../context/AuthContext';
 import Modal from '../Modal';
-import EventForm from '../EventForm';
 import { toast } from 'react-toastify';
 
 const HeaderContainer = styled.header`
@@ -239,7 +238,6 @@ const Header = ({ isAdmin, onLoginClick, onLogout, onRefreshEvents }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { isAuthenticated, login, logout, user } = useContext(AuthContext);
@@ -291,107 +289,11 @@ const Header = ({ isAdmin, onLoginClick, onLogout, onRefreshEvents }) => {
   const handleLogout = () => {
     logout();
     closeMenu();
-    setIsAdminModalOpen(false);
     // Redirigir a la página de inicio después de cerrar sesión
     navigate('/');
   };
 
-  // Cargar eventos
-  const fetchEvents = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const data = await eventService.getEvents();
-      setEvents(data);
-    } catch (error) {
-      console.error('Error al cargar eventos:', error);
-      toast.error('Error al cargar los eventos');
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isAdminModalOpen) {
-      fetchEvents();
-    }
-  }, [isAdminModalOpen, fetchEvents]);
-
-  // Función para guardar un evento
-  const handleSaveEvent = async (eventData, explicitId = null) => {
-    try {
-      let result;
-      // Use explicit ID if provided, otherwise try to extract from FormData/Object
-      let id = explicitId;
-      
-      if (!id) {
-        const isFormData = eventData instanceof FormData;
-        id = isFormData ? eventData.get('id') : eventData.id;
-      }
-
-      console.log('Header.jsx handleSaveEvent called. Explicit ID:', explicitId, 'Final ID:', id);
-
-      if (id !== null && id !== undefined && id !== '') {
-        // Actualizar evento existente
-        result = await eventService.updateEvent(id, eventData);
-        // Toast handled in eventService
-      } else {
-        // Crear nuevo evento
-        result = await eventService.createEvent(eventData);
-        // Toast handled in eventService
-      }
-      
-      // Refresh events list immediately
-      await fetchEvents();
-      
-      return result;
-    } catch (error) {
-      console.error('Error al guardar el evento:', error);
-      // Toast handled in eventService for errors too usually, but keeping this as fallback if needed, 
-      // though eventService throws after toast.
-      // To avoid double error toast, we can rely on eventService or check if error was already handled.
-      // eventService throws error, so we might want to catch it here but not toast again if eventService did.
-      // For now, let's keep it simple and assume eventService handles the main success/error toasts.
-      throw error;
-    }
-  };
-
-  // Función para eliminar un evento
-  const handleDeleteEvent = async (id) => {
-    try {
-      const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este evento?');
-      if (!confirmDelete) return false;
-      
-      await eventService.deleteEvent(id);
-      toast.success('Evento eliminado correctamente');
-      
-      // Refresh events list immediately
-      await fetchEvents();
-      
-      // Refresh global events list
-      if (onRefreshEvents) {
-        onRefreshEvents();
-      }
-      
-      return true;
-    } catch (error) {
-      console.error('Error al eliminar el evento:', error);
-      toast.error(error.message || 'Error al eliminar el evento');
-      throw error;
-    }
-  };
-
-  // Función para manejar el éxito al guardar
-  const handleSaveSuccess = () => {
-    // Close modal
-    setIsAdminModalOpen(false);
-    // Refresh events list (although handleSaveEvent already does it, this is a safety net)
-    fetchEvents();
-    
-    // Refresh global events list
-    if (onRefreshEvents) {
-      onRefreshEvents();
-    }
-  };
+  // Fetch events removed since we no longer manage the event table state here in the Header.
 
   return (
     <HeaderContainer style={{ 
@@ -400,7 +302,7 @@ const Header = ({ isAdmin, onLoginClick, onLogout, onRefreshEvents }) => {
     }}>
       <Nav>
         <Logo to="/">
-          <img src={`${import.meta.env.BASE_URL}logo-museo.png`} alt="Museo Regional Andino" />
+          <img src={`${import.meta.env.BASE_URL}logo-museo2.png`} alt="Museo Regional Andino" />
           <span>{t('header.title')}</span>
         </Logo>
         
@@ -414,9 +316,9 @@ const Header = ({ isAdmin, onLoginClick, onLogout, onRefreshEvents }) => {
             <NavLink to="/el-museo" $active={location.pathname === '/el-museo'} onClick={closeMenu}>{t('nav.museum')}</NavLink>
             <NavLink to="/salas" $active={location.pathname === '/salas'} onClick={closeMenu}>{t('nav.rooms')}</NavLink>
             <NavLink to="/eventos" $active={location.pathname === '/eventos'} onClick={closeMenu}>{t('nav.events')}</NavLink>
-            <NavLink to="/visita" $active={location.pathname === '/visita'} onClick={closeMenu}>{t('nav.visit')}</NavLink>
+            {/* <NavLink to="/visita" $active={location.pathname === '/visita'} onClick={closeMenu}>{t('nav.visit')}</NavLink>
             <NavLink to="/visita-virtual" $active={location.pathname === '/visita-virtual'} onClick={closeMenu}>{t('nav.virtualTour')}</NavLink>
-            <NavLink to="/contacto" $active={location.pathname === '/contacto'} onClick={closeMenu}>{t('nav.contact')}</NavLink>
+             */}<NavLink to="/contacto" $active={location.pathname === '/contacto'} onClick={closeMenu}>{t('nav.contact')}</NavLink>
           </NavLinks>
 
           <AuthButtons>
@@ -444,7 +346,10 @@ const Header = ({ isAdmin, onLoginClick, onLogout, onRefreshEvents }) => {
                 <Button 
                   variant="outline" 
                   size="small" 
-                  onClick={() => setIsAdminModalOpen(true)}
+                  onClick={() => {
+                    closeMenu();
+                    navigate('/admin/eventos');
+                  }}
                   style={{ 
                     marginRight: '10px',
                     color: 'white',
@@ -489,28 +394,6 @@ const Header = ({ isAdmin, onLoginClick, onLogout, onRefreshEvents }) => {
           onLogin={handleLogin}
         />
 
-        {/* Modal de Administración de Eventos */}
-        <Modal
-          isOpen={isAdminModalOpen}
-          onClose={() => setIsAdminModalOpen(false)}
-          title={t('auth.admin')}
-          size="lg"
-        >
-          <div style={{ maxHeight: '70vh', overflowY: 'auto', padding: '1rem' }}>
-            {isLoading ? (
-              <div style={{ textAlign: 'center', padding: '2rem' }}>
-                <p>{t('common.loading')}</p>
-              </div>
-            ) : (
-              <EventForm 
-                events={events}
-                onSave={handleSaveEvent}
-                onDelete={handleDeleteEvent}
-                onSaveSuccess={handleSaveSuccess}
-              />
-            )}
-          </div>
-        </Modal>
       </Nav>
     </HeaderContainer>
   );

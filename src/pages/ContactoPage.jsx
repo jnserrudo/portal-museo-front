@@ -16,13 +16,17 @@ const HeroSection = styled.section`
   background-size: cover;
   background-position: center;
   height: 40vh;
-  min-height: 300px;
+  min-height: 350px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: white;
-  margin-bottom: ${theme.spacing.xl};
+  padding-bottom: 80px; /* Space for overlap */
+  
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    padding-bottom: 40px;
+  }
 `;
 
 const HeroContent = styled.div`
@@ -30,95 +34,118 @@ const HeroContent = styled.div`
   padding: 0 ${theme.spacing.md};
 
   h1 {
-    font-size: ${theme.typography.sizes.h2};
+    font-size: ${theme.typography.sizes.h1};
     margin-bottom: ${theme.spacing.sm};
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
     color: white;
+    font-weight: ${theme.typography.weights.black};
   }
 
   p {
-    font-size: ${theme.typography.sizes.subtitle};
+    font-size: ${theme.typography.sizes.welcome};
     opacity: 0.9;
+    font-weight: ${theme.typography.weights.regular};
   }
 `;
 
 const Container = styled.div`
-  max-width: 1200px;
+  max-width: 1400px;
+  width: 95%;
   margin: 0 auto;
-  padding: 0 ${theme.spacing.md};
-`;
+  position: relative;
+  z-index: 10;
+  margin-top: -80px;
 
-const SplitLayout = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: ${theme.spacing.xl};
-  
   @media (max-width: ${theme.breakpoints.tablet}) {
-    grid-template-columns: 1fr;
+    width: 92%;
+    margin-top: -40px;
   }
 `;
 
-const InfoColumn = styled.div`
+const ContactCard = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing.lg};
+  flex-direction: row;
+  background: white;
+  border-radius: ${theme.borderRadius.lg};
+  box-shadow: ${theme.shadows.dark};
+  overflow: hidden;
+  margin-bottom: ${theme.spacing.xl};
+
+  @media (max-width: ${theme.breakpoints.desktop}) {
+    flex-direction: column;
+  }
 `;
 
-const InfoCard = styled.div`
-  background: white;
-  padding: ${theme.spacing.lg};
-  border-radius: ${theme.borderRadius.md};
-  box-shadow: ${theme.shadows.medium};
-  border-left: 4px solid ${theme.colors.primary};
-  
+const InfoPanel = styled.div`
+  background: ${theme.colors.primary};
+  color: white;
+  flex: 1;
+  padding: ${theme.spacing.xl};
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
   @media (max-width: ${theme.breakpoints.tablet}) {
-    padding: ${theme.spacing.md};
+    padding: ${theme.spacing.lg};
   }
 `;
 
 const InfoTitle = styled.h2`
-  color: ${theme.colors.primary};
-  font-size: 1.8rem;
-  margin-bottom: ${theme.spacing.md};
+  color: white;
+  font-size: 2.2rem;
+  margin-bottom: ${theme.spacing.lg};
+  font-weight: ${theme.typography.weights.bold};
 `;
 
 const ContactList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing.lg};
   
   li {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: ${theme.spacing.md};
-    margin-bottom: ${theme.spacing.md};
-    font-size: 1.1rem;
-    color: ${theme.colors.text.dark};
+    font-size: 1.15rem;
     
     a {
-      color: ${theme.colors.text.dark};
+      color: rgba(255, 255, 255, 0.9);
       text-decoration: none;
-      transition: color 0.2s;
+      transition: color 0.3s;
       
       &:hover {
-        color: ${theme.colors.primary};
+        color: white;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
       }
+    }
+
+    span {
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.4;
     }
     
     svg {
-      color: ${theme.colors.primary};
-      font-size: 1.5rem;
+      color: ${theme.colors.accent};
+      font-size: 1.6rem;
       flex-shrink: 0;
+      margin-top: 2px;
     }
   }
 `;
 
 const SocialSection = styled.div`
-  margin-top: ${theme.spacing.md};
+  margin-top: ${theme.spacing.xl};
+  padding-top: ${theme.spacing.lg};
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   
   h3 {
-    color: ${theme.colors.text.dark};
+    color: white;
+    font-size: 1.3rem;
     margin-bottom: ${theme.spacing.md};
+    font-weight: ${theme.typography.weights.regular};
   }
 `;
 
@@ -130,83 +157,100 @@ const SocialIcons = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    background-color: white;
-    color: ${theme.colors.primary};
-    box-shadow: ${theme.shadows.light};
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
     transition: all 0.3s ease;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     
     &:hover {
       transform: translateY(-3px);
-      background-color: ${theme.colors.primary};
-      color: white;
-      box-shadow: ${theme.shadows.medium};
+      background-color: white;
+      color: ${theme.colors.primary};
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
   }
 `;
 
-const FormColumn = styled.div`
+const FormPanel = styled.div`
+  flex: 1.5;
   background: white;
   padding: ${theme.spacing.xl};
-  border-radius: ${theme.borderRadius.lg};
-  box-shadow: ${theme.shadows.medium};
   
   @media (max-width: ${theme.breakpoints.tablet}) {
-    padding: ${theme.spacing.md};
+    padding: ${theme.spacing.lg};
   }
 `;
 
 const FormTitle = styled.h2`
-  color: ${theme.colors.primary};
-  margin-bottom: ${theme.spacing.md};
+  color: ${theme.colors.text.dark};
+  font-size: 2.2rem;
+  margin-bottom: ${theme.spacing.xl};
+  font-weight: ${theme.typography.weights.bold};
 `;
 
 const FormGroup = styled.div`
-  margin-bottom: ${theme.spacing.md};
+  margin-bottom: ${theme.spacing.lg};
   
   label {
     display: block;
     margin-bottom: ${theme.spacing.xs};
     color: ${theme.colors.text.dark};
     font-weight: 600;
+    font-size: 0.95rem;
   }
   
   input, textarea {
     width: 100%;
-    padding: 12px;
-    border: 1px solid ${theme.colors.border || '#ddd'};
+    padding: 14px 16px;
+    border: 2px solid #e1e1e1;
     border-radius: ${theme.borderRadius.sm};
     font-size: 1rem;
-    transition: border-color 0.3s;
+    transition: all 0.3s;
     font-family: inherit;
+    background-color: #fafafa;
     
     &:focus {
       outline: none;
       border-color: ${theme.colors.primary};
-      box-shadow: 0 0 0 2px ${theme.colors.primary}20;
+      background-color: white;
+      box-shadow: 0 0 0 4px ${theme.colors.primary}15;
+    }
+
+    &::placeholder {
+      color: #aaa;
     }
   }
   
   textarea {
-    min-height: 150px;
+    min-height: 160px;
     resize: vertical;
   }
 `;
 
 const MapSection = styled.div`
-  margin-top: ${theme.spacing.xl};
-  border-radius: ${theme.borderRadius.md};
+  border-radius: ${theme.borderRadius.lg};
   overflow: hidden;
   box-shadow: ${theme.shadows.medium};
-  height: 400px;
+  height: 450px;
+  width: 100%;
+  position: relative;
+  margin-bottom: ${theme.spacing.xl};
   
   iframe {
     width: 100%;
     height: 100%;
     border: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    height: 350px;
   }
 `;
 
@@ -216,7 +260,7 @@ const ContactoPage = () => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
-  email: '',
+    email: '',
     asunto: '',
     mensaje: ''
   });
@@ -316,9 +360,9 @@ const ContactoPage = () => {
       </HeroSection>
 
       <Container>
-        <SplitLayout>
-          <InfoColumn>
-            <InfoCard>
+        <ContactCard>
+          <InfoPanel>
+            <div>
               <InfoTitle>{t('contact.info.title')}</InfoTitle>
               <ContactList>
                 <li>
@@ -334,34 +378,25 @@ const ContactoPage = () => {
                   <a href="mailto:museoregionalandino@gmail.com">museoregionalandino@gmail.com</a>
                 </li>
               </ContactList>
+            </div>
 
-              <SocialSection>
-                <InfoTitle>{t('contact.social.title')}</InfoTitle>
-                <SocialIcons>
-                  <a href="https://www.facebook.com/people/Museo-Regional-Andino/100075671035620/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                    <FaFacebook />
-                  </a>
-                  <a href="https://www.instagram.com/museoandino/?hl=es" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                    <FaInstagram />
-                  </a>
-                  <a href="https://www.youtube.com/@museoregionalandino4593" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-                    <FaYoutube />
-                  </a>
-                </SocialIcons>
-              </SocialSection>
-            </InfoCard>
+            <SocialSection>
+              <h3>{t('contact.social.title')}</h3>
+              <SocialIcons>
+                <a href="https://www.facebook.com/people/Museo-Regional-Andino/100075671035620/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                  <FaFacebook />
+                </a>
+                <a href="https://www.instagram.com/museoandino/?hl=es" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <FaInstagram />
+                </a>
+                <a href="https://www.youtube.com/@museoregionalandino4593" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                  <FaYoutube />
+                </a>
+              </SocialIcons>
+            </SocialSection>
+          </InfoPanel>
 
-            <MapSection>
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3636.567890123456!2d-66.3854321!3d-24.2256789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94047a5890123456%3A0x1234567890abcdef!2sSan%20Antonio%20de%20los%20Cobres%2C%20Salta!5e0!3m2!1ses!2sar!4v1633024800000!5m2!1ses!2sar" 
-                allowFullScreen="" 
-                loading="lazy"
-                title="Ubicación del Museo"
-              ></iframe>
-            </MapSection>
-          </InfoColumn>
-
-          <FormColumn>
+          <FormPanel>
             <FormTitle>{t('contact.form.title')}</FormTitle>
             <form ref={form} onSubmit={sendEmail}>
               <FormGroup>
@@ -417,12 +452,23 @@ const ContactoPage = () => {
                 type="submit" 
                 disabled={loading}
                 startIcon={!loading && <FaPaperPlane />}
+                style={{ padding: '16px', fontSize: '1.1rem', marginTop: '10px' }}
               >
                 {loading ? t('common.loading') : t('contact.form.submit')}
               </Button>
             </form>
-          </FormColumn>
-        </SplitLayout>
+          </FormPanel>
+        </ContactCard>
+
+        <MapSection>
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3636.567890123456!2d-66.3854321!3d-24.2256789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94047a5890123456%3A0x1234567890abcdef!2sSan%20Antonio%20de%20los%20Cobres%2C%20Salta!5e0!3m2!1ses!2sar!4v1633024800000!5m2!1ses!2sar" 
+            allowFullScreen="" 
+            loading="lazy"
+            title="Ubicación del Museo"
+          ></iframe>
+        </MapSection>
+
       </Container>
     </PageContainer>
   );

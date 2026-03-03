@@ -297,7 +297,7 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
                         onChange={handleChange} 
                         required 
                         className="form-input" 
-                        min={new Date().toISOString().split('T')[0]}
+                        min={!isEditing ? new Date().toISOString().split('T')[0] : undefined}
                     />
                 </div>
 

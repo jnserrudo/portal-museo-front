@@ -14,11 +14,21 @@ const FooterContainer = styled.footer`
 
 const FooterContent = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: ${theme.spacing.lg};
-  max-width: 1200px;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: ${theme.spacing.xl};
+  max-width: 1400px;
+  width: 95%;
   margin: 0 auto;
   padding: 0 ${theme.spacing.md};
+  
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    grid-template-columns: 1fr 1fr;
+    gap: ${theme.spacing.lg};
+  }
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const FooterSection = styled.div`
@@ -168,8 +178,8 @@ const ContactItem = styled.div`
   display: flex;
   align-items: flex-start;
   gap: ${theme.spacing.md};
-  margin-bottom: ${theme.spacing.md};
-  padding: 0.75rem;
+  margin-bottom: ${theme.spacing.sm};
+  padding: 0.5rem;
   background: rgba(255, 255, 255, 0.05);
   border-radius: ${theme.borderRadius.sm};
   transition: all 0.3s ease;
@@ -193,7 +203,7 @@ const ContactItem = styled.div`
 `;
 
 const OpeningHours = styled.div`
-  margin-top: ${theme.spacing.lg};
+  margin-top: ${theme.spacing.md};
   background: rgba(0, 0, 0, 0.1);
   padding: ${theme.spacing.md};
   border-radius: ${theme.borderRadius.md};
@@ -223,11 +233,57 @@ const HoursItem = styled.div`
   }
 `;
 
-const Copyright = styled.div`
+const CopyrightContainer = styled.div`
   text-align: center;
   padding: ${theme.spacing.lg} 0;
   margin-top: ${theme.spacing.xl};
   background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${theme.spacing.md};
+`;
+
+const LogosContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: ${theme.spacing.sm};
+
+  img {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  /* Aplica el filtro solo a los logos que lo necesiten */
+  .logo-invertido {
+    filter: brightness(0) invert(1);
+  }
+
+  /* Aplica modo de fusión para ocultar fondos negros (Screen mode) */
+  .logo-sin-fondo {
+    mix-blend-mode: screen;
+    filter: grayscale(100%) contrast(300%) brightness(120%);
+    opacity: 0.9;
+    transform: scale(1.3);
+    transform-origin: left center;
+  }
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+`;
+
+const CopyrightText = styled.div`
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.7);
   letter-spacing: 0.5px;
@@ -241,7 +297,7 @@ const Footer = () => {
       <FooterContent>
         <FooterSection>
           <FooterLogo to="/">
-            <img src={`${import.meta.env.BASE_URL}logo-museo.png`} alt="Museo Regional Andino" />
+            <img src={`${import.meta.env.BASE_URL}logo-museo2.png`} alt="Museo Regional Andino" />
             <span>Museo Regional Andino</span>
           </FooterLogo>
           <FooterText>
@@ -320,9 +376,15 @@ const Footer = () => {
         </FooterSection>
       </FooterContent>
 
-      <Copyright>
-        &copy; {currentYear} Museo Regional Andino. Todos los derechos reservados.
-      </Copyright>
+      <CopyrightContainer>
+        <LogosContainer>
+          <img src={`${import.meta.env.BASE_URL}ucasal-logo.png`} alt="UCASAL" className="logo-invertido" />
+          <img src={`${import.meta.env.BASE_URL}logo-tipo4.png`} alt="JNSIX" className="logo-sin-fondo" />
+        </LogosContainer>
+        <CopyrightText>
+          &copy; {currentYear} Museo Regional Andino. Todos los derechos reservados.
+        </CopyrightText>
+      </CopyrightContainer>
     </FooterContainer>
   );
 };

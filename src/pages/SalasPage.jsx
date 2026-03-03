@@ -1,11 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
-import { FaMountain, FaGem, FaLeaf, FaHistory, FaTrain, FaLandmark, FaMapMarkerAlt } from 'react-icons/fa';
-
-// Definir la imagen fuera del componente estilizado para mayor seguridad
-const heroImage = `${import.meta.env.BASE_URL}sala-hero.jpg`;
+import { FaMountain, FaGem, FaLeaf, FaHistory, FaTrain, FaLandmark, FaMapMarkerAlt, FaHandPointer, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { motion, useAnimation, useMotionValue } from 'framer-motion';
 
 const PageContainer = styled.div`
   padding-top: 80px;
@@ -13,59 +11,191 @@ const PageContainer = styled.div`
   background-color: ${theme.colors.background.light};
 `;
 
-const HeroSection = styled.section`
-  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1)), url(${heroImage}) center/cover no-repeat;
-  height: 40vh;
-  min-height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: ${theme.colors.text.light};
-  margin-bottom: ${theme.spacing.xl};
-  background-color: ${theme.colors.primary}; /* Fallback */
+const ContentContainer = styled.div`
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: ${theme.spacing.xl} ${theme.spacing.md} ${theme.spacing.xxl};
+  
+  @media (max-width: ${theme.breakpoints.tablet}) {
+    padding: ${theme.spacing.lg} ${theme.spacing.sm} ${theme.spacing.xl};
+  }
 `;
 
-const HeroTitle = styled.h1`
+const CarouselSection = styled.section`
+  margin-bottom: ${theme.spacing.xxl};
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 1rem 0;
+`;
+
+const CarouselHeader = styled.div`
+  text-align: center;
+  margin-bottom: ${theme.spacing.lg};
+`;
+
+const CarouselTitle = styled.h1`
+  color: ${theme.colors.primary};
   font-size: 3rem;
-  margin-bottom: ${theme.spacing.md};
-  color: ${theme.colors.text.light};
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin-bottom: ${theme.spacing.sm};
+  font-weight: 800;
   
   @media (max-width: 768px) {
     font-size: 2rem;
   }
 `;
 
-const ContentContainer = styled.div`
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 ${theme.spacing.md} ${theme.spacing.xxl};
+const CarouselSubtitle = styled.p`
+  color: ${theme.colors.text.dark};
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto ${theme.spacing.md};
+`;
+
+const DragHint = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: ${theme.colors.accent};
+  font-size: 0.95rem;
+  font-weight: 700;
+  opacity: 0.8;
+  animation: pulse 2s infinite;
   
-  @media (max-width: ${theme.breakpoints.tablet}) {
-    padding: 0 ${theme.spacing.sm} ${theme.spacing.xl};
+  @keyframes pulse {
+    0% { opacity: 0.4; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1.02); }
+    100% { opacity: 0.4; transform: scale(0.98); }
   }
 `;
 
-const IntroSection = styled.div`
-  margin-bottom: ${theme.spacing.xl};
-  text-align: center;
-  padding: ${theme.spacing.lg};
-  background-color: ${theme.colors.background.section};
-  border-radius: ${theme.borderRadius.md};
-  box-shadow: ${theme.shadows.light};
+const CarouselWrapper = styled.div`
+  position: relative;
+  width: 100%;
 `;
 
-const IntroText = styled.p`
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: ${theme.colors.text.dark};
-  margin-bottom: ${theme.spacing.md};
+const ArrowButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.1);
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  
+  &:hover {
+    background: ${theme.colors.accent};
+    border-color: ${theme.colors.accent};
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 8px 16px rgba(139, 90, 43, 0.5);
+  }
+  
+  &:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+  
+  svg {
+    font-size: 1.5rem;
+    ${props => props.$direction === 'left' ? 'margin-right: 3px;' : 'margin-left: 3px;'}
+  }
+  
+  ${props => props.$direction === 'left' ? 'left: 10px;' : 'right: 10px;'}
+  
+  @media (max-width: 768px) {
+    width: 45px;
+    height: 45px;
+    
+    svg {
+      font-size: 1.2rem;
+    }
+  }
+`;
+
+const CarouselInner = styled(motion.div)`
+  display: flex;
+  gap: ${theme.spacing.xl};
+  padding: ${theme.spacing.sm} 1rem;
+  cursor: grab;
+  
+  &:active {
+    cursor: grabbing;
+  }
+`;
+
+const CarouselItem = styled(motion.a)`
+  min-width: 320px;
+  height: 450px;
+  border-radius: ${theme.borderRadius.lg};
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%), url(${props => props.$image}) center/cover no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: ${theme.spacing.xl};
+  text-decoration: none;
+  box-shadow: ${theme.shadows.medium};
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  
+  @media (max-width: 768px) {
+    min-width: 260px;
+    height: 380px;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  &:hover::before, &:active::before {
+    opacity: 1;
+  }
+  
+  &:hover {
+    box-shadow: 0 15px 30px rgba(139, 90, 43, 0.4);
+    border-color: ${theme.colors.accent};
+  }
+  
+  span {
+    color: white;
+    font-weight: 800;
+    font-size: 1.5rem;
+    position: relative;
+    z-index: 2;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.9);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    line-height: 1.2;
+  }
+  
+  svg {
+    font-size: 1.8rem;
+    color: ${theme.colors.accent};
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.8));
+  }
 `;
 
 const SalaSection = styled.section`
   margin-bottom: ${theme.spacing.xxl};
-  scroll-margin-top: 100px; /* Para compensar el header fijo */
+  scroll-margin-top: 100px;
   padding: ${theme.spacing.xl};
   background-color: white;
   border-radius: ${theme.borderRadius.lg};
@@ -133,6 +263,10 @@ const SalaContent = styled.div`
   line-height: 1.8;
   color: ${theme.colors.text.dark};
   text-align: justify;
+  
+  p {
+    margin-bottom: 1rem;
+  }
 `;
 
 const SalaImage = styled.div`
@@ -157,194 +291,14 @@ const SalaImage = styled.div`
   }
 `;
 
-const NavigationMenu = styled.nav`
-  position: sticky;
-  top: 10px;
-  background: linear-gradient(135deg, ${theme.colors.primary}15 0%, ${theme.colors.accent}25 100%);
-  padding: ${theme.spacing.lg} ${theme.spacing.sm};
-  margin-bottom: ${theme.spacing.xl};
-  border-radius: ${theme.borderRadius.lg};
-  box-shadow: ${theme.shadows.medium}, inset 0 1px 0 rgba(255,255,255,0.5);
-  z-index: 90;
-  overflow: visible;
-  position: relative;
-`;
-
-const MenuTitle = styled.div`
-  display: block;
-  text-align: center;
-  font-weight: ${theme.typography.weights.bold};
-  color: ${theme.colors.primary};
-  font-size: 0.9rem;
-  margin-bottom: ${theme.spacing.sm};
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-`;
-
-const ScrollContainer = styled.div`
-  overflow-x: auto;
-  overflow-y: hidden;
-  position: relative;
-  
-  /* Hide scrollbar but keep functionality */
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  
-  /* Animated scroll indicators - only on larger screens */
-  @media (min-width: 768px) {
-    &::before,
-    &::after {
-      content: '→';
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: ${theme.colors.primary};
-      z-index: 2;
-      animation: pulse 2s ease-in-out infinite;
-      pointer-events: none;
-    }
-    
-    &::before {
-      content: '←';
-      left: -10px;
-      opacity: 0.3;
-    }
-    
-    &::after {
-      right: -10px;
-      opacity: 0.7;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 0.3; transform: translateY(-50%) scale(1); }
-      50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
-    }
-  }
-`;
-
-const MenuList = styled.ul`
-  display: flex;
-  list-style: none;
-  gap: ${theme.spacing.md};
-  padding: ${theme.spacing.sm} ${theme.spacing.md};
-  margin: 0;
-  white-space: nowrap;
-  position: relative;
-`;
-
-const MenuItem = styled.li`
-  flex: 0 0 auto;
-`;
-
-const MenuLink = styled.a`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  width: 200px;
-  min-height: 140px;
-  border-radius: ${theme.borderRadius.md};
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.1) 0%,
-    rgba(0, 0, 0, 0.7) 100%
-  ), url('${props => props.$image}');
-  background-size: cover;
-  background-position: center;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  position: relative;
-  padding: ${theme.spacing.md};
-  
-  /* Title overlay */
-  span {
-    color: white;
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-align: center;
-    z-index: 2;
-    position: relative;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-    line-height: 1.3;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
-    display: block;
-    max-width: 100%;
-    white-space: normal;
-  }
-  
-  /* Hover effects */
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      transform: translateY(-8px) scale(1.05);
-      box-shadow: 0 8px 24px rgba(139, 90, 43, 0.4);
-      
-      &::before {
-        opacity: 1;
-      }
-    }
-  }
-  
-  /* Overlay effect on hover */
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(139, 90, 43, 0.3) 0%,
-      rgba(139, 90, 43, 0.6) 100%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 1;
-  }
-  
-  &:active {
-    transform: translateY(-4px) scale(1.02);
-  }
-  
-  /* Mobile adjustments */
-  @media (max-width: 768px) {
-    width: 160px;
-    height: 120px;
-    padding: ${theme.spacing.sm};
-    
-    span {
-      font-size: 0.85rem;
-    }
-  }
-`;
-
 const SalasPage = () => {
   const { t } = useLanguage();
-
-  useEffect(() => {
-    // Scroll to top on mount
-    window.scrollTo(0, 0);
-    
-    // Check for hash in URL and scroll to it if present
-    if (window.location.hash) {
-      const id = window.location.hash.substring(1);
-      const element = document.getElementById(id);
-      if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      }
-    }
-  }, []);
+  const carouselOuterRef = useRef(null);
+  const [carouselWidth, setCarouselWidth] = useState(0);
+  const x = useMotionValue(0);
+  const controls = useAnimation();
+  const autoScrollTimeoutRef = useRef(null);
+  const isMounted = useRef(true);
 
   const salas = [
     {
@@ -353,7 +307,7 @@ const SalasPage = () => {
       icon: <FaMountain />,
       image: `${import.meta.env.BASE_URL}salas/portal_sala_experiencia_inmersiva.png`,
       detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_experiencia_inmersiva.png`,
-      content: <span dangerouslySetInnerHTML={{ __html: t('salas.immersive.content') }} />
+      content: t('salas.immersive.content')
     },
     {
       id: 'sala-geologia',
@@ -361,7 +315,7 @@ const SalasPage = () => {
       icon: <FaGem />,
       image: `${import.meta.env.BASE_URL}geologia.jpg`,
       detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_geologia.JPG`,
-      content: <span dangerouslySetInnerHTML={{ __html: t('salas.geology.content') }} />
+      content: t('salas.geology.content')
     },
     {
       id: 'sala-biodiversidad',
@@ -369,7 +323,7 @@ const SalasPage = () => {
       icon: <FaLeaf />,
       image: `${import.meta.env.BASE_URL}biodiversidad.jpg`,
       detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_biodiversidad.JPG`,
-      content: <span dangerouslySetInnerHTML={{ __html: t('salas.biodiversity.content') }} />
+      content: t('salas.biodiversity.content')
     },
     {
       id: 'sala-arqueologia',
@@ -377,7 +331,7 @@ const SalasPage = () => {
       icon: <FaHistory />,
       image: `${import.meta.env.BASE_URL}arqueologia.JPG`,
       detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_arqueologia.JPG`,
-      content: <span dangerouslySetInnerHTML={{ __html: t('salas.archeology.content') }} />
+      content: t('salas.archeology.content')
     },
     {
       id: 'sala-mineria',
@@ -385,7 +339,7 @@ const SalasPage = () => {
       icon: <FaGem />,
       image: `${import.meta.env.BASE_URL}minerologia_y_mineria.jpg`,
       detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_mineria.JPG`,
-      content: <span dangerouslySetInnerHTML={{ __html: t('salas.mining.content') }} />
+      content: t('salas.mining.content')
     },
     {
       id: 'sala-ramal-c14',
@@ -393,7 +347,7 @@ const SalasPage = () => {
       icon: <FaTrain />,
       image: `${import.meta.env.BASE_URL}ramalc14_tarjeta.jpg`,
       detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_ramal.JPG`,
-      content: <span dangerouslySetInnerHTML={{ __html: t('salas.c14.content') }} />
+      content: t('salas.c14.content')
     },
     {
       id: 'sala-historia',
@@ -401,7 +355,7 @@ const SalasPage = () => {
       icon: <FaLandmark />,
       image: `${import.meta.env.BASE_URL}historia_museo.JPG`,
       detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_historia.JPG`,
-      content: <span dangerouslySetInnerHTML={{ __html: t('salas.history.content') }} />
+      content: t('salas.history.content')
     },
     {
       id: 'sala-territorio',
@@ -409,7 +363,7 @@ const SalasPage = () => {
       icon: <FaMapMarkerAlt />,
       image: `${import.meta.env.BASE_URL}territorio_andes_tarjeta.JPG`,
       detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_territorio_andes.JPG`,
-      content: <span dangerouslySetInnerHTML={{ __html: t('salas.territory.content') }} />
+      content: t('salas.territory.content')
     },
     {
       id: 'sala-gobernacion',
@@ -417,7 +371,7 @@ const SalasPage = () => {
       icon: <FaLandmark />,
       image: `${import.meta.env.BASE_URL}historia_museo.png`,
       detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_gobernacion_andes.JPG`,
-      content: <span dangerouslySetInnerHTML={{ __html: t('salas.governance.content') }} />
+      content: t('salas.governance.content')
     },
     {
       id: 'sala-sac-hoy',
@@ -425,40 +379,162 @@ const SalasPage = () => {
       icon: <FaMapMarkerAlt />,
       image: `${import.meta.env.BASE_URL}territorio_andes.jpg`,
       detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_san_antonio.JPG`,
-      content: <span dangerouslySetInnerHTML={{ __html: t('salas.sac.content') }} />
+      content: t('salas.sac.content')
     }
   ];
 
+  useEffect(() => {
+    isMounted.current = true;
+    window.scrollTo(0, 0);
+    
+    if (window.location.hash) {
+      const id = window.location.hash.substring(1);
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+      }
+    }
+
+    return () => { isMounted.current = false; };
+  }, []);
+
+  useEffect(() => {
+    const measureWidth = () => {
+      if (carouselOuterRef.current) {
+        setCarouselWidth(carouselOuterRef.current.scrollWidth - carouselOuterRef.current.offsetWidth);
+      }
+    };
+    
+    measureWidth();
+    // Re-measure after images load to ensure proper width parsing
+    setTimeout(measureWidth, 500);
+    window.addEventListener('resize', measureWidth);
+    return () => window.removeEventListener('resize', measureWidth);
+  }, []);
+
+  const playAutoScroll = (direction = -1) => {
+    if (carouselWidth > 0 && isMounted.current) {
+      const currentX = x.get();
+      const target = direction === -1 ? -carouselWidth : 0;
+      const distanceToTravel = Math.abs(target - currentX);
+      const totalDistance = carouselWidth;
+      const totalDuration = 60; // seconds for a full complete swipe width
+      
+      const duration = totalDistance > 0 ? (distanceToTravel / totalDistance) * totalDuration : totalDuration;
+
+      if (duration > 0.5) {
+        controls.start({
+          x: target,
+          transition: { 
+            duration: duration,
+            ease: "linear",
+          }
+        }).then(() => {
+           if (isMounted.current) playAutoScroll(direction === -1 ? 1 : -1);
+        });
+      } else {
+        // If we're already at edge, reverse immediately
+        if (isMounted.current) playAutoScroll(direction === -1 ? 1 : -1);
+      }
+    }
+  };
+
+  const scheduleAutoScroll = (delay = 3000) => {
+    if (autoScrollTimeoutRef.current) clearTimeout(autoScrollTimeoutRef.current);
+    autoScrollTimeoutRef.current = setTimeout(() => {
+      if (isMounted.current) {
+        const currentX = x.get();
+        // keep heading left generally, unless we are pinned at the left edge
+        const dir = currentX <= -carouselWidth + 20 ? 1 : -1;
+        playAutoScroll(dir);
+      }
+    }, delay);
+  };
+
+  useEffect(() => {
+    if (carouselWidth > 0) {
+      playAutoScroll();
+    }
+    return () => { 
+      controls.stop(); 
+      if (autoScrollTimeoutRef.current) clearTimeout(autoScrollTimeoutRef.current);
+    };
+  }, [carouselWidth]);
+
+  const handleArrowClick = (direction) => {
+    controls.stop();
+    if (autoScrollTimeoutRef.current) clearTimeout(autoScrollTimeoutRef.current);
+    
+    const currentX = x.get();
+    // Approximate card width + gap depending on viewport breakpoints
+    const cardScrollAmount = window.innerWidth < 768 ? 260 + 24 : 320 + 32; 
+    let targetX = direction === 'left' ? currentX + cardScrollAmount : currentX - cardScrollAmount;
+    
+    targetX = Math.max(-carouselWidth, Math.min(0, targetX));
+    
+    controls.start({
+      x: targetX,
+      transition: { duration: 0.6, ease: "easeOut" }
+    }).then(() => {
+      scheduleAutoScroll(2500);
+    });
+  };
+
   return (
-    <PageContainer id="seccion-salas-principal">
-      <HeroSection>
-        <div style={{ maxWidth: '800px', padding: '0 20px', zIndex: 1 }}>
-          <HeroTitle>{t('salas.hero.title')}</HeroTitle>
-          <p style={{ fontSize: '1.2rem' }}>
-            {t('salas.hero.subtitle')}
-          </p>
-        </div>
-      </HeroSection>
-
+    <PageContainer>
       <ContentContainer>
-        {/* <IntroSection>
-          <IntroText dangerouslySetInnerHTML={{ __html: t('salas.intro') }} />
-        </IntroSection> */}
+        <CarouselSection>
+          <CarouselHeader>
+            <CarouselTitle>Salas y Experiencia Inmersiva</CarouselTitle>
+            <CarouselSubtitle>Desplázate para recorrer la historia, geología y cultura de la Puna a través de nuestras salas temáticas.</CarouselSubtitle>
+            <DragHint>
+              <FaHandPointer /> Arrastra para explorar
+            </DragHint>
+          </CarouselHeader>
 
-        <NavigationMenu>
-          <MenuTitle>{t('salas.nav.title')}</MenuTitle>
-          <ScrollContainer>
-            <MenuList>
-              {salas.map(sala => (
-                <MenuItem key={sala.id}>
-                  <MenuLink href={`#${sala.id}`} $image={sala.image}>
-                    <span>{sala.title}</span>
-                  </MenuLink>
-                </MenuItem>
-              ))}
-            </MenuList>
-          </ScrollContainer>
-        </NavigationMenu>
+          <CarouselWrapper>
+            <ArrowButton 
+              $direction="left" 
+              onClick={() => handleArrowClick('left')} 
+              aria-label="Anterior"
+            >
+              <FaChevronLeft />
+            </ArrowButton>
+            
+            <motion.div ref={carouselOuterRef} style={{ overflow: 'hidden', padding: '10px 0' }}>
+              <CarouselInner
+                drag="x"
+                dragConstraints={{ right: 0, left: -carouselWidth }}
+                style={{ x }}
+                animate={controls}
+                onDragStart={() => {
+                  controls.stop();
+                  if (autoScrollTimeoutRef.current) clearTimeout(autoScrollTimeoutRef.current);
+                }}
+                onDragEnd={() => scheduleAutoScroll(1500)} // Resume auto-scroll quickly after a manual swipe completes
+                whileTap={{ cursor: "grabbing" }}
+              >
+                {salas.map((sala) => (
+                  <CarouselItem key={sala.id} href={`#${sala.id}`} $image={sala.image}>
+                    <motion.span whileHover={{ scale: 1.05 }}>
+                      {sala.icon} {sala.title}
+                    </motion.span>
+                  </CarouselItem>
+                ))}
+              </CarouselInner>
+            </motion.div>
+
+            <ArrowButton 
+              $direction="right" 
+              onClick={() => handleArrowClick('right')} 
+              aria-label="Siguiente"
+            >
+              <FaChevronRight />
+            </ArrowButton>
+          </CarouselWrapper>
+        </CarouselSection>
 
         {salas.map((sala) => (
           <SalaSection key={sala.id} id={sala.id}>
@@ -468,7 +544,9 @@ const SalasPage = () => {
             </SalaHeader>
             <SalaContentWrapper>
               <SalaContent>
-                {sala.content}
+                {typeof sala.content === 'string' ? sala.content.split('\n').map((paragraph, index) => (
+                  paragraph.trim() ? <p key={index}>{paragraph}</p> : null
+                )) : sala.content}
               </SalaContent>
               <SalaImage>
                 <img src={sala.detailImage} alt={sala.title} />
