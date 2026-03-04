@@ -251,25 +251,11 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
 
     return (
         <div className="form-wrapper">
-            <h4 className="form-main-title">Administración de Eventos</h4>
+            <h4 className="form-main-title">{isEditing ? 'Administración de Eventos' : 'Crear Nuevo Evento'}</h4>
 
-            <div className="form-selector-container">
-                <label htmlFor="select-event" className="form-label">
-                    {isEditing ? 'Editar evento existente:' : 'Crear nuevo o seleccionar para editar:'}
-                </label>
-                <select id="select-event" value={selectedEventId} onChange={handleSelectEvent} className="form-select" style={{ borderColor: '#8B5A2B' }}>
-                    <option value="">-- Crear un Nuevo Evento --</option>
-                    {sortedEvents.map(event => (
-                        <option key={`event-${event.id}`} value={event.id}>
-                            {event.fecha ? new Date(event.fecha).toLocaleDateString() : 'Sin fecha'} - {event.titulo}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            <form onSubmit={handleSubmit} className="event-form" style={{ borderColor: '#8B5A2B' }}>
+            <form onSubmit={handleSubmit} className="event-form" style={{ borderColor: '#8B5A2B', marginTop: '1rem' }}>
                 <h5 className="form-title" style={{ color: '#8B5A2B' }}>
-                    {isEditing ? `Editando: ${formData.titulo}` : 'Crear Nuevo Evento'}
+                    {isEditing ? `Editando: ${event?.titulo || event?.title || 'Evento'}` : 'Detalles del Evento'}
                 </h5>
                 <p className="form-note">Los campos marcados con * son obligatorios</p>
 
