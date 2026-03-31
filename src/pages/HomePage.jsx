@@ -14,18 +14,26 @@ const museoFrente = `${import.meta.env.BASE_URL}museo_frente.jpg`;
 
 const HeroSection = styled.section`
   position: relative;
-  height: 50vh;
-  min-height: 300px;
+  height: 70vh;
+  min-height: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: ${theme.colors.text.light};
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), 
-              url(${museoFrente}) center/cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), 
+              url(${museoFrente}) center 40%/cover no-repeat;
   margin: 0;
   padding: 0;
   margin-top: -1px;
+  
+  @media (max-width: 768px) {
+    height: 60vh;
+    background-position: center 35%;
+    background-size: cover;
+    background-attachment: scroll;
+    min-height: 450px;
+  }
 `;
 
 const HeroContent = styled.div`
@@ -40,7 +48,7 @@ const HeroTitle = styled.h1`
   font-size: ${theme.typography.sizes.h2};
   margin: 0 0 0.5rem 0;
   color: ${theme.colors.text.light};
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6);
   line-height: 1.1;
   padding-top: 0;
   
