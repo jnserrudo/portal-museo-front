@@ -6,6 +6,37 @@ const ImageUploader = ({ onImagesChange, existingImages = [] }) => {
   const [images, setImages] = React.useState(existingImages);
   const [isUploading, setIsUploading] = React.useState(false);
 
+  // Función para construir la URL completa de la imagen
+  const getImageUrl = (imageUrl) => {
+    if (!imageUrl) return null;
+    
+    // Si ya es una URL completa o data URL, retornarla tal cual
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://') || imageUrl.startsWith('data:')) {
+      return imageUrl;
+    }
+    
+    // Limpiar path y asegurar que empiece con slash
+    let cleanPath = imageUrl;
+    if (!cleanPath.startsWith('/')) {
+      cleanPath = `/${cleanPath}`;
+    }
+
+    // Si la imagen está en /uploads/ y tenemos configurada una URL base para uploads
+    const uploadsBaseUrl = import.meta.env.VITE_UPLOADS_BASE_URL;
+    if (cleanPath.startsWith('/uploads/') && uploadsBaseUrl) {
+      const base = uploadsBaseUrl.endsWith('/') ? uploadsBaseUrl.slice(0, -1) : uploadsBaseUrl;
+      return `${base}${cleanPath}`;
+    }
+    
+    // Fallback: Usar VITE_API_URL
+    let baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    if (baseUrl.endsWith('/')) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+    
+    return `${baseUrl}${cleanPath}`;
+  };
+
   // Maneja la selección de archivos
   const handleFileChange = useCallback(async (e) => {
     const files = Array.from(e.target.files);
@@ -61,7 +92,7 @@ const ImageUploader = ({ onImagesChange, existingImages = [] }) => {
         {images.map((img, index) => (
           <div key={index} className="image-preview">
             <img 
-              src={img.url} 
+              src={getImageUrl(img.url)} 
               alt={`Vista previa ${index + 1}`} 
               className="image-thumbnail"
             />
