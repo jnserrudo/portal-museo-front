@@ -99,12 +99,18 @@ export const createEvent = async (formData) => {
             });
             
             let errorMessage;
-            try {
-                const errorData = await response.json();
-                errorMessage = errorData.message || errorData.error || `Error al crear el evento (${response.status})`;
-            } catch (e) {
-                // Si no se puede parsear como JSON, usar mensaje genérico
-                errorMessage = `Error al crear el evento: ${response.status} ${response.statusText}`;
+            
+            // Mensaje específico para error 413 (archivo muy grande)
+            if (response.status === 413) {
+                errorMessage = 'La imagen es demasiado grande. Por favor, usa una imagen más pequeña (máximo 10MB).';
+            } else {
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorData.error || `Error al crear el evento (${response.status})`;
+                } catch (e) {
+                    // Si no se puede parsear como JSON, usar mensaje genérico
+                    errorMessage = `Error al crear el evento: ${response.status} ${response.statusText}`;
+                }
             }
             
             console.log('🔔 [API] Mostrando toast de ERROR');
@@ -204,11 +210,17 @@ export const updateEvent = async (id, formData) => {
             });
             
             let errorMessage;
-            try {
-                const errorData = await response.json();
-                errorMessage = errorData.message || errorData.error || `Error al actualizar el evento (${response.status})`;
-            } catch (e) {
-                errorMessage = `Error al actualizar el evento: ${response.status} ${response.statusText}`;
+            
+            // Mensaje específico para error 413 (archivo muy grande)
+            if (response.status === 413) {
+                errorMessage = 'La imagen es demasiado grande. Por favor, usa una imagen más pequeña (máximo 10MB).';
+            } else {
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorData.error || `Error al actualizar el evento (${response.status})`;
+                } catch (e) {
+                    errorMessage = `Error al actualizar el evento: ${response.status} ${response.statusText}`;
+                }
             }
             
             console.log('🔔 [API] Mostrando toast de ERROR');
