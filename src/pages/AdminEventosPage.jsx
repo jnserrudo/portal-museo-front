@@ -14,6 +14,7 @@ import Button from '../components/ui/Button';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import Modal from '../components/Modal';
 import EventForm from '../components/EventForm';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const PageContainer = styled.div`
   padding: ${theme.spacing.xl} 0;
@@ -363,6 +364,8 @@ const AdminEventosPage = () => {
   const [locationFilter, setLocationFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
 
   // Redirigir si no está autenticado
   useEffect(() => {
@@ -490,13 +493,19 @@ const AdminEventosPage = () => {
     setIsFormOpen(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleDeleteClick = (event) => {
+    setEventToDelete(event);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!eventToDelete) return;
+    
     try {
-      if (window.confirm(t('events.confirmDelete'))) {
-        await eventService.deleteEvent(id);
-        toast.success('Evento eliminado correctamente');
-        fetchEvents();
-      }
+      await eventService.deleteEvent(eventToDelete.id);
+      toast.success('Evento eliminado correctamente');
+      fetchEvents();
+      setEventToDelete(null);
     } catch (error) {
       console.error(error);
       toast.error(t('common.error'));
@@ -658,7 +667,7 @@ const AdminEventosPage = () => {
                           <ActionBtn onClick={() => handleEdit(ev)} title={t('common.edit')}>
                             <FaEdit />
                           </ActionBtn>
-                          <ActionBtn $danger onClick={() => handleDelete(ev.id)} title={t('common.delete')}>
+                          <ActionBtn $danger onClick={() => handleDeleteClick(ev)} title={t('common.delete')}>
                             <FaTrash />
                           </ActionBtn>
                         </ActionsContainer>
@@ -724,12 +733,26 @@ const AdminEventosPage = () => {
           events={events}
           event={currentEvent}
           onSave={handleSaveEvent}
-          onDelete={handleDelete}
           onSaveSuccess={() => {
             setIsFormOpen(false);
           }}
         />
       </Modal>
+
+      {/* Modal de confirmación de eliminación */}
+      <ConfirmDialog
+        isOpen={deleteConfirmOpen}
+        onClose={() => {
+          setDeleteConfirmOpen(false);
+          setEventToDelete(null);
+        }}
+        onConfirm={handleDeleteConfirm}
+        title="¿Eliminar evento?"
+        message={eventToDelete ? `¿Estás seguro de que deseas eliminar el evento "${eventToDelete.titulo || eventToDelete.title}"? Esta acción no se puede deshacer.` : ''}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        type="danger"
+      />
 
     </PageContainer>
   );

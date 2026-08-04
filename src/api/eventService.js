@@ -31,9 +31,13 @@ export const getEvents = async () => {
         const response = await fetch(urlWithTimestamp, {
             method: 'GET',
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
             },
-            credentials: 'include'
+            credentials: 'include',
+            cache: 'no-store'
         });
         
         if (!response.ok) {

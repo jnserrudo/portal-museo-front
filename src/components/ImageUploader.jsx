@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { toast } from 'react-toastify';
 import { COLORS } from '../constants/colors';
 import './ImageUploader.css';
 
@@ -72,7 +73,7 @@ const ImageUploader = ({ onImagesChange, existingImages = [] }) => {
       onImagesChange(updatedImages);
     } catch (error) {
       console.error('Error al cargar las imágenes:', error);
-      alert('Error al cargar las imágenes. Por favor, inténtalo de nuevo.');
+      toast.error('Error al cargar las imágenes. Por favor, inténtalo de nuevo.');
     } finally {
       setIsUploading(false);
     }
