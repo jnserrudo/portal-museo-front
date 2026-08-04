@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { format, parseISO, isValid, compareDesc } from 'date-fns';
 import { es } from 'date-fns/locale';
 import styled from 'styled-components';
-import { FaCalendarAlt, FaMapMarkerAlt, FaSearch, FaPlus, FaEdit, FaTrash, FaClock, FaInfoCircle, FaTimes, FaTicketAlt } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaSearch, FaPlus, FaEdit, FaTrash, FaClock, FaInfoCircle, FaTimes, FaTicketAlt, FaArrowLeft } from 'react-icons/fa';
 import { theme } from '../styles/theme';
 import Button from '../components/ui/Button';
 import Modal from '../components/Modal';
@@ -28,7 +29,7 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: ${theme.spacing.xl};
+  margin-bottom: ${theme.spacing.lg};
   flex-wrap: wrap;
   gap: ${theme.spacing.md};
   border-bottom: 2px solid ${theme.colors.primary}20;
@@ -127,8 +128,8 @@ const MonthHeader = styled.h2`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: ${theme.spacing.lg};
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: ${theme.spacing.md};
   
   @media (max-width: ${theme.breakpoints.mobile}) {
     grid-template-columns: 1fr;
@@ -158,7 +159,7 @@ const Card = styled.article`
 `;
 
 const CardImageContainer = styled.div`
-  height: 220px;
+  height: 180px;
   overflow: hidden;
   position: relative;
 `;
@@ -223,16 +224,16 @@ const DateBadge = styled.div`
 `;
 
 const CardContent = styled.div`
-  padding: ${theme.spacing.lg};
+  padding: ${theme.spacing.md};
   flex: 1;
   display: flex;
   flex-direction: column;
 `;
 
 const CardTitle = styled.h3`
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: ${theme.colors.primary};
-  margin: 0 0 ${theme.spacing.sm} 0;
+  margin: 0 0 ${theme.spacing.xs} 0;
   font-weight: ${theme.typography.weights.bold};
   line-height: 1.3;
 `;
@@ -258,11 +259,11 @@ const CardMeta = styled.div`
 
 const CardDescription = styled.p`
   color: ${theme.colors.text.dark};
-  font-size: 1rem;
-  line-height: 1.6;
-  margin: 0 0 ${theme.spacing.lg} 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 ${theme.spacing.sm} 0;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex: 1;
@@ -274,7 +275,7 @@ const CardFooter = styled.div`
   justify-content: space-between;
   align-items: center;
   border-top: 1px solid ${theme.colors.border || '#eee'};
-  padding-top: ${theme.spacing.md};
+  padding-top: ${theme.spacing.sm};
 `;
 
 const ActionButton = styled.button`
@@ -352,6 +353,30 @@ const MetaItem = styled.div`
   }
 `;
 
+const BackButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: ${theme.colors.primary};
+  font-size: 1rem;
+  font-weight: ${theme.typography.weights.semibold};
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: ${theme.spacing.md};
+  transition: all 0.2s;
+  
+  &:hover {
+    color: ${theme.colors.accent};
+    transform: translateX(-4px);
+  }
+  
+  svg {
+    font-size: 1.2rem;
+  }
+`;
+
 const EventosPage = ({ 
   events = [], 
   isLoading, 
@@ -360,6 +385,7 @@ const EventosPage = ({
 }) => {
   const { isAuthenticated } = useAuth();
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [viewEvent, setViewEvent] = useState(null);
@@ -559,6 +585,11 @@ const EventosPage = ({
   return (
     <PageContainer>
       <Container>
+        <BackButton onClick={() => navigate('/')}>
+          <FaArrowLeft />
+          Volver al Inicio
+        </BackButton>
+        
         <Header>
           <TitleColumn>
             <Title>{t('nav.events')}</Title>
