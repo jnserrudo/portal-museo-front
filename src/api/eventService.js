@@ -352,17 +352,6 @@ export const deleteEvent = async (id) => {
             }
         }
         
-        // Mostrar notificación de éxito
-        toast.success('Evento eliminado correctamente', {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        
         return result;
     } catch (error) {
         console.error('Error en deleteEvent:', error);

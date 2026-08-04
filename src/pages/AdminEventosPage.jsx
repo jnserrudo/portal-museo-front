@@ -494,7 +494,7 @@ const AdminEventosPage = () => {
     try {
       if (window.confirm(t('events.confirmDelete'))) {
         await eventService.deleteEvent(id);
-        toast.success(t('contact.form.success') || 'OK');
+        toast.success('Evento eliminado correctamente');
         fetchEvents();
       }
     } catch (error) {
