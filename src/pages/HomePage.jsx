@@ -418,8 +418,8 @@ const HomePage = ({ events = [], isLoading = false }) => {
 
     // Filtrar solo eventos publicados, futuros o del día actual
     const futureEvents = normalized.filter(event => {
-      // Filtrar eventos no publicados
-      if (event.publicado === false || event.publicado === undefined) return false;
+      // Filtrar eventos no publicados (solo si es explícitamente false)
+      if (event.publicado === false) return false;
       
       if (!event.date) return true; // Si no tiene fecha, mostrarlo
       

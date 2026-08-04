@@ -159,7 +159,7 @@ const Card = styled.article`
 `;
 
 const CardImageContainer = styled.div`
-  height: 180px;
+  height: 150px;
   overflow: hidden;
   position: relative;
 `;
@@ -224,27 +224,27 @@ const DateBadge = styled.div`
 `;
 
 const CardContent = styled.div`
-  padding: ${theme.spacing.md};
+  padding: ${theme.spacing.sm} ${theme.spacing.md};
   flex: 1;
   display: flex;
   flex-direction: column;
 `;
 
 const CardTitle = styled.h3`
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: ${theme.colors.primary};
   margin: 0 0 ${theme.spacing.xs} 0;
   font-weight: ${theme.typography.weights.bold};
-  line-height: 1.3;
+  line-height: 1.2;
 `;
 
 const CardMeta = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.spacing.xs};
-  margin-bottom: ${theme.spacing.md};
+  gap: 4px;
+  margin-bottom: ${theme.spacing.xs};
   color: ${theme.colors.text.dark};
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   
   div {
     display: flex;
@@ -259,9 +259,9 @@ const CardMeta = styled.div`
 
 const CardDescription = styled.p`
   color: ${theme.colors.text.dark};
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin: 0 0 ${theme.spacing.sm} 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0 0 ${theme.spacing.xs} 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -464,8 +464,8 @@ const EventosPage = ({
 
     // Filtrar eventos publicados, futuros o del día actual
     let filtered = normalized.filter(event => {
-      // Filtrar eventos no publicados
-      if (event.publicado === false || event.publicado === undefined) return false;
+      // Filtrar eventos no publicados (solo si es explícitamente false)
+      if (event.publicado === false) return false;
       
       // Filtro de búsqueda
       const title = event.title || '';

@@ -11,7 +11,7 @@ const HomeSection = ({ events = [], isLoading = false }) => {
     
     const publishedEvents = Array.isArray(events) 
         ? events
-            .filter(event => event.publicado !== false && event.publicado !== undefined)
+            .filter(event => event.publicado !== false)
             .filter(event => {
                 if (!event.fecha && !event.date) return true;
                 const dateStr = event.fecha || event.date;
