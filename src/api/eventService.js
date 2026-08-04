@@ -343,7 +343,14 @@ export const deleteEvent = async (id) => {
             throw new Error(errorMessage);
         }
         
-        const result = await response.json();
+        // Si es 204 No Content, no hay body para parsear
+        let result = { success: true };
+        if (response.status !== 204) {
+            const text = await response.text();
+            if (text) {
+                result = JSON.parse(text);
+            }
+        }
         
         // Mostrar notificación de éxito
         toast.success('Evento eliminado correctamente', {
