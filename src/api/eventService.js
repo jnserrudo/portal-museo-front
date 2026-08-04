@@ -91,33 +91,23 @@ export const createEvent = async (formData) => {
             credentials: 'include' // Importante para mantener la sesión si usas autenticación
         });
 
-        let responseData;
-        try {
-            // Intentar parsear la respuesta como JSON
-            responseData = await response.json();
-        } catch (e) {
-            // Si no se puede parsear como JSON, lanzar un error con el texto de la respuesta
-            const text = await response.text();
-            throw new Error(`Error al parsear la respuesta del servidor: ${text}`);
-        }
-        
-        console.log('📡 [API] Respuesta del servidor:', {
-            ok: response.ok,
-            status: response.status,
-            data: responseData
-        });
-        
+        // Primero verificar si la respuesta es OK
         if (!response.ok) {
             console.error('❌ [API] Error en la respuesta del servidor:', {
                 status: response.status,
-                statusText: response.statusText,
-                data: responseData
+                statusText: response.statusText
             });
             
-            const errorMessage = responseData.message || responseData.error || `Error al crear el evento (${response.status})`;
+            let errorMessage;
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorData.error || `Error al crear el evento (${response.status})`;
+            } catch (e) {
+                // Si no se puede parsear como JSON, usar mensaje genérico
+                errorMessage = `Error al crear el evento: ${response.status} ${response.statusText}`;
+            }
             
             console.log('🔔 [API] Mostrando toast de ERROR');
-            // Mostrar notificación de error
             toast.error(errorMessage, {
               position: "top-right",
               autoClose: 5000,
@@ -129,6 +119,20 @@ export const createEvent = async (formData) => {
             
             throw new Error(errorMessage);
         }
+        
+        // Solo parsear JSON si la respuesta es OK
+        let responseData;
+        try {
+            responseData = await response.json();
+        } catch (e) {
+            throw new Error(`Error al parsear la respuesta del servidor`);
+        }
+        
+        console.log('📡 [API] Respuesta del servidor:', {
+            ok: response.ok,
+            status: response.status,
+            data: responseData
+        });
         
         console.log('✅ [API] Evento creado exitosamente');
         console.log('📄 [API] Datos del evento:', responseData.data);
@@ -192,33 +196,22 @@ export const updateEvent = async (id, formData) => {
             credentials: 'include'
         });
 
-        let responseData;
-        try {
-            // Intentar parsear la respuesta como JSON
-            responseData = await response.json();
-        } catch (e) {
-            // Si no se puede parsear como JSON, lanzar un error con el texto de la respuesta
-            const text = await response.text();
-            throw new Error(`Error al parsear la respuesta del servidor: ${text}`);
-        }
-        
-        console.log('📡 [API] Respuesta del servidor:', {
-            ok: response.ok,
-            status: response.status,
-            data: responseData
-        });
-        
+        // Primero verificar si la respuesta es OK
         if (!response.ok) {
             console.error('❌ [API] Error en la respuesta del servidor al actualizar:', {
                 status: response.status,
-                statusText: response.statusText,
-                data: responseData
+                statusText: response.statusText
             });
             
-            const errorMessage = responseData.message || responseData.error || `Error al actualizar el evento (${response.status})`;
+            let errorMessage;
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorData.error || `Error al actualizar el evento (${response.status})`;
+            } catch (e) {
+                errorMessage = `Error al actualizar el evento: ${response.status} ${response.statusText}`;
+            }
             
             console.log('🔔 [API] Mostrando toast de ERROR');
-            // Mostrar notificación de error
             toast.error(errorMessage, {
               position: "top-right",
               autoClose: 5000,
@@ -230,6 +223,20 @@ export const updateEvent = async (id, formData) => {
             
             throw new Error(errorMessage);
         }
+        
+        // Solo parsear JSON si la respuesta es OK
+        let responseData;
+        try {
+            responseData = await response.json();
+        } catch (e) {
+            throw new Error(`Error al parsear la respuesta del servidor`);
+        }
+        
+        console.log('📡 [API] Respuesta del servidor:', {
+            ok: response.ok,
+            status: response.status,
+            data: responseData
+        });
         
         console.log('✅ [API] Evento actualizado exitosamente');
         console.log('📄 [API] Datos del evento:', responseData.data);
