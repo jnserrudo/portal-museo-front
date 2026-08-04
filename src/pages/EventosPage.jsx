@@ -359,6 +359,7 @@ const EventosPage = ({
   onDeleteEvent 
 }) => {
   const { isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [viewEvent, setViewEvent] = useState(null);
@@ -405,6 +406,10 @@ const EventosPage = ({
     
     console.log('🔄 [EVENTOS] Procesando eventos:', events.length);
     
+    // Obtener fecha actual sin hora para comparación
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
     const normalized = events.map((event, index) => {
       const imageUrl = (event.imagenUrls && event.imagenUrls.length > 0) 
         ? event.imagenUrls[0] 
@@ -430,11 +435,30 @@ const EventosPage = ({
       };
     });
 
+    // Filtrar eventos futuros o del día actual
     let filtered = normalized.filter(event => {
+      // Filtro de búsqueda
       const title = event.title || '';
       const desc = event.description || '';
       const term = searchTerm.toLowerCase();
-      return title.toLowerCase().includes(term) || desc.toLowerCase().includes(term);
+      const matchesSearch = title.toLowerCase().includes(term) || desc.toLowerCase().includes(term);
+      
+      if (!matchesSearch) return false;
+      
+      // Filtro de fecha: solo eventos futuros o del día actual
+      if (!event.date) return true; // Si no tiene fecha, mostrarlo
+      
+      try {
+        const eventDate = parseISO(event.date);
+        if (isValid(eventDate)) {
+          eventDate.setHours(0, 0, 0, 0);
+          return eventDate >= today; // Solo eventos de hoy o futuros
+        }
+      } catch (e) {
+        console.error('Error parsing date for filtering:', e);
+      }
+      
+      return true; // Si hay error parseando, mostrar el evento
     });
 
     return filtered.sort((a, b) => {

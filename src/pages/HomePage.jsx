@@ -395,6 +395,10 @@ const HomePage = ({ events = [], isLoading = false }) => {
   const processedEvents = useMemo(() => {
     if (!Array.isArray(events)) return [];
     
+    // Obtener fecha actual sin hora para comparación
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
     const normalized = events.map(event => {
       const imageUrl = (event.imagenUrls && event.imagenUrls.length > 0) 
         ? event.imagenUrls[0] 
@@ -411,7 +415,30 @@ const HomePage = ({ events = [], isLoading = false }) => {
       };
     });
 
-    return normalized.sort((a, b) => {
+    // Filtrar solo eventos futuros o del día actual
+    const futureEvents = normalized.filter(event => {
+      if (!event.date) return true; // Si no tiene fecha, mostrarlo
+      
+      try {
+        let eventDate = parseISO(event.date);
+        
+        // Si no es válido como ISO, intentar como DD/MM/YYYY
+        if (!isValid(eventDate)) {
+          eventDate = parse(event.date, 'dd/MM/yyyy', new Date());
+        }
+        
+        if (isValid(eventDate)) {
+          eventDate.setHours(0, 0, 0, 0);
+          return eventDate >= today; // Solo eventos de hoy o futuros
+        }
+      } catch (e) {
+        console.error('Error parsing date for filtering:', e);
+      }
+      
+      return true; // Si hay error parseando, mostrar el evento
+    });
+
+    return futureEvents.sort((a, b) => {
       const dateAStr = a.date;
       const dateBStr = b.date;
       
