@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { es } from 'date-fns/locale';
 import Button from '../components/ui/Button';
 import Modal from '../components/Modal';
 import { theme } from '../styles/theme';
+import * as eventService from '../api/eventService';
 
 // Ruta a la imagen usando BASE_URL
 const museoFrente = `${import.meta.env.BASE_URL}museo_frente.jpg`;
@@ -358,11 +359,33 @@ const features = [
   }
 ];
 
-const HomePage = ({ events = [], isLoading = false }) => {
+const HomePage = ({ events: propEvents = [], isLoading: propLoading = false }) => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [viewEvent, setViewEvent] = useState(null);
+  const [events, setEvents] = useState(propEvents);
+  const [isLoading, setIsLoading] = useState(propLoading);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setIsLoading(true);
+      try {
+        const data = await eventService.getEvents();
+        const sorted = [...data].sort((a, b) => {
+          const dateA = new Date(a.fecha);
+          const dateB = new Date(b.fecha);
+          return dateA - dateB;
+        });
+        setEvents(sorted);
+      } catch (error) {
+        console.error('Error al cargar eventos en HomePage:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
 
   // Helper function to normalize image URLs
   const normalizeImageUrl = (imageUrl) => {

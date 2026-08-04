@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy } from "react";
+import React, { useState, useEffect, useCallback, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { ToastContainer, toast } from 'react-toastify';
@@ -45,7 +45,7 @@ const App = () => {
   });
 
   // Cargar eventos desde la API y ordenarlos por fecha
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     setIsEventsLoading(true);
     try {
       const data = await eventService.getEvents();
@@ -68,7 +68,7 @@ const App = () => {
     } finally {
       setIsEventsLoading(false);
     }
-  };
+  }, []);
 
   // Cargar eventos al montar el componente
   useEffect(() => {

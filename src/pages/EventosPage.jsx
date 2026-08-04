@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { format, parseISO, isValid, compareDesc } from 'date-fns';
@@ -10,6 +10,7 @@ import Button from '../components/ui/Button';
 import Modal from '../components/Modal';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { useAuth } from '../context/AuthContext';
+import * as eventService from '../api/eventService';
 
 // --- Styled Components ---
 
@@ -378,8 +379,8 @@ const BackButton = styled.button`
 `;
 
 const EventosPage = ({ 
-  events = [], 
-  isLoading, 
+  events: propEvents = [], 
+  isLoading: propLoading, 
   onSaveEvent, 
   onDeleteEvent 
 }) => {
@@ -389,6 +390,28 @@ const EventosPage = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [viewEvent, setViewEvent] = useState(null);
+  const [events, setEvents] = useState(propEvents);
+  const [isLoading, setIsLoading] = useState(propLoading);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setIsLoading(true);
+      try {
+        const data = await eventService.getEvents();
+        const sorted = [...data].sort((a, b) => {
+          const dateA = new Date(a.fecha);
+          const dateB = new Date(b.fecha);
+          return dateA - dateB;
+        });
+        setEvents(sorted);
+      } catch (error) {
+        console.error('Error al cargar eventos en EventosPage:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
 
   // --- Data Processing ---
 
