@@ -14,6 +14,16 @@ class ErrorBoundary extends Component {
 
   componentDidCatch(error, errorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
+    
+    if (
+      error?.message?.includes('Failed to fetch dynamically imported module') ||
+      error?.message?.includes('Importing a module script failed') ||
+      error?.message?.includes('error loading dynamically imported module')
+    ) {
+      console.log('🔄 Error de chunk cacheado, recargando pagina...');
+      window.location.reload();
+      return;
+    }
   }
 
   render() {
