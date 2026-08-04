@@ -411,12 +411,16 @@ const HomePage = ({ events = [], isLoading = false }) => {
         date: event.fecha || event.date,
         time: event.hora || event.time,
         location: event.lugar || event.location,
-        imageUrl: normalizeImageUrl(imageUrl)
+        imageUrl: normalizeImageUrl(imageUrl),
+        publicado: event.publicado
       };
     });
 
-    // Filtrar solo eventos futuros o del día actual
+    // Filtrar solo eventos publicados, futuros o del día actual
     const futureEvents = normalized.filter(event => {
+      // Filtrar eventos no publicados
+      if (event.publicado === false || event.publicado === undefined) return false;
+      
       if (!event.date) return true; // Si no tiene fecha, mostrarlo
       
       try {
@@ -428,8 +432,9 @@ const HomePage = ({ events = [], isLoading = false }) => {
         }
         
         if (isValid(eventDate)) {
-          eventDate.setHours(0, 0, 0, 0);
-          return eventDate >= today; // Solo eventos de hoy o futuros
+          const eventDateOnly = new Date(eventDate);
+          eventDateOnly.setHours(0, 0, 0, 0);
+          return eventDateOnly >= today; // Solo eventos de hoy o futuros
         }
       } catch (e) {
         console.error('Error parsing date for filtering:', e);

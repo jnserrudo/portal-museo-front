@@ -5,9 +5,33 @@ import * as eventService from '../../api/eventService';
 import './HomeSection.css'; // Importamos nuestros estilos
 
 const HomeSection = ({ events = [], isLoading = false }) => {
-    // Filtrar solo los eventos publicados
+    // Filtrar solo los eventos publicados y futuros
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
     const publishedEvents = Array.isArray(events) 
-        ? events.filter(event => event.publicado)
+        ? events
+            .filter(event => event.publicado !== false && event.publicado !== undefined)
+            .filter(event => {
+                if (!event.fecha && !event.date) return true;
+                const dateStr = event.fecha || event.date;
+                try {
+                    const eventDate = new Date(dateStr);
+                    if (!isNaN(eventDate.getTime())) {
+                        const eventDateOnly = new Date(eventDate);
+                        eventDateOnly.setHours(0, 0, 0, 0);
+                        return eventDateOnly >= today;
+                    }
+                } catch (e) {
+                    console.error('Error parsing date:', e);
+                }
+                return true;
+            })
+            .sort((a, b) => {
+                const dateA = new Date(a.fecha || a.date || 0);
+                const dateB = new Date(b.fecha || b.date || 0);
+                return dateA - dateB;
+            })
         : [];
 
     return (
@@ -42,7 +66,7 @@ const HomeSection = ({ events = [], isLoading = false }) => {
                  <p>Cargando eventos...</p>
              </div>
         ) : (
-            <EventCarousel events={events} />
+            <EventCarousel events={publishedEvents} />
         )}
         
         {/* Bloque de Bienvenida */}

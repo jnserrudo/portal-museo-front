@@ -8,6 +8,7 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
         titulo: '',
         descripcion: '',
         fecha: '',
+        hora: '',
         lugar: '',
         imagenUrls: [],
         publicado: false,
@@ -32,6 +33,7 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
                 titulo: event.titulo || event.title,
                 descripcion: event.descripcion || event.description,
                 fecha: fechaFormateada,
+                hora: event.hora || event.time || '',
                 lugar: event.lugar || event.location,
                 imagenUrls: event.imagenUrls || (event.imageUrl ? [event.imageUrl] : []),
                 publicado: event.publicado !== undefined ? event.publicado : true,
@@ -79,6 +81,7 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
                 setFormData({
                     ...eventToEdit,
                     fecha: fechaFormateada,
+                    hora: eventToEdit.hora || '',
                     autorId: eventToEdit.autorId || 1
                 });
                 setIsEditing(true);
@@ -94,9 +97,10 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
             titulo: '', 
             descripcion: '', 
             fecha: '',
+            hora: '',
             lugar: '',
             imagenUrls: [],
-            publicado: false,
+            publicado: true,
             autorId: 1
         });
         setIsEditing(false);
@@ -138,6 +142,7 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
         
         formDataToSend.append('fecha', fechaISO);
         
+        if (formData.hora) formDataToSend.append('hora', formData.hora);
         if (formData.lugar) formDataToSend.append('lugar', formData.lugar);
         formDataToSend.append('publicado', formData.publicado ? 'true' : 'false');
         formDataToSend.append('autorId', '1');
@@ -284,6 +289,19 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
                         required 
                         className="form-input" 
                         min={!isEditing ? new Date().toISOString().split('T')[0] : undefined}
+                    />
+                </div>
+
+                <div className="form-field">
+                    <label htmlFor="hora" className="form-label">Hora del Evento</label>
+                    <input 
+                        type="time" 
+                        id="hora" 
+                        name="hora" 
+                        value={formData.hora || ''} 
+                        onChange={handleChange} 
+                        className="form-input"
+                        placeholder="Ej: 14:30"
                     />
                 </div>
 
