@@ -163,6 +163,7 @@ const CardImageContainer = styled.div`
   height: 150px;
   overflow: hidden;
   position: relative;
+  background-color: white;
 `;
 
 const CardImage = styled.img`
@@ -170,13 +171,13 @@ const CardImage = styled.img`
   height: 100%;
   object-fit: contain;
   transition: transform 0.5s ease;
-  background-color: ${theme.colors.background.section};
+  background-color: white;
 `;
 
 const CardImagePlaceholder = styled.div`
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, ${theme.colors.primary}20, ${theme.colors.accent}40);
+  background: #f5f5f5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -357,20 +358,24 @@ const MetaItem = styled.div`
 const BackButton = styled.button`
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: none;
-  border: none;
+  gap: 10px;
+  background: white;
+  border: 2px solid ${theme.colors.primary};
   color: ${theme.colors.primary};
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: ${theme.typography.weights.semibold};
   cursor: pointer;
-  padding: 8px 0;
-  margin-bottom: ${theme.spacing.md};
-  transition: all 0.2s;
+  padding: 12px 24px;
+  margin-bottom: ${theme.spacing.lg};
+  border-radius: ${theme.borderRadius.md};
+  box-shadow: ${theme.shadows.light};
+  transition: all 0.3s;
   
   &:hover {
-    color: ${theme.colors.accent};
+    background: ${theme.colors.primary};
+    color: white;
     transform: translateX(-4px);
+    box-shadow: ${theme.shadows.medium};
   }
   
   svg {

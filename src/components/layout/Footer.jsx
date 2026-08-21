@@ -235,8 +235,8 @@ const HoursItem = styled.div`
 
 const CopyrightContainer = styled.div`
   text-align: center;
-  padding: ${theme.spacing.lg} 0;
-  margin-top: ${theme.spacing.xl};
+  padding: ${theme.spacing.xl} 0;
+  margin-top: calc(${theme.spacing.xl} + 2rem);
   background: rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
@@ -252,7 +252,7 @@ const LogosContainer = styled.div`
   margin-bottom: ${theme.spacing.sm};
 
   img {
-    height: 60px;
+    height: 45px;
     width: auto;
     object-fit: contain;
     opacity: 0.9;
@@ -365,7 +365,7 @@ const Footer = () => {
               <span>Av. Brígido Zabaleta 22, San Antonio de los Cobres, Salta</span>
             </ContactItem>
             <ContactItem>
-              <FaPhone />
+              <FaPhone style={{ transform: 'rotate(90deg)' }} />
               <span>(387) 5020900</span>
             </ContactItem>
             <ContactItem>

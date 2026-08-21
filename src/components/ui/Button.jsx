@@ -2,10 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { theme } from '../../styles/theme';
 
-const StyledButton = styled.button.attrs({
-  // Prevenir que fullWidth se pase al elemento DOM
-  fullWidth: undefined
-})`
+const StyledButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -22,8 +19,8 @@ const StyledButton = styled.button.attrs({
   text-align: center;
 
   /* Variantes */
-  ${({ variant }) => {
-    switch (variant) {
+  ${({ $variant }) => {
+    switch ($variant) {
       case 'primary':
         return `
           background-color: ${theme.colors.primary};
@@ -69,8 +66,8 @@ const StyledButton = styled.button.attrs({
   }}
 
   /* Tamaños */
-  ${({ size }) => {
-    switch (size) {
+  ${({ $size }) => {
+    switch ($size) {
       case 'small':
         return 'padding: 0.5rem 1rem; font-size: 0.875rem;';
       case 'large':
@@ -110,8 +107,8 @@ const Button = React.forwardRef(({
       ref={ref}
       as={as}
       to={to}
-      variant={variant}
-      size={size}
+      $variant={variant}
+      $size={size}
       $fullWidth={fullWidth}
       disabled={disabled}
       onClick={onClick}

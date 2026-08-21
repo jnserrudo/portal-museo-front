@@ -12,20 +12,26 @@ const PageContainer = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${import.meta.env.BASE_URL}museo_frente.jpg');
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url('${import.meta.env.BASE_URL}museo_frente.jpg');
   background-size: cover;
-  background-position: center;
-  height: 40vh;
-  min-height: 350px;
+  background-position: center 60%;
+  background-repeat: no-repeat;
+  height: 95vh;
+  min-height: 700px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: white;
-  padding-bottom: 80px; /* Space for overlap */
+  margin: 0;
+  padding: 0;
+  margin-top: -1px;
   
   @media (max-width: ${theme.breakpoints.tablet}) {
-    padding-bottom: 40px;
+    height: 80vh;
+    background-position: center 60%;
+    background-size: cover;
+    min-height: 550px;
   }
 `;
 
@@ -49,44 +55,36 @@ const HeroContent = styled.div`
 `;
 
 const Container = styled.div`
-  max-width: 1400px;
-  width: 95%;
-  margin: 0 auto;
-  position: relative;
-  z-index: 10;
-  margin-top: -80px;
-
-  @media (max-width: ${theme.breakpoints.tablet}) {
-    width: 92%;
-    margin-top: -40px;
-  }
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: ${theme.colors.background.light};
 `;
 
 const ContactCard = styled.div`
-  display: flex;
-  flex-direction: row;
-  background: white;
-  border-radius: ${theme.borderRadius.lg};
-  box-shadow: ${theme.shadows.dark};
-  overflow: hidden;
-  margin-bottom: ${theme.spacing.xl};
+  display: grid;
+  grid-template-columns: 45% 55%;
+  background: transparent;
+  overflow: visible;
+  min-height: 700px;
 
   @media (max-width: ${theme.breakpoints.desktop}) {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    min-height: auto;
   }
 `;
 
 const InfoPanel = styled.div`
   background: ${theme.colors.primary};
   color: white;
-  flex: 1;
-  padding: ${theme.spacing.xl};
+  padding: 80px 60px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: ${theme.spacing.xl};
 
   @media (max-width: ${theme.breakpoints.tablet}) {
-    padding: ${theme.spacing.lg};
+    padding: 50px 30px;
   }
 `;
 
@@ -176,12 +174,11 @@ const SocialIcons = styled.div`
 `;
 
 const FormPanel = styled.div`
-  flex: 1.5;
   background: white;
-  padding: ${theme.spacing.xl};
+  padding: 80px 60px;
   
   @media (max-width: ${theme.breakpoints.tablet}) {
-    padding: ${theme.spacing.lg};
+    padding: 50px 30px;
   }
 `;
 
@@ -370,7 +367,7 @@ const ContactoPage = () => {
                   <span>Av. San Martín 22, San Antonio de los Cobres, Salta</span>
                 </li>
                 <li>
-                  <FaPhone />
+                  <FaPhone style={{ transform: 'rotate(90deg)' }} />
                   <a href="tel:+543875020900">(387) 5020900</a>
                 </li>
                 <li>

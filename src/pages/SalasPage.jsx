@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
-import { FaMountain, FaGem, FaLeaf, FaHistory, FaTrain, FaLandmark, FaMapMarkerAlt, FaHandPointer, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaMountain, FaGem, FaLeaf, FaHistory, FaTrain, FaLandmark, FaMapMarkerAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
 
 const PageContainer = styled.div`
@@ -42,31 +42,6 @@ const CarouselTitle = styled.h1`
   
   @media (max-width: 768px) {
     font-size: 2rem;
-  }
-`;
-
-const CarouselSubtitle = styled.p`
-  color: ${theme.colors.text.dark};
-  font-size: 1.1rem;
-  max-width: 600px;
-  margin: 0 auto ${theme.spacing.md};
-`;
-
-const DragHint = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: ${theme.colors.accent};
-  font-size: 0.95rem;
-  font-weight: 700;
-  opacity: 0.8;
-  animation: pulse 2s infinite;
-  
-  @keyframes pulse {
-    0% { opacity: 0.4; transform: scale(0.98); }
-    50% { opacity: 1; transform: scale(1.02); }
-    100% { opacity: 0.4; transform: scale(0.98); }
   }
 `;
 
@@ -488,10 +463,6 @@ const SalasPage = () => {
         <CarouselSection>
           <CarouselHeader>
             <CarouselTitle>Salas y Experiencia Inmersiva</CarouselTitle>
-            <CarouselSubtitle>Desplázate para recorrer la historia, geología y cultura de la Puna a través de nuestras salas temáticas.</CarouselSubtitle>
-            <DragHint>
-              <FaHandPointer /> Arrastra para explorar
-            </DragHint>
           </CarouselHeader>
 
           <CarouselWrapper>

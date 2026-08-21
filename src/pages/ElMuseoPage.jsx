@@ -12,7 +12,7 @@ const PageContainer = styled.div`
 const HeroSection = styled.section`
   background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${import.meta.env.BASE_URL}museo_frente.jpg');
   background-size: cover;
-  background-position: center;
+  background-position: center 60%;
   height: 50vh;
   min-height: 400px;
   display: flex;

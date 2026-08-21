@@ -15,25 +15,28 @@ const museoFrente = `${import.meta.env.BASE_URL}museo_frente.jpg`;
 
 const HeroSection = styled.section`
   position: relative;
-  height: 70vh;
-  min-height: 500px;
+  height: 95vh;
+  min-height: 700px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: ${theme.colors.text.light};
   background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), 
-              url(${museoFrente}) center 40%/cover no-repeat;
+              url(${museoFrente});
+  background-size: cover;
+  background-position: center 60%;
+  background-repeat: no-repeat;
   margin: 0;
   padding: 0;
   margin-top: -1px;
   
   @media (max-width: 768px) {
-    height: 60vh;
-    background-position: center 35%;
+    height: 80vh;
+    background-position: center 60%;
     background-size: cover;
     background-attachment: scroll;
-    min-height: 450px;
+    min-height: 550px;
   }
 `;
 
@@ -183,23 +186,31 @@ const EventCard = styled.div`
   }
 `;
 
-const EventImage = styled.div.attrs({
-  style: ({ $imageUrl }) => ({
-    background: $imageUrl ? `url(${$imageUrl}) center/cover no-repeat` : 'linear-gradient(135deg, #8B5A2B20, #e3c2a140)',
-    height: '200px'
-  })
-})`
+const EventImageContainer = styled.div`
+  width: 100%;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${theme.colors.primary};
+  background-color: white;
+  overflow: hidden;
   
-  ${props => !props.$imageUrl && `
+  ${props => !props.$hasImage && `
+    background-color: #f5f5f5;
+    color: ${theme.colors.primary};
+    
     svg {
       font-size: 3rem;
       opacity: 0.5;
     }
   `}
+`;
+
+const EventImageElement = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 `;
 
 const EventContent = styled.div`
@@ -427,6 +438,15 @@ const HomePage = ({ events: propEvents = [], isLoading: propLoading = false }) =
         ? event.imagenUrls[0] 
         : event.imageUrl || null;
       
+      const normalizedUrl = normalizeImageUrl(imageUrl);
+      
+      // Debug: ver qué URLs se están generando
+      if (imageUrl) {
+        console.log('Imagen original:', imageUrl);
+        console.log('Imagen normalizada:', normalizedUrl);
+        console.log('VITE_UPLOADS_BASE_URL:', import.meta.env.VITE_UPLOADS_BASE_URL);
+      }
+      
       return {
         id: event.id,
         title: event.titulo || event.title,
@@ -434,7 +454,7 @@ const HomePage = ({ events: propEvents = [], isLoading: propLoading = false }) =
         date: event.fecha || event.date,
         time: event.hora || event.time,
         location: event.lugar || event.location,
-        imageUrl: normalizeImageUrl(imageUrl),
+        imageUrl: normalizedUrl,
         publicado: event.publicado
       };
     });
@@ -576,9 +596,19 @@ const HomePage = ({ events: propEvents = [], isLoading: propLoading = false }) =
                   
                   return (
                     <EventCard key={event.id} onClick={() => handleEventClick(event)}>
-                      <EventImage $imageUrl={event.imageUrl}>
-                        {!event.imageUrl && <FaCalendarAlt />}
-                      </EventImage>
+                      <EventImageContainer $hasImage={!!event.imageUrl}>
+                        {event.imageUrl ? (
+                          <EventImageElement 
+                            src={event.imageUrl} 
+                            alt={event.title}
+                            onError={(e) => { 
+                              e.target.style.display = 'none'; 
+                            }}
+                          />
+                        ) : (
+                          <FaCalendarAlt />
+                        )}
+                      </EventImageContainer>
                       <EventContent>
                         <EventDate>
                           <FaCalendarAlt /> {formattedDate}
