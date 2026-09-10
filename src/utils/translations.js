@@ -83,7 +83,7 @@ export const translations = {
     'museum.about.content': 'El "Museo Regional Andino" se encuentra en San Antonio de los Cobres, Salta.\n\n\n\nEl mismo funciona en el edificio de la antigua sede de la Gobernación y declarado Monumento Histórico Nacional en el año 2018.\n\n\n\nInaugurado en el año 2019 como museo para conservar y difundir la historia de la gente de la puna.\n\n\n\nEl museo cuenta con una colección de bienes muy significativos que permiten conocer y descubrir la vida en la región andina, su naturaleza diversa, la historia y el estilo de vida de los habitantes.',
     
     'museum.info.location.label': 'Ubicación',
-    'museum.info.location.value': 'Av. Brígido Zabaleta, San Antonio de los Cobres, Salta',
+    'museum.info.location.value': 'Av. Brígido Zabaleta 22, San Antonio de los Cobres, Salta',
     
     'museum.info.hours.label': 'Días y Horarios',
     'museum.info.hours.value': 'Martes a Domingos de 10:00 a 18:00hs',
@@ -120,7 +120,7 @@ export const translations = {
     'visit.tickets.exemptions': 'Niños y personas especiales no pagan, descuento a jubilados.',
     'visit.location.title': 'Ubicación',
     'visit.location.address.label': 'Dirección',
-    'visit.location.address.value': 'Av. San Martín 22, San Antonio de los Cobres',
+    'visit.location.address.value': 'Av. Brígido Zabaleta 22, San Antonio de los Cobres, Salta',
     'visit.location.province.label': 'Provincia',
     'visit.location.province.value': 'Salta, Argentina',
     'visit.location.howTo.label': 'Cómo llegar',
@@ -303,7 +303,7 @@ export const translations = {
     'museum.about.content': 'The "Andean Regional Museum" is located in San Antonio de los Cobres, Salta.\n\n\n\nIt operates in the building of the former Government House, declared a National Historic Monument in 2018.\n\n\n\nInaugurated in 2019 as a museum to preserve and disseminate the history of the Puna people.\n\n\n\nThe museum houses a significant collection of artifacts that allow visitors to learn about and discover life in the Andean region, its diverse nature, history, and the lifestyle of its inhabitants.',
     
     'museum.info.location.label': 'Location',
-    'museum.info.location.value': 'Av. Brígido Zabaleta, San Antonio de los Cobres, Salta',
+    'museum.info.location.value': 'Av. Brígido Zabaleta 22, San Antonio de los Cobres, Salta',
     
     'museum.info.hours.label': 'Days and Hours',
     'museum.info.hours.value': 'Tuesday to Sunday from 10:00 AM to 6:00 PM',
@@ -387,7 +387,7 @@ export const translations = {
     'museum.about.content': 'El “Museo Regional Andino” se encuentra en San Antonio de los Cobres, Salta. Funciona en un edificio declarado Monumento Histórico Nacional en el año 2018, creado en el siglo XX con la Gobernación de los Andes e inaugurado en el año 2019 como museo para conservar y difundir la historia de la gente de la puna. Su colección posee objetos históricas y textiles ancestrales realizados a manualmente en telar aplicados a trajes rurales y regionales, piezas etnográficas de la Puna Salteña y tejidos de barracán de fines del siglo XIX. La colección del Museo cuenta con textiles ancestrales realizados manualmente en telar.',
     
     'museum.info.location.label': 'Ubicación',
-    'museum.info.location.value': 'Av. Brígido Zabaleta, San Antonio de los Cobres, Salta',
+    'museum.info.location.value': 'Av. Brígido Zabaleta 22, San Antonio de los Cobres, Salta',
     
     'museum.info.hours.label': 'Días y Horarios',
     'museum.info.hours.value': 'Martes a Domingos de 10:00 a 18:00hs',
@@ -430,7 +430,7 @@ export const translations = {
     'visit.tickets.exemptions': 'Children and special needs individuals do not pay, discount for retirees.',
     'visit.location.title': 'Location',
     'visit.location.address.label': 'Address',
-    'visit.location.address.value': 'Av. San Martín 22, San Antonio de los Cobres',
+    'visit.location.address.value': 'Av. Brígido Zabaleta 22, San Antonio de los Cobres, Salta',
     'visit.location.province.label': 'Province',
     'visit.location.province.value': 'Salta, Argentina',
     'visit.location.howTo.label': 'How to get there',
