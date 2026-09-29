@@ -694,7 +694,7 @@ const HomePage = ({ events: propEvents = [], isLoading: propLoading = false }) =
               </MetaItem>
             </ModalMetaGrid>
 
-            <div style={{ lineHeight: '1.8', color: theme.colors.text.dark, fontSize: '1.1rem' }}>
+            <div style={{ lineHeight: '1.8', color: theme.colors.text.dark, fontSize: '1.1rem', whiteSpace: 'pre-line' }}>
               {viewEvent.description}
             </div>
           </ModalContentWrapper>

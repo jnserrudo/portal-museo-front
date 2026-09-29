@@ -1,53 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import './EventForm.css';
 import ImageUploader from './ImageUploader';
 
-const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCreate, onSaveSuccess }) => {
-    const [formData, setFormData] = useState({
-        id: '',
-        titulo: '',
-        descripcion: '',
-        fecha: '',
-        hora: '',
-        lugar: '',
-        imagenUrls: [],
-        publicado: false,
-        autorId: 1
-    });
-    
-    const [isEditing, setIsEditing] = useState(false);
-    const [selectedEventId, setSelectedEventId] = useState('');
-    const [newImages, setNewImages] = useState([]);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+const pad = (n) => String(n).padStart(2, '0');
 
-    // Effect to populate form when event prop changes (from parent)
-    useEffect(() => {
-        if (event) {
-            console.log('EventForm received event prop:', event);
-            const fecha = new Date(event.fecha || event.date);
-            const fechaFormateada = !isNaN(fecha.getTime()) ? fecha.toISOString().split('T')[0] : '';
-            
-            setFormData({
-                ...event,
-                id: event.id,
-                titulo: event.titulo || event.title,
-                descripcion: event.descripcion || event.description,
-                fecha: fechaFormateada,
-                hora: event.hora || event.time || '',
-                lugar: event.lugar || event.location,
-                imagenUrls: event.imagenUrls || (event.imageUrl ? [event.imageUrl] : []),
-                publicado: event.publicado !== undefined ? event.publicado : true,
-                autorId: event.autorId || 1
-            });
-            setIsEditing(true);
-            setSelectedEventId(event.id.toString());
-        } else {
-            // Only reset if we are not already editing via selector
-            if (!selectedEventId) {
-                handleReset();
-            }
-        }
-    }, [event]);
+// Fecha local (YYYY-MM-DD), la misma que muestran las paginas publicas.
+const toDateInput = (value) => {
+    if (!value) return '';
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return '';
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
+
+const formFromEvent = (event) => ({
+    titulo: event?.titulo || event?.title || '',
+    descripcion: event?.descripcion || event?.description || '',
+    fecha: toDateInput(event?.fecha || event?.date),
+    hora: event?.hora || event?.time || '',
+    lugar: event?.lugar || event?.location || '',
+    imagenUrls: event?.imagenUrls || (event?.imageUrl ? [event.imageUrl] : []),
+    publicado: event?.publicado !== undefined ? event.publicado : true
+});
+
+const EventForm = ({ event = null, onSave, onDelete, onCancel }) => {
+    const isEditing = Boolean(event?.id);
+    const [formData, setFormData] = useState(() => formFromEvent(event));
+    const [newImages, setNewImages] = useState([]);
+    const [uploaderKey, setUploaderKey] = useState(0);
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -58,261 +39,120 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
     };
 
     const handleImagesChange = (images) => {
-        const existingImages = images.filter(img => !img.isNew).map(img => img.url);
-        const newImageFiles = images.filter(img => img.isNew).map(img => img.file);
-        
         setFormData(prev => ({
             ...prev,
-            imagenUrls: [...existingImages],
-            imageFiles: [...newImageFiles]
+            imagenUrls: images.filter(img => !img.isNew).map(img => img.url)
         }));
-        setNewImages(newImageFiles);
-    };
-
-    const handleSelectEvent = (e) => {
-        const id = e.target.value;
-        setSelectedEventId(id);
-        if (id) {
-            const eventToEdit = events.find(event => event.id.toString() === id);
-            if (eventToEdit) {
-                const fecha = new Date(eventToEdit.fecha);
-                const fechaFormateada = !isNaN(fecha.getTime()) ? fecha.toISOString().split('T')[0] : '';
-                
-                setFormData({
-                    ...eventToEdit,
-                    fecha: fechaFormateada,
-                    hora: eventToEdit.hora || '',
-                    autorId: eventToEdit.autorId || 1
-                });
-                setIsEditing(true);
-            }
-        } else {
-            handleReset();
-        }
+        setNewImages(images.filter(img => img.isNew).map(img => img.file));
     };
 
     const handleReset = () => {
-        setFormData({ 
-            id: '', 
-            titulo: '', 
-            descripcion: '', 
-            fecha: '',
-            hora: '',
-            lugar: '',
-            imagenUrls: [],
-            publicado: true,
-            autorId: 1
-        });
-        setIsEditing(false);
-        setSelectedEventId('');
+        if (isEditing) {
+            onCancel?.();
+            return;
+        }
+        setFormData(formFromEvent(null));
+        setNewImages([]);
+        setUploaderKey(k => k + 1);
     };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        console.log('🎯 [EVENTO] ========== INICIO SUBMIT ==========');
-        console.log('📝 [EVENTO] Datos del formulario:', formData);
-        console.log('🔄 [EVENTO] ¿Es edición?:', isEditing);
-        console.log('🆔 [EVENTO] ID del evento:', formData.id);
-        
-        if (isSubmitting) {
-            console.warn('⚠️ [EVENTO] Submit bloqueado - ya hay una petición en curso');
+        if (isSaving) return;
+
+        const titulo = formData.titulo.trim();
+        const descripcion = formData.descripcion.trim();
+        if (!titulo || !descripcion || !formData.fecha) {
+            toast.error('Completá el título, la fecha y la descripción.');
             return;
         }
-        
-        if (!formData.titulo || !formData.descripcion || !formData.fecha) {
-            console.error('❌ [EVENTO] Faltan campos requeridos');
-            return;
-        }
-        
-        setIsSubmitting(true);
-        
+
         const formDataToSend = new FormData();
-        
-        formDataToSend.append('titulo', formData.titulo);
-        formDataToSend.append('descripcion', formData.descripcion);
-        
-        // FIX TIMEZONE: Crear fecha local a mediodía para evitar problemas de timezone
-        console.log('📅 [EVENTO] Fecha original del input:', formData.fecha);
-        const fechaLocal = new Date(formData.fecha + 'T12:00:00');
-        const fechaISO = fechaLocal.toISOString();
-        console.log('📅 [EVENTO] Fecha local creada:', fechaLocal);
-        console.log('📅 [EVENTO] Fecha ISO a enviar:', fechaISO);
-        console.log('📅 [EVENTO] Timezone offset:', fechaLocal.getTimezoneOffset());
-        
-        formDataToSend.append('fecha', fechaISO);
-        
-        if (formData.hora) formDataToSend.append('hora', formData.hora);
-        if (formData.lugar) formDataToSend.append('lugar', formData.lugar);
+        formDataToSend.append('titulo', titulo);
+        formDataToSend.append('descripcion', descripcion);
+        // Mediodia local para que la fecha no cambie de dia al pasar a UTC.
+        formDataToSend.append('fecha', new Date(`${formData.fecha}T12:00:00`).toISOString());
+        formDataToSend.append('hora', formData.hora || '');
+        formDataToSend.append('lugar', formData.lugar.trim());
         formDataToSend.append('publicado', formData.publicado ? 'true' : 'false');
-        formDataToSend.append('autorId', '1');
-        
-        // CRITICAL: Include ID for updates
-        if (isEditing && formData.id !== null && formData.id !== undefined && formData.id !== '') {
-            formDataToSend.append('id', formData.id);
-            console.log('✏️ [EVENTO] ACTUALIZANDO evento con ID:', formData.id);
-        } else {
-            console.log('➕ [EVENTO] CREANDO nuevo evento');
-        }
-        
-        // Manejo de imágenes
-        console.log('🖼️ [EVENTO] Nuevas imágenes:', newImages);
-        console.log('🖼️ [EVENTO] URLs existentes:', formData.imagenUrls);
-        
-        if (newImages && newImages.length > 0) {
-            console.log(`🖼️ [EVENTO] Agregando ${newImages.length} imagen(es) nueva(s)`);
-            newImages.forEach((file, index) => {
-                if (file instanceof File) {
-                    console.log(`  📎 [EVENTO] Imagen ${index + 1}:`, {
-                        name: file.name,
-                        size: file.size,
-                        type: file.type
-                    });
-                    formDataToSend.append('imagenes', file);
-                } else if (file.file) {
-                    console.log(`  📎 [EVENTO] Imagen ${index + 1} (wrapped):`, {
-                        name: file.file.name,
-                        size: file.file.size,
-                        type: file.file.type
-                    });
-                    formDataToSend.append('imagenes', file.file);
-                }
-            });
-        } else if (isEditing && formData.imagenUrls && formData.imagenUrls.length > 0) {
-            console.log('🖼️ [EVENTO] Manteniendo URLs existentes:', formData.imagenUrls);
-            formDataToSend.append('imagenUrls', JSON.stringify(formData.imagenUrls));
-        } else {
-            console.log('🖼️ [EVENTO] Sin imágenes');
-        }
-        
-        // Log del FormData completo
-        console.log('📦 [EVENTO] FormData a enviar:');
-        for (let [key, value] of formDataToSend.entries()) {
-            if (value instanceof File) {
-                console.log(`  ${key}:`, `[File: ${value.name}]`);
-            } else {
-                console.log(`  ${key}:`, value);
-            }
-        }
-        
+        formDataToSend.append('imagenUrls', JSON.stringify(formData.imagenUrls));
+        newImages.forEach(file => formDataToSend.append('imagenes', file));
+
+        setIsSaving(true);
         try {
-            if (typeof onSave === 'function') {
-                // Pass ID explicitly as second argument
-                const eventId = (isEditing && formData.id) ? formData.id : null;
-                console.log('💾 [EVENTO] Llamando a onSave con ID:', eventId);
-                
-                const result = await onSave(formDataToSend, eventId);
-                console.log('✅ [EVENTO] Respuesta de onSave:', result);
-                
-                handleReset();
-                if (typeof onSaveSuccess === 'function') {
-                    console.log('🎉 [EVENTO] Llamando a onSaveSuccess');
-                    onSaveSuccess();
-                }
-            } else {
-                throw new Error('No se encontró ninguna función para guardar el evento');
-            }
+            await onSave(formDataToSend, isEditing ? event.id : null);
+            if (!isEditing) handleReset();
         } catch (error) {
-            console.error('💥 [EVENTO] Error al guardar:', error);
-            console.error('💥 [EVENTO] Error stack:', error.stack);
+            // eventService ya muestra los errores que responde el servidor; fetch lanza TypeError si no hay conexión.
+            if (error instanceof TypeError) {
+                toast.error('No se pudo conectar con el servidor. Revisá la conexión e intentá de nuevo.');
+            }
+            console.error('Error al guardar el evento:', error);
         } finally {
-            setIsSubmitting(false);
-            console.log('🏁 [EVENTO] ========== FIN SUBMIT ==========');
+            setIsSaving(false);
         }
     };
-
-    const handleDeleteClick = async () => {
-        if (isSubmitting) return; // Prevent double clicks
-        
-        if (!formData.id) return;
-        
-        setIsSubmitting(true);
-        
-        try {
-            // App.jsx's deleteEvent handles confirmation
-            const result = await onDelete(formData.id);
-            // If result is false, user cancelled confirmation
-            if (result) {
-                handleReset();
-                if (typeof onSaveSuccess === 'function') {
-                    onSaveSuccess();
-                }
-            }
-        } catch (error) {
-            console.error('Error al eliminar el evento:', error);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    useEffect(() => {}, []);
-
-    const safeEvents = Array.isArray(events) ? events : [];
-    console.log(safeEvents);
-    const sortedEvents = [...safeEvents].sort((a, b) => 
-        new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
-    );
-    console.log("sortedEvents", sortedEvents);
 
     return (
         <div className="form-wrapper">
-            <h4 className="form-main-title">{isEditing ? 'Administración de Eventos' : 'Crear Nuevo Evento'}</h4>
+            <h4 className="form-main-title">{isEditing ? 'Editar Evento' : 'Crear Nuevo Evento'}</h4>
 
             <form onSubmit={handleSubmit} className="event-form" style={{ borderColor: '#8B5A2B', marginTop: '1rem' }}>
                 <h5 className="form-title" style={{ color: '#8B5A2B' }}>
-                    {isEditing ? `Editando: ${event?.titulo || event?.title || 'Evento'}` : 'Detalles del Evento'}
+                    {isEditing ? `Editando: ${event.titulo || event.title || 'Evento'}` : 'Detalles del Evento'}
                 </h5>
                 <p className="form-note">Los campos marcados con * son obligatorios</p>
 
                 <div className="form-field">
                     <label htmlFor="titulo" className="form-label">Título del Evento *</label>
-                    <input 
-                        type="text" 
-                        id="titulo" 
-                        name="titulo" 
-                        value={formData.titulo} 
-                        onChange={handleChange} 
-                        required 
-                        className="form-input" 
+                    <input
+                        type="text"
+                        id="titulo"
+                        name="titulo"
+                        value={formData.titulo}
+                        onChange={handleChange}
+                        required
+                        maxLength={200}
+                        className="form-input"
                         placeholder="Ej: Exposición de Arte Contemporáneo"
                     />
                 </div>
 
                 <div className="form-field">
                     <label htmlFor="fecha" className="form-label">Fecha del Evento *</label>
-                    <input 
-                        type="date" 
-                        id="fecha" 
-                        name="fecha" 
-                        value={formData.fecha} 
-                        onChange={handleChange} 
-                        required 
-                        className="form-input" 
-                        min={!isEditing ? new Date().toISOString().split('T')[0] : undefined}
+                    <input
+                        type="date"
+                        id="fecha"
+                        name="fecha"
+                        value={formData.fecha}
+                        onChange={handleChange}
+                        required
+                        className="form-input"
+                        min={!isEditing ? toDateInput(new Date()) : undefined}
                     />
                 </div>
 
                 <div className="form-field">
                     <label htmlFor="hora" className="form-label">Hora del Evento</label>
-                    <input 
-                        type="time" 
-                        id="hora" 
-                        name="hora" 
-                        value={formData.hora || ''} 
-                        onChange={handleChange} 
+                    <input
+                        type="time"
+                        id="hora"
+                        name="hora"
+                        value={formData.hora}
+                        onChange={handleChange}
                         className="form-input"
-                        placeholder="Ej: 14:30"
                     />
                 </div>
 
                 <div className="form-field">
                     <label htmlFor="lugar" className="form-label">Lugar</label>
-                    <input 
-                        type="text" 
-                        id="lugar" 
-                        name="lugar" 
-                        value={formData.lugar || ''} 
-                        onChange={handleChange} 
+                    <input
+                        type="text"
+                        id="lugar"
+                        name="lugar"
+                        value={formData.lugar}
+                        onChange={handleChange}
+                        maxLength={200}
                         className="form-input"
                         placeholder="Ej: Salón Principal del Museo"
                     />
@@ -320,13 +160,13 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
 
                 <div className="form-field">
                     <label htmlFor="descripcion" className="form-label">Descripción Detallada *</label>
-                    <textarea 
-                        id="descripcion" 
-                        name="descripcion" 
-                        rows="5" 
-                        value={formData.descripcion} 
-                        onChange={handleChange} 
-                        required 
+                    <textarea
+                        id="descripcion"
+                        name="descripcion"
+                        rows="5"
+                        value={formData.descripcion}
+                        onChange={handleChange}
+                        required
                         className="form-textarea"
                         placeholder="Proporciona una descripción detallada del evento..."
                     ></textarea>
@@ -335,20 +175,21 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
                 <div className="form-field">
                     <label className="form-label">Imágenes del evento</label>
                     <div className="image-uploader-container">
-                        <ImageUploader 
+                        <ImageUploader
+                            key={uploaderKey}
                             onImagesChange={handleImagesChange}
                             existingImages={formData.imagenUrls.map(url => ({ url }))}
                         />
-                        <p className="form-hint">Puedes arrastrar y soltar imágenes o hacer clic para seleccionar. Tamaño máximo por imagen: 5MB</p>
+                        <p className="form-hint">Hasta 5 imágenes JPG, PNG o WebP. Tamaño máximo por imagen: 5MB. La primera es la portada.</p>
                     </div>
                 </div>
 
                 <div className="form-field">
                     <label className="form-checkbox">
-                        <input 
-                            type="checkbox" 
-                            name="publicado" 
-                            checked={formData.publicado} 
+                        <input
+                            type="checkbox"
+                            name="publicado"
+                            checked={formData.publicado}
                             onChange={handleChange}
                         />
                         <span>Publicar este evento</span>
@@ -357,28 +198,26 @@ const EventForm = ({ events = [], event = null, onSave, onDelete, onUpdate, onCr
                 </div>
 
                 <div className="form-actions">
-                    <button type="submit" className="save-button" disabled={isSubmitting}>
-                        {isSubmitting ? (
-                            isEditing ? 'Actualizando...' : 'Creando...'
-                        ) : (
-                            isEditing ? 'Actualizar Evento' : 'Crear Evento'
-                        )}
+                    <button type="submit" className="save-button" disabled={isSaving}>
+                        {isSaving
+                            ? (isEditing ? 'Actualizando...' : 'Creando...')
+                            : (isEditing ? 'Actualizar Evento' : 'Crear Evento')}
                     </button>
-                    {isEditing && (
-                        <button 
-                            type="button" 
+                    {isEditing && onDelete && (
+                        <button
+                            type="button"
                             className="delete-button"
-                            onClick={handleDeleteClick}
-                            disabled={isSubmitting}
+                            onClick={() => onDelete(event)}
+                            disabled={isSaving}
                         >
-                            {isSubmitting ? 'Eliminando...' : 'Eliminar Evento'}
+                            Eliminar Evento
                         </button>
                     )}
-                    <button 
-                        type="button" 
-                        onClick={handleReset} 
+                    <button
+                        type="button"
+                        onClick={handleReset}
                         className="form-button form-button-reset"
-                        disabled={isSubmitting}
+                        disabled={isSaving}
                     >
                         {isEditing ? 'Cancelar' : 'Limpiar'}
                     </button>

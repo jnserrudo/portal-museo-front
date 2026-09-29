@@ -6,6 +6,8 @@ import { theme } from '../styles/theme';
 import Button from '../components/ui/Button';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import * as eventService from '../api/eventService';
+import { useAuth } from '../context/AuthContext';
+import { uploadUrl } from '../utils/imageAsset';
 
 const PageContainer = styled.div`
   padding: ${theme.spacing.xl} 0;
@@ -48,9 +50,7 @@ const EventHeader = styled.div`
   height: 400px;
   background: ${({ $imageUrl }) => {
     if (!$imageUrl) return theme.colors.primary;
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    const imagePath = $imageUrl.startsWith('http') ? $imageUrl : `${baseUrl}${$imageUrl}`;
-    return `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${imagePath})`;
+    return `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url("${uploadUrl($imageUrl)}")`;
   }};
   background-size: cover;
   background-position: center;
@@ -121,7 +121,7 @@ const GalleryImage = styled.div`
   border-radius: ${theme.borderRadius.md};
   background: ${({ $imageUrl }) => 
     $imageUrl 
-      ? `url(${$imageUrl})`
+      ? `url("${uploadUrl($imageUrl)}")`
       : theme.colors.background.grey};
   background-size: cover;
   background-position: center;
@@ -136,6 +136,7 @@ const GalleryImage = styled.div`
 const EventoDetallePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [event, setEvent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -167,18 +168,17 @@ const EventoDetallePage = () => {
     }
   }, [id]);
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString, hora) => {
     if (!dateString) return 'Fecha no definida';
     try {
       const date = new Date(dateString);
-      return date.toLocaleDateString('es-ES', {
+      const fecha = date.toLocaleDateString('es-ES', {
         weekday: 'long',
         day: 'numeric',
         month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+        year: 'numeric'
       });
+      return hora ? `${fecha} - ${hora} hs` : fecha;
     } catch (error) {
       console.error('Error al formatear la fecha:', error);
       return 'Fecha inválida';
@@ -196,7 +196,7 @@ const EventoDetallePage = () => {
     );
   }
 
-  if (error || !event) {
+  if (error || !event || (event.publicado === false && !isAuthenticated)) {
     return (
       <PageContainer>
         <Container style={{ textAlign: 'center', padding: '4rem 0' }}>
@@ -231,7 +231,7 @@ const EventoDetallePage = () => {
               <EventMeta>
                 <div>
                   <FaCalendarAlt />
-                  <span>{formatDate(event.fecha)}</span>
+                  <span>{formatDate(event.fecha, event.hora)}</span>
                 </div>
                 {event.lugar && (
                   <div>
@@ -257,7 +257,7 @@ const EventoDetallePage = () => {
                       key={index} 
                       $imageUrl={url} 
                       alt={`Imagen ${index + 2} de ${event.titulo}`}
-                      onClick={() => window.open(url, '_blank')}
+                      onClick={() => window.open(uploadUrl(url), '_blank', 'noopener')}
                     />
                   ))}
                 </Gallery>

@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 import { authHeaders, handleUnauthorized } from './auth';
 
 const SESSION_EXPIRED_MESSAGE = 'Tu sesión venció. Iniciá sesión nuevamente.';
+const UPLOAD_TOO_LARGE_MESSAGE = 'Las imágenes superan el tamaño que acepta el servidor. Probá con menos imágenes o más livianas.';
 
 // Usamos la variable de entorno para la URL base de la API
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -109,7 +110,7 @@ export const createEvent = async (formData) => {
                 errorMessage = SESSION_EXPIRED_MESSAGE;
             } else if (response.status === 413) {
                 // Mensaje específico para error 413 (archivo muy grande)
-                errorMessage = 'La imagen es demasiado grande. Por favor, usa una imagen más pequeña (máximo 10MB).';
+                errorMessage = UPLOAD_TOO_LARGE_MESSAGE;
             } else {
                 try {
                     const errorData = await response.json();
@@ -224,7 +225,7 @@ export const updateEvent = async (id, formData) => {
                 errorMessage = SESSION_EXPIRED_MESSAGE;
             } else if (response.status === 413) {
                 // Mensaje específico para error 413 (archivo muy grande)
-                errorMessage = 'La imagen es demasiado grande. Por favor, usa una imagen más pequeña (máximo 10MB).';
+                errorMessage = UPLOAD_TOO_LARGE_MESSAGE;
             } else {
                 try {
                     const errorData = await response.json();

@@ -33,6 +33,17 @@ const AdminEventosPage = lazy(() => import("./pages/AdminEventosPage"));
 // Servicios
 import * as eventService from "./api/eventService";
 
+// Definido fuera de App para que refrescar los eventos no vuelva a montar la página actual.
+const Page = ({ children }) => (
+  <ErrorBoundary>
+    <LanguageProvider>
+      <Layout>
+        {children}
+      </Layout>
+    </LanguageProvider>
+  </ErrorBoundary>
+);
+
 const App = () => {
   // Estados de la aplicación
   const [events, setEvents] = useState([]);
@@ -146,19 +157,6 @@ const App = () => {
     </div>
   );
 
-
-
-  // Componente de página con manejo de errores
-  const Page = ({ children }) => (
-    <ErrorBoundary>
-      <LanguageProvider>
-        <Layout onRefreshEvents={fetchEvents}>
-          {children}
-        </Layout>
-      </LanguageProvider>
-    </ErrorBoundary>
-  );
-
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
@@ -223,7 +221,7 @@ const App = () => {
                 } />
                 <Route path="/admin/eventos" element={
                   <Page>
-                    <AdminEventosPage />
+                    <AdminEventosPage onEventsChanged={fetchEvents} />
                   </Page>
                 } />
                 <Route path="/visita-virtual" element={

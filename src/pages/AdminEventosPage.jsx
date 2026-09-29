@@ -347,7 +347,7 @@ const EmptyState = styled.div`
   }
 `;
 
-const AdminEventosPage = () => {
+const AdminEventosPage = ({ onEventsChanged }) => {
   const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -505,10 +505,14 @@ const AdminEventosPage = () => {
       await eventService.deleteEvent(eventToDelete.id);
       toast.success('Evento eliminado correctamente');
       fetchEvents();
+      onEventsChanged?.();
       setEventToDelete(null);
     } catch (error) {
+      // eventService ya muestra los errores que responde el servidor; fetch lanza TypeError si no hay conexión.
+      if (error instanceof TypeError) {
+        toast.error('No se pudo conectar con el servidor. Revisá la conexión e intentá de nuevo.');
+      }
       console.error(error);
-      toast.error(t('common.error'));
     }
   };
 
@@ -528,6 +532,7 @@ const AdminEventosPage = () => {
       
       setIsFormOpen(false);
       fetchEvents();
+      onEventsChanged?.();
     } catch (error) {
       console.error(error);
       throw error;
@@ -730,12 +735,13 @@ const AdminEventosPage = () => {
       >
         <EventForm 
           key={currentEvent ? currentEvent.id : 'new-event'}
-          events={events}
           event={currentEvent}
           onSave={handleSaveEvent}
-          onSaveSuccess={() => {
+          onDelete={(ev) => {
             setIsFormOpen(false);
+            handleDeleteClick(ev);
           }}
+          onCancel={() => setIsFormOpen(false)}
         />
       </Modal>
 

@@ -5,7 +5,8 @@ import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaWhatsapp, FaInstagram, FaFaceboo
 import { theme } from '../styles/theme';
 import { asset } from '../utils/imageAsset';
 import Button from '../components/ui/Button';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { apiUrl } from '../api/apiUrl';
 
 const PageContainer = styled.div`
   padding-bottom: ${theme.spacing.xl};
@@ -273,28 +274,24 @@ const ContactoPage = () => {
 
   const sendEmail = async (e) => {
     e.preventDefault();
-    console.log('🚀 [CONTACTO] Iniciando envío de formulario...');
-    console.log('📋 [CONTACTO] Datos del formulario:', formData);
-    
+    if (loading) return;
+
+    const payload = {
+      nombreCompleto: formData.nombre.trim(),
+      emailRemitente: formData.email.trim(),
+      asunto: formData.asunto.trim(),
+      mensaje: formData.mensaje.trim()
+    };
+
+    if (!payload.nombreCompleto || !payload.emailRemitente || !payload.asunto || !payload.mensaje) {
+      toast.error('Completá todos los campos antes de enviar.', { position: "top-center", theme: "colored" });
+      return;
+    }
+
     setLoading(true);
 
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-    const endpoint = `${apiUrl}/api/email/enviar`;
-    
-    const payload = {
-      nombreCompleto: formData.nombre,
-      emailRemitente: formData.email,
-      asunto: formData.asunto,
-      mensaje: formData.mensaje
-    };
-    
-    console.log('🌐 [CONTACTO] URL del endpoint:', endpoint);
-    console.log('📦 [CONTACTO] Payload a enviar:', payload);
-
     try {
-      console.log('⏳ [CONTACTO] Enviando petición fetch...');
-      
-      const response = await fetch(endpoint, {
+      const response = await fetch(apiUrl('email/enviar'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -302,15 +299,9 @@ const ContactoPage = () => {
         body: JSON.stringify(payload)
       });
 
-      console.log('📡 [CONTACTO] Respuesta recibida - Status:', response.status);
-      console.log('📡 [CONTACTO] Respuesta recibida - OK:', response.ok);
-      console.log('📡 [CONTACTO] Headers de respuesta:', Object.fromEntries(response.headers.entries()));
+      const data = await response.json().catch(() => ({}));
 
-      const data = await response.json();
-      console.log('📄 [CONTACTO] Data parseada:', data);
-
-      if (data.success) {
-        console.log('✅ [CONTACTO] Email enviado exitosamente');
+      if (response.ok && data.success) {
         setLoading(false);
         toast.success('¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.', {
           position: "top-center",
@@ -324,7 +315,7 @@ const ContactoPage = () => {
         });
         setFormData({ nombre: '', email: '', asunto: '', mensaje: '' });
       } else {
-        console.error('❌ [CONTACTO] Error del servidor:', data.message);
+        console.error('Error del servidor al enviar el contacto:', response.status, data.message);
         setLoading(false);
         toast.error(data.message || 'Hubo un error al enviar el mensaje. Intenta nuevamente.', {
           position: "top-center",
@@ -333,11 +324,7 @@ const ContactoPage = () => {
         });
       }
     } catch (error) {
-      console.error('💥 [CONTACTO] Error en catch:', error);
-      console.error('💥 [CONTACTO] Error name:', error.name);
-      console.error('💥 [CONTACTO] Error message:', error.message);
-      console.error('💥 [CONTACTO] Error stack:', error.stack);
-      
+      console.error('Error de conexión al enviar el contacto:', error);
       setLoading(false);
       toast.error('Error de conexión con el servidor. Por favor, intenta nuevamente.', {
         position: "top-center",
@@ -349,7 +336,6 @@ const ContactoPage = () => {
 
   return (
     <PageContainer>
-      <ToastContainer />
       <HeroSection>
         <HeroContent>
           <h1>{t('contact.hero.title')}</h1>
@@ -406,6 +392,7 @@ const ContactoPage = () => {
                   value={formData.nombre}
                   onChange={handleChange}
                   required 
+                  maxLength={100}
                   placeholder={t('contact.form.name.placeholder')} 
                 />
               </FormGroup>
@@ -418,6 +405,7 @@ const ContactoPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required 
+                  maxLength={150}
                   placeholder={t('contact.form.email.placeholder')} 
                 />
               </FormGroup>
@@ -430,6 +418,7 @@ const ContactoPage = () => {
                   value={formData.asunto}
                   onChange={handleChange}
                   required 
+                  maxLength={150}
                   placeholder={t('contact.form.subject.placeholder')} 
                 />
               </FormGroup>
@@ -441,6 +430,7 @@ const ContactoPage = () => {
                   value={formData.mensaje}
                   onChange={handleChange}
                   required 
+                  maxLength={5000}
                   placeholder={t('contact.form.message.placeholder')}
                 ></textarea>
               </FormGroup>

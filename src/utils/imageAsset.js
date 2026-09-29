@@ -41,6 +41,19 @@ export const thumbnailFor = (url) => {
 };
 
 /**
+ * URL pública de una imagen subida (/uploads/archivo.jpg), según VITE_UPLOADS_BASE_URL.
+ */
+export const uploadUrl = (url) => {
+  if (!url || /^(https?:|data:)/.test(url)) return url;
+  const clean = url.startsWith('/') ? url : `/${url}`;
+  const uploadsBase = import.meta.env.VITE_UPLOADS_BASE_URL;
+  const base = clean.startsWith('/uploads/') && uploadsBase
+    ? uploadsBase
+    : (import.meta.env.VITE_API_URL || 'http://localhost:3000');
+  return `${base.replace(/\/+$/, '')}${clean}`;
+};
+
+/**
  * Convierte la URL de una imagen subida (/uploads/archivo.jpg, relativa o absoluta)
  * a su copia liviana /uploads/opt/archivo.jpg.opt.webp. Si no es de /uploads la deja igual.
  */
