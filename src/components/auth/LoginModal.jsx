@@ -100,7 +100,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         setError('Contraseña incorrecta. Por favor, intente nuevamente.');
       }
     } catch (err) {
-      setError('Ocurrió un error al intentar iniciar sesión.');
+      setError(err.message || 'Ocurrió un error al intentar iniciar sesión.');
       console.error('Error en inicio de sesión:', err);
     } finally {
       setIsLoading(false);

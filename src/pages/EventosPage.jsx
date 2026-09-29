@@ -105,6 +105,28 @@ const SearchContainer = styled.div`
   }
 `;
 
+const PastToggle = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 1px solid ${theme.colors.primary};
+  border-radius: 50px;
+  background: ${({ $active }) => ($active ? theme.colors.primary : 'white')};
+  color: ${({ $active }) => ($active ? 'white' : theme.colors.primary)};
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: ${theme.transitions.default};
+  white-space: nowrap;
+
+  &:hover {
+    background: ${theme.colors.primary};
+    color: white;
+  }
+`;
+
 const MonthSection = styled.section`
   margin-bottom: ${theme.spacing.xl};
 `;
@@ -394,6 +416,7 @@ const EventosPage = ({
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [showPast, setShowPast] = useState(false);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [viewEvent, setViewEvent] = useState(null);
   const [events, setEvents] = useState(propEvents);
@@ -504,22 +527,24 @@ const EventosPage = ({
       
       if (!matchesSearch) return false;
       
-      // Filtro de fecha: solo eventos futuros o del día actual
-      if (!event.date) return true; // Si no tiene fecha, mostrarlo
+      // Filtro de fecha: próximos (hoy o futuros) o pasados, según showPast
+      if (!event.date) return !showPast; // Sin fecha: solo entre los próximos
       
       try {
         const eventDate = parseISO(event.date);
         if (isValid(eventDate)) {
           const eventDateOnly = new Date(eventDate);
           eventDateOnly.setHours(0, 0, 0, 0);
-          return eventDateOnly >= today; // Solo eventos de hoy o futuros
+          return showPast ? eventDateOnly < today : eventDateOnly >= today;
         }
       } catch (e) {
         console.error('Error parsing date for filtering:', e);
       }
       
-      return true; // Si hay error parseando, mostrar el evento
+      return !showPast; // Si hay error parseando, mostrarlo entre los próximos
     });
+
+    const direction = showPast ? -1 : 1; // Pasados: el más reciente primero
 
     return filtered.sort((a, b) => {
       const dateAStr = a.date;
@@ -533,14 +558,14 @@ const EventosPage = ({
         const dateB = parseISO(dateBStr);
         
         if (isValid(dateA) && isValid(dateB)) {
-          return dateA - dateB; // más recientes primero (ascending)
+          return (dateA - dateB) * direction;
         }
       } catch (e) {
         console.error('Error parsing dates:', e);
       }
-      return dateAStr.localeCompare(dateBStr); // Fallback: compare strings
+      return dateAStr.localeCompare(dateBStr) * direction; // Fallback: compare strings
     });
-  }, [events, searchTerm]);
+  }, [events, searchTerm, showPast]);
 
   // Group by Month
   const eventsByMonth = useMemo(() => {
@@ -634,14 +659,23 @@ const EventosPage = ({
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </SearchContainer>
+            <PastToggle
+              type="button"
+              $active={showPast}
+              aria-pressed={showPast}
+              onClick={() => setShowPast(prev => !prev)}
+            >
+              {showPast ? <FaCalendarAlt /> : <FaClock />}
+              {showPast ? t('events.showUpcoming') : t('events.showPast')}
+            </PastToggle>
           </Controls>
         </Header>
 
         {Object.entries(eventsByMonth).length === 0 ? (
            <div style={{ textAlign: 'center', padding: '4rem', color: theme.colors.text.dark }}>
              <FaCalendarAlt size={48} style={{ marginBottom: '1rem', opacity: 0.5 }} />
-             <h3>{t('events.noEventsTitle')}</h3>
-             <p>{t('events.noEventsMessage')}</p>
+             <h3>{showPast ? t('events.noPastTitle') : t('events.noEventsTitle')}</h3>
+             <p>{showPast ? t('events.noPastMessage') : t('events.noEventsMessage')}</p>
            </div>
         ) : (
           Object.entries(eventsByMonth)
@@ -658,14 +692,14 @@ const EventosPage = ({
                 const parsedA = parseISO(dateA);
                 const parsedB = parseISO(dateB);
                 if (isValid(parsedA) && isValid(parsedB)) {
-                  // Use regular comparison for ascending (nearest first)
-                  return parsedA - parsedB;
+                  // Próximos: el mes más cercano primero. Pasados: el más reciente primero.
+                  return (parsedA - parsedB) * (showPast ? -1 : 1);
                 }
               } catch (e) {
                 console.error('Error sorting months:', e);
               }
               
-              return dateA.localeCompare(dateB);
+              return dateA.localeCompare(dateB) * (showPast ? -1 : 1);
             })
             .map(([month, monthEvents]) => (
             <MonthSection key={month}>

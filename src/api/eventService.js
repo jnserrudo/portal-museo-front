@@ -1,4 +1,7 @@
 import { toast } from 'react-toastify';
+import { authHeaders, handleUnauthorized } from './auth';
+
+const SESSION_EXPIRED_MESSAGE = 'Tu sesión venció. Iniciá sesión nuevamente.';
 
 // Usamos la variable de entorno para la URL base de la API
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -86,7 +89,8 @@ export const createEvent = async (formData) => {
             // No establecer Content-Type manualmente para FormData
             // El navegador lo hará automáticamente con el boundary correcto
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                ...authHeaders()
             },
             credentials: 'include' // Importante para mantener la sesión si usas autenticación
         });
@@ -100,8 +104,11 @@ export const createEvent = async (formData) => {
             
             let errorMessage;
             
-            // Mensaje específico para error 413 (archivo muy grande)
-            if (response.status === 413) {
+            if (response.status === 401) {
+                handleUnauthorized();
+                errorMessage = SESSION_EXPIRED_MESSAGE;
+            } else if (response.status === 413) {
+                // Mensaje específico para error 413 (archivo muy grande)
                 errorMessage = 'La imagen es demasiado grande. Por favor, usa una imagen más pequeña (máximo 10MB).';
             } else {
                 try {
@@ -197,7 +204,8 @@ export const updateEvent = async (id, formData) => {
             body: formData,
             // No establecer Content-Type manualmente para FormData
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                ...authHeaders()
             },
             credentials: 'include'
         });
@@ -211,8 +219,11 @@ export const updateEvent = async (id, formData) => {
             
             let errorMessage;
             
-            // Mensaje específico para error 413 (archivo muy grande)
-            if (response.status === 413) {
+            if (response.status === 401) {
+                handleUnauthorized();
+                errorMessage = SESSION_EXPIRED_MESSAGE;
+            } else if (response.status === 413) {
+                // Mensaje específico para error 413 (archivo muy grande)
                 errorMessage = 'La imagen es demasiado grande. Por favor, usa una imagen más pequeña (máximo 10MB).';
             } else {
                 try {
@@ -344,14 +355,19 @@ export const deleteEvent = async (id) => {
         const response = await fetch(getApiUrl(`eventos/${id}`), {
             method: 'DELETE',
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                ...authHeaders()
             },
             credentials: 'include' // Importante para mantener la sesión si usas autenticación
         });
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            const errorMessage = errorData.message || 'Error al eliminar el evento';
+            let errorMessage = errorData.message || 'Error al eliminar el evento';
+            if (response.status === 401) {
+                handleUnauthorized();
+                errorMessage = SESSION_EXPIRED_MESSAGE;
+            }
             
             // Mostrar notificación de error
             toast.error(errorMessage, {

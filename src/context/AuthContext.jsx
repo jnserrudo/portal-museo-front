@@ -1,46 +1,35 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { AUTH_EXPIRED_EVENT, clearToken, getToken, loginRequest, verifySession } from '../api/auth';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(getToken()));
 
-  // Verificar si el usuario ya está autenticado al cargar la aplicación
+  // El token vigente habilita la sesión al instante; el servidor la confirma en segundo plano.
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      // Aquí podrías validar el token con el backend si es necesario
-      setIsAuthenticated(true);
-    }
-    setIsLoading(false);
+    if (!getToken()) return;
+    verifySession().then((valid) => {
+      if (!valid) setIsAuthenticated(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    const onExpired = () => setIsAuthenticated(false);
+    window.addEventListener(AUTH_EXPIRED_EVENT, onExpired);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, onExpired);
   }, []);
 
   const login = async (password) => {
-    try {
-      // Aquí iría la llamada al backend para autenticar
-      // Por ahora, usamos una contraseña simple para la demo
-      if (password === 'admin123') {
-        // Simulamos un token de autenticación
-        localStorage.setItem('authToken', 'dummy-token');
-        setIsAuthenticated(true);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Error en el login:', error);
-      return false;
-    }
+    const success = await loginRequest(password);
+    if (success) setIsAuthenticated(true);
+    return success;
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
+    clearToken();
     setIsAuthenticated(false);
   };
-
-  if (isLoading) {
-    return <div>Cargando...</div>;
-  }
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout }}>

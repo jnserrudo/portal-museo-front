@@ -273,19 +273,7 @@ const Header = ({ isAdmin, onLoginClick, onLogout, onRefreshEvents }) => {
     setIsLoginModalOpen(false);
   };
 
-  const handleLogin = async (password) => {
-    try {
-      const success = await login(password);
-      if (success) {
-        console.log('Inicio de sesión exitoso');
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      return false;
-    }
-  };
+  const handleLogin = (password) => login(password);
 
   const handleLogout = () => {
     logout();
