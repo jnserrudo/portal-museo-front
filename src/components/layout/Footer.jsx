@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from 'react-icons/fa';
 import { theme } from '../../styles/theme';
+import { asset, assetSize } from '../../utils/imageAsset';
 
 const FooterContainer = styled.footer`
   background-color: ${theme.colors.background.navbar};
@@ -297,7 +298,7 @@ const Footer = () => {
       <FooterContent>
         <FooterSection>
           <FooterLogo to="/">
-            <img src={`${import.meta.env.BASE_URL}logo-museo2.png`} alt="Museo Regional Andino" />
+            <img src={asset('logo-museo2.png')} alt="Museo Regional Andino" {...assetSize('logo-museo2.png')} loading="lazy" decoding="async" />
             <span>Museo Regional Andino</span>
           </FooterLogo>
           <FooterText>
@@ -378,8 +379,8 @@ const Footer = () => {
 
       <CopyrightContainer>
         <LogosContainer>
-          <img src={`${import.meta.env.BASE_URL}ucasal-logo.png`} alt="UCASAL" className="logo-invertido" />
-          <img src={`${import.meta.env.BASE_URL}logo-tipo4.png`} alt="JNSIX" className="logo-sin-fondo" />
+          <img src={asset('ucasal-logo.png')} alt="UCASAL" className="logo-invertido" {...assetSize('ucasal-logo.png')} loading="lazy" decoding="async" />
+          <img src={asset('logo-tipo4.png')} alt="JNSIX" className="logo-sin-fondo" {...assetSize('logo-tipo4.png')} loading="lazy" decoding="async" />
         </LogosContainer>
         <CopyrightText>
           &copy; {currentYear} Museo Regional Andino. Todos los derechos reservados.

@@ -1,9 +1,11 @@
 // Mapa del recorrido virtual del museo
 // Sistema de navegación: 4 botones (prev/next en sala, prev/next sala)
+import { asset } from '../utils/imageAsset';
+
 export const museumMap = [
   {
     id: "G0041653",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0041653.JPG`,
+    src: asset('visita-virtual/G0041653.JPG'),
     title: "Frente del Museo - Vista 1",
     room: 0,
     hotspots: [
@@ -29,7 +31,7 @@ export const museumMap = [
   },
   {
     id: "G0041654",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0041654.JPG`,
+    src: asset('visita-virtual/G0041654.JPG'),
     title: "Frente del Museo - Vista 2",
     room: 0,
     hotspots: [
@@ -64,7 +66,7 @@ export const museumMap = [
   },
   {
     id: "G0041655",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0041655.JPG`,
+    src: asset('visita-virtual/G0041655.JPG'),
     title: "Frente del Museo - Vista 3",
     room: 0,
     hotspots: [
@@ -99,7 +101,7 @@ export const museumMap = [
   },
   {
     id: "G0041656",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0041656.JPG`,
+    src: asset('visita-virtual/G0041656.JPG'),
     title: "Frente del Museo - Vista 4",
     room: 0,
     hotspots: [
@@ -134,7 +136,7 @@ export const museumMap = [
   },
   {
     id: "G0041657",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0041657.JPG`,
+    src: asset('visita-virtual/G0041657.JPG'),
     title: "Frente del Museo - Vista 5",
     room: 0,
     hotspots: [
@@ -169,7 +171,7 @@ export const museumMap = [
   },
   {
     id: "G0041658",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0041658.JPG`,
+    src: asset('visita-virtual/G0041658.JPG'),
     title: "Frente del Museo - Vista 6",
     room: 0,
     hotspots: [
@@ -204,7 +206,7 @@ export const museumMap = [
   },
   {
     id: "G0041659",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0041659.JPG`,
+    src: asset('visita-virtual/G0041659.JPG'),
     title: "Frente del Museo - Vista 7",
     room: 0,
     hotspots: [
@@ -239,7 +241,7 @@ export const museumMap = [
   },
   {
     id: "G0041660",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0041660.JPG`,
+    src: asset('visita-virtual/G0041660.JPG'),
     title: "Frente del Museo - Vista 8",
     room: 0,
     hotspots: [
@@ -274,7 +276,7 @@ export const museumMap = [
   },
   {
     id: "G0041661",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0041661.JPG`,
+    src: asset('visita-virtual/G0041661.JPG'),
     title: "Frente del Museo - Vista 9",
     room: 0,
     hotspots: [
@@ -309,7 +311,7 @@ export const museumMap = [
   },
   {
     id: "G0041662",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0041662.JPG`,
+    src: asset('visita-virtual/G0041662.JPG'),
     title: "Frente del Museo - Vista 10",
     room: 0,
     hotspots: [
@@ -344,7 +346,7 @@ export const museumMap = [
   },
   {
     id: "G0051664",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0051664.JPG`,
+    src: asset('visita-virtual/G0051664.JPG'),
     title: "Frente del Museo - Vista 11",
     room: 0,
     hotspots: [
@@ -379,7 +381,7 @@ export const museumMap = [
   },
   {
     id: "G0051665",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0051665.JPG`,
+    src: asset('visita-virtual/G0051665.JPG'),
     title: "Frente del Museo - Vista 12",
     room: 0,
     hotspots: [
@@ -414,7 +416,7 @@ export const museumMap = [
   },
   {
     id: "G0051666",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0051666.JPG`,
+    src: asset('visita-virtual/G0051666.JPG'),
     title: "Frente del Museo - Vista 13",
     room: 0,
     hotspots: [
@@ -449,7 +451,7 @@ export const museumMap = [
   },
   {
     id: "G0051667",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0051667.JPG`,
+    src: asset('visita-virtual/G0051667.JPG'),
     title: "Frente del Museo - Vista 14",
     room: 0,
     hotspots: [
@@ -484,7 +486,7 @@ export const museumMap = [
   },
   {
     id: "G0051668",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0051668.JPG`,
+    src: asset('visita-virtual/G0051668.JPG'),
     title: "Frente del Museo - Vista 15",
     room: 0,
     hotspots: [
@@ -519,7 +521,7 @@ export const museumMap = [
   },
   {
     id: "G0051669",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0051669.JPG`,
+    src: asset('visita-virtual/G0051669.JPG'),
     title: "Frente del Museo - Vista 16",
     room: 0,
     hotspots: [
@@ -554,7 +556,7 @@ export const museumMap = [
   },
   {
     id: "G0051670",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0051670.JPG`,
+    src: asset('visita-virtual/G0051670.JPG'),
     title: "Frente del Museo - Vista 17",
     room: 0,
     hotspots: [
@@ -589,7 +591,7 @@ export const museumMap = [
   },
   {
     id: "G0051671",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0051671.JPG`,
+    src: asset('visita-virtual/G0051671.JPG'),
     title: "Frente del Museo - Vista 18",
     room: 0,
     hotspots: [
@@ -624,7 +626,7 @@ export const museumMap = [
   },
   {
     id: "G0011623",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0011623.JPG`,
+    src: asset('visita-virtual/G0011623.JPG'),
     title: "Frente del Museo - Vista 19",
     room: 0,
     hotspots: [
@@ -650,7 +652,7 @@ export const museumMap = [
   },
   {
     id: "G0011624",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0011624.JPG`,
+    src: asset('visita-virtual/G0011624.JPG'),
     title: "Sala 2 - Vista 1",
     room: 1,
     hotspots: [
@@ -685,7 +687,7 @@ export const museumMap = [
   },
   {
     id: "G0011625",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0011625.JPG`,
+    src: asset('visita-virtual/G0011625.JPG'),
     title: "Sala 2 - Vista 2",
     room: 1,
     hotspots: [
@@ -729,7 +731,7 @@ export const museumMap = [
   },
   {
     id: "G0011626",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0011626.JPG`,
+    src: asset('visita-virtual/G0011626.JPG'),
     title: "Sala 2 - Vista 3",
     room: 1,
     hotspots: [
@@ -773,7 +775,7 @@ export const museumMap = [
   },
   {
     id: "G0011627",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0011627.JPG`,
+    src: asset('visita-virtual/G0011627.JPG'),
     title: "Sala 2 - Vista 4",
     room: 1,
     hotspots: [
@@ -817,7 +819,7 @@ export const museumMap = [
   },
   {
     id: "G0011628",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0011628.JPG`,
+    src: asset('visita-virtual/G0011628.JPG'),
     title: "Sala 2 - Vista 5",
     room: 1,
     hotspots: [
@@ -861,7 +863,7 @@ export const museumMap = [
   },
   {
     id: "G0011629",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0011629.JPG`,
+    src: asset('visita-virtual/G0011629.JPG'),
     title: "Sala 2 - Vista 6",
     room: 1,
     hotspots: [
@@ -905,7 +907,7 @@ export const museumMap = [
   },
   {
     id: "G0011630",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0011630.JPG`,
+    src: asset('visita-virtual/G0011630.JPG'),
     title: "Sala 2 - Vista 7",
     room: 1,
     hotspots: [
@@ -949,7 +951,7 @@ export const museumMap = [
   },
   {
     id: "G0021632",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0021632.JPG`,
+    src: asset('visita-virtual/G0021632.JPG'),
     title: "Sala 2 - Vista 8",
     room: 1,
     hotspots: [
@@ -993,7 +995,7 @@ export const museumMap = [
   },
   {
     id: "G0021633",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0021633.JPG`,
+    src: asset('visita-virtual/G0021633.JPG'),
     title: "Sala 2 - Vista 9",
     room: 1,
     hotspots: [
@@ -1037,7 +1039,7 @@ export const museumMap = [
   },
   {
     id: "G0021634",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0021634.JPG`,
+    src: asset('visita-virtual/G0021634.JPG'),
     title: "Sala 2 - Vista 10",
     room: 1,
     hotspots: [
@@ -1081,7 +1083,7 @@ export const museumMap = [
   },
   {
     id: "G0021635",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0021635.JPG`,
+    src: asset('visita-virtual/G0021635.JPG'),
     title: "Sala 2 - Vista 11",
     room: 1,
     hotspots: [
@@ -1125,7 +1127,7 @@ export const museumMap = [
   },
   {
     id: "G0021636",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0021636.JPG`,
+    src: asset('visita-virtual/G0021636.JPG'),
     title: "Sala 2 - Vista 12",
     room: 1,
     hotspots: [
@@ -1169,7 +1171,7 @@ export const museumMap = [
   },
   {
     id: "G0021637",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0021637.JPG`,
+    src: asset('visita-virtual/G0021637.JPG'),
     title: "Sala 2 - Vista 13",
     room: 1,
     hotspots: [
@@ -1213,7 +1215,7 @@ export const museumMap = [
   },
   {
     id: "G0021638",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0021638.JPG`,
+    src: asset('visita-virtual/G0021638.JPG'),
     title: "Sala 2 - Vista 14",
     room: 1,
     hotspots: [
@@ -1257,7 +1259,7 @@ export const museumMap = [
   },
   {
     id: "G0021639",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0021639.JPG`,
+    src: asset('visita-virtual/G0021639.JPG'),
     title: "Sala 2 - Vista 15",
     room: 1,
     hotspots: [
@@ -1301,7 +1303,7 @@ export const museumMap = [
   },
   {
     id: "G0021640",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0021640.JPG`,
+    src: asset('visita-virtual/G0021640.JPG'),
     title: "Sala 2 - Vista 16",
     room: 1,
     hotspots: [
@@ -1345,7 +1347,7 @@ export const museumMap = [
   },
   {
     id: "G0021641",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0021641.JPG`,
+    src: asset('visita-virtual/G0021641.JPG'),
     title: "Sala 2 - Vista 17",
     room: 1,
     hotspots: [
@@ -1389,7 +1391,7 @@ export const museumMap = [
   },
   {
     id: "G0031644",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0031644.JPG`,
+    src: asset('visita-virtual/G0031644.JPG'),
     title: "Sala 2 - Vista 18",
     room: 1,
     hotspots: [
@@ -1433,7 +1435,7 @@ export const museumMap = [
   },
   {
     id: "G0031645",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0031645.JPG`,
+    src: asset('visita-virtual/G0031645.JPG'),
     title: "Sala 2 - Vista 19",
     room: 1,
     hotspots: [
@@ -1477,7 +1479,7 @@ export const museumMap = [
   },
   {
     id: "G0031646",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0031646.JPG`,
+    src: asset('visita-virtual/G0031646.JPG'),
     title: "Sala 2 - Vista 20",
     room: 1,
     hotspots: [
@@ -1521,7 +1523,7 @@ export const museumMap = [
   },
   {
     id: "G0061673",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0061673.JPG`,
+    src: asset('visita-virtual/G0061673.JPG'),
     title: "Sala 2 - Vista 21",
     room: 1,
     hotspots: [
@@ -1565,7 +1567,7 @@ export const museumMap = [
   },
   {
     id: "G0061674",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0061674.JPG`,
+    src: asset('visita-virtual/G0061674.JPG'),
     title: "Sala 2 - Vista 22",
     room: 1,
     hotspots: [
@@ -1609,7 +1611,7 @@ export const museumMap = [
   },
   {
     id: "G0061675",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0061675.JPG`,
+    src: asset('visita-virtual/G0061675.JPG'),
     title: "Sala 2 - Vista 23",
     room: 1,
     hotspots: [
@@ -1653,7 +1655,7 @@ export const museumMap = [
   },
   {
     id: "G0061676",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0061676.JPG`,
+    src: asset('visita-virtual/G0061676.JPG'),
     title: "Sala 2 - Vista 24",
     room: 1,
     hotspots: [
@@ -1697,7 +1699,7 @@ export const museumMap = [
   },
   {
     id: "G0061677",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0061677.JPG`,
+    src: asset('visita-virtual/G0061677.JPG'),
     title: "Sala 2 - Vista 25",
     room: 1,
     hotspots: [
@@ -1741,7 +1743,7 @@ export const museumMap = [
   },
   {
     id: "G0071679",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0071679.JPG`,
+    src: asset('visita-virtual/G0071679.JPG'),
     title: "Sala 2 - Vista 26",
     room: 1,
     hotspots: [
@@ -1785,7 +1787,7 @@ export const museumMap = [
   },
   {
     id: "G0071680",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0071680.JPG`,
+    src: asset('visita-virtual/G0071680.JPG'),
     title: "Sala 2 - Vista 27",
     room: 1,
     hotspots: [
@@ -1829,7 +1831,7 @@ export const museumMap = [
   },
   {
     id: "G0071681",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0071681.JPG`,
+    src: asset('visita-virtual/G0071681.JPG'),
     title: "Sala 2 - Vista 28",
     room: 1,
     hotspots: [
@@ -1873,7 +1875,7 @@ export const museumMap = [
   },
   {
     id: "G0071682",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0071682.JPG`,
+    src: asset('visita-virtual/G0071682.JPG'),
     title: "Sala 2 - Vista 29",
     room: 1,
     hotspots: [
@@ -1917,7 +1919,7 @@ export const museumMap = [
   },
   {
     id: "G0081684",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0081684.JPG`,
+    src: asset('visita-virtual/G0081684.JPG'),
     title: "Sala 2 - Vista 30",
     room: 1,
     hotspots: [
@@ -1961,7 +1963,7 @@ export const museumMap = [
   },
   {
     id: "G0081685",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0081685.JPG`,
+    src: asset('visita-virtual/G0081685.JPG'),
     title: "Sala 2 - Vista 31",
     room: 1,
     hotspots: [
@@ -2005,7 +2007,7 @@ export const museumMap = [
   },
   {
     id: "G0081686",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0081686.JPG`,
+    src: asset('visita-virtual/G0081686.JPG'),
     title: "Sala 2 - Vista 32",
     room: 1,
     hotspots: [
@@ -2049,7 +2051,7 @@ export const museumMap = [
   },
   {
     id: "G0081687",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0081687.JPG`,
+    src: asset('visita-virtual/G0081687.JPG'),
     title: "Sala 2 - Vista 33",
     room: 1,
     hotspots: [
@@ -2093,7 +2095,7 @@ export const museumMap = [
   },
   {
     id: "G0081688",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0081688.JPG`,
+    src: asset('visita-virtual/G0081688.JPG'),
     title: "Sala 2 - Vista 34",
     room: 1,
     hotspots: [
@@ -2137,7 +2139,7 @@ export const museumMap = [
   },
   {
     id: "G0091690",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0091690.JPG`,
+    src: asset('visita-virtual/G0091690.JPG'),
     title: "Sala 2 - Vista 35",
     room: 1,
     hotspots: [
@@ -2181,7 +2183,7 @@ export const museumMap = [
   },
   {
     id: "G0091691",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0091691.JPG`,
+    src: asset('visita-virtual/G0091691.JPG'),
     title: "Sala 2 - Vista 36",
     room: 1,
     hotspots: [
@@ -2225,7 +2227,7 @@ export const museumMap = [
   },
   {
     id: "G0091692",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0091692.JPG`,
+    src: asset('visita-virtual/G0091692.JPG'),
     title: "Sala 2 - Vista 37",
     room: 1,
     hotspots: [
@@ -2269,7 +2271,7 @@ export const museumMap = [
   },
   {
     id: "G0091693",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0091693.JPG`,
+    src: asset('visita-virtual/G0091693.JPG'),
     title: "Sala 2 - Vista 38",
     room: 1,
     hotspots: [
@@ -2313,7 +2315,7 @@ export const museumMap = [
   },
   {
     id: "G0091694",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0091694.JPG`,
+    src: asset('visita-virtual/G0091694.JPG'),
     title: "Sala 2 - Vista 39",
     room: 1,
     hotspots: [
@@ -2357,7 +2359,7 @@ export const museumMap = [
   },
   {
     id: "G0091695",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0091695.JPG`,
+    src: asset('visita-virtual/G0091695.JPG'),
     title: "Sala 2 - Vista 40",
     room: 1,
     hotspots: [
@@ -2401,7 +2403,7 @@ export const museumMap = [
   },
   {
     id: "G0101697",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0101697.JPG`,
+    src: asset('visita-virtual/G0101697.JPG'),
     title: "Sala 2 - Vista 41",
     room: 1,
     hotspots: [
@@ -2436,7 +2438,7 @@ export const museumMap = [
   },
   {
     id: "G0101698",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0101698.JPG`,
+    src: asset('visita-virtual/G0101698.JPG'),
     title: "Sala 3 - Vista 1",
     room: 2,
     hotspots: [
@@ -2462,7 +2464,7 @@ export const museumMap = [
   },
   {
     id: "G0101699",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0101699.JPG`,
+    src: asset('visita-virtual/G0101699.JPG'),
     title: "Sala 3 - Vista 2",
     room: 2,
     hotspots: [
@@ -2497,7 +2499,7 @@ export const museumMap = [
   },
   {
     id: "G0101700",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0101700.JPG`,
+    src: asset('visita-virtual/G0101700.JPG'),
     title: "Sala 3 - Vista 3",
     room: 2,
     hotspots: [
@@ -2532,7 +2534,7 @@ export const museumMap = [
   },
   {
     id: "G0101701",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0101701.JPG`,
+    src: asset('visita-virtual/G0101701.JPG'),
     title: "Sala 3 - Vista 4",
     room: 2,
     hotspots: [
@@ -2567,7 +2569,7 @@ export const museumMap = [
   },
   {
     id: "G0111703",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0111703.JPG`,
+    src: asset('visita-virtual/G0111703.JPG'),
     title: "Sala 3 - Vista 5",
     room: 2,
     hotspots: [
@@ -2602,7 +2604,7 @@ export const museumMap = [
   },
   {
     id: "G0111704",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0111704.JPG`,
+    src: asset('visita-virtual/G0111704.JPG'),
     title: "Sala 3 - Vista 6",
     room: 2,
     hotspots: [
@@ -2637,7 +2639,7 @@ export const museumMap = [
   },
   {
     id: "G0111705",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0111705.JPG`,
+    src: asset('visita-virtual/G0111705.JPG'),
     title: "Sala 3 - Vista 7",
     room: 2,
     hotspots: [
@@ -2672,7 +2674,7 @@ export const museumMap = [
   },
   {
     id: "G0111706",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0111706.JPG`,
+    src: asset('visita-virtual/G0111706.JPG'),
     title: "Sala 3 - Vista 8",
     room: 2,
     hotspots: [
@@ -2707,7 +2709,7 @@ export const museumMap = [
   },
   {
     id: "G0121708",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0121708.JPG`,
+    src: asset('visita-virtual/G0121708.JPG'),
     title: "Sala 3 - Vista 9",
     room: 2,
     hotspots: [
@@ -2742,7 +2744,7 @@ export const museumMap = [
   },
   {
     id: "G0121709",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0121709.JPG`,
+    src: asset('visita-virtual/G0121709.JPG'),
     title: "Sala 3 - Vista 10",
     room: 2,
     hotspots: [
@@ -2777,7 +2779,7 @@ export const museumMap = [
   },
   {
     id: "G0131711",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0131711.JPG`,
+    src: asset('visita-virtual/G0131711.JPG'),
     title: "Sala 3 - Vista 11",
     room: 2,
     hotspots: [
@@ -2812,7 +2814,7 @@ export const museumMap = [
   },
   {
     id: "G0131712",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0131712.JPG`,
+    src: asset('visita-virtual/G0131712.JPG'),
     title: "Sala 3 - Vista 12",
     room: 2,
     hotspots: [
@@ -2847,7 +2849,7 @@ export const museumMap = [
   },
   {
     id: "G0141714",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0141714.JPG`,
+    src: asset('visita-virtual/G0141714.JPG'),
     title: "Sala 3 - Vista 13",
     room: 2,
     hotspots: [
@@ -2882,7 +2884,7 @@ export const museumMap = [
   },
   {
     id: "G0141715",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0141715.JPG`,
+    src: asset('visita-virtual/G0141715.JPG'),
     title: "Sala 3 - Vista 14",
     room: 2,
     hotspots: [
@@ -2917,7 +2919,7 @@ export const museumMap = [
   },
   {
     id: "G0151717",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0151717.JPG`,
+    src: asset('visita-virtual/G0151717.JPG'),
     title: "Sala 3 - Vista 15",
     room: 2,
     hotspots: [
@@ -2952,7 +2954,7 @@ export const museumMap = [
   },
   {
     id: "G0151718",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0151718.JPG`,
+    src: asset('visita-virtual/G0151718.JPG'),
     title: "Sala 3 - Vista 16",
     room: 2,
     hotspots: [
@@ -2987,7 +2989,7 @@ export const museumMap = [
   },
   {
     id: "G0161720",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161720.JPG`,
+    src: asset('visita-virtual/G0161720.JPG'),
     title: "Sala 3 - Vista 17",
     room: 2,
     hotspots: [
@@ -3022,7 +3024,7 @@ export const museumMap = [
   },
   {
     id: "G0161721",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161721.JPG`,
+    src: asset('visita-virtual/G0161721.JPG'),
     title: "Sala 3 - Vista 18",
     room: 2,
     hotspots: [
@@ -3057,7 +3059,7 @@ export const museumMap = [
   },
   {
     id: "G0161722",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161722.JPG`,
+    src: asset('visita-virtual/G0161722.JPG'),
     title: "Sala 3 - Vista 19",
     room: 2,
     hotspots: [
@@ -3092,7 +3094,7 @@ export const museumMap = [
   },
   {
     id: "G0161723",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161723.JPG`,
+    src: asset('visita-virtual/G0161723.JPG'),
     title: "Sala 3 - Vista 20",
     room: 2,
     hotspots: [
@@ -3127,7 +3129,7 @@ export const museumMap = [
   },
   {
     id: "G0161724",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161724.JPG`,
+    src: asset('visita-virtual/G0161724.JPG'),
     title: "Sala 3 - Vista 21",
     room: 2,
     hotspots: [
@@ -3162,7 +3164,7 @@ export const museumMap = [
   },
   {
     id: "G0161725",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161725.JPG`,
+    src: asset('visita-virtual/G0161725.JPG'),
     title: "Sala 3 - Vista 22",
     room: 2,
     hotspots: [
@@ -3197,7 +3199,7 @@ export const museumMap = [
   },
   {
     id: "G0161726",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161726.JPG`,
+    src: asset('visita-virtual/G0161726.JPG'),
     title: "Sala 3 - Vista 23",
     room: 2,
     hotspots: [
@@ -3232,7 +3234,7 @@ export const museumMap = [
   },
   {
     id: "G0161727",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161727.JPG`,
+    src: asset('visita-virtual/G0161727.JPG'),
     title: "Sala 3 - Vista 24",
     room: 2,
     hotspots: [
@@ -3267,7 +3269,7 @@ export const museumMap = [
   },
   {
     id: "G0161728",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161728.JPG`,
+    src: asset('visita-virtual/G0161728.JPG'),
     title: "Sala 3 - Vista 25",
     room: 2,
     hotspots: [
@@ -3302,7 +3304,7 @@ export const museumMap = [
   },
   {
     id: "G0161729",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161729.JPG`,
+    src: asset('visita-virtual/G0161729.JPG'),
     title: "Sala 3 - Vista 26",
     room: 2,
     hotspots: [
@@ -3337,7 +3339,7 @@ export const museumMap = [
   },
   {
     id: "G0161730",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161730.JPG`,
+    src: asset('visita-virtual/G0161730.JPG'),
     title: "Sala 3 - Vista 27",
     room: 2,
     hotspots: [
@@ -3372,7 +3374,7 @@ export const museumMap = [
   },
   {
     id: "G0161731",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0161731.JPG`,
+    src: asset('visita-virtual/G0161731.JPG'),
     title: "Sala 3 - Vista 28",
     room: 2,
     hotspots: [
@@ -3407,7 +3409,7 @@ export const museumMap = [
   },
   {
     id: "G0171733",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0171733.JPG`,
+    src: asset('visita-virtual/G0171733.JPG'),
     title: "Sala 3 - Vista 29",
     room: 2,
     hotspots: [
@@ -3442,7 +3444,7 @@ export const museumMap = [
   },
   {
     id: "G0171734",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0171734.JPG`,
+    src: asset('visita-virtual/G0171734.JPG'),
     title: "Sala 3 - Vista 30",
     room: 2,
     hotspots: [
@@ -3477,7 +3479,7 @@ export const museumMap = [
   },
   {
     id: "G0171735",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0171735.JPG`,
+    src: asset('visita-virtual/G0171735.JPG'),
     title: "Sala 3 - Vista 31",
     room: 2,
     hotspots: [
@@ -3512,7 +3514,7 @@ export const museumMap = [
   },
   {
     id: "G0171736",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0171736.JPG`,
+    src: asset('visita-virtual/G0171736.JPG'),
     title: "Sala 3 - Vista 32",
     room: 2,
     hotspots: [
@@ -3547,7 +3549,7 @@ export const museumMap = [
   },
   {
     id: "G0171737",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0171737.JPG`,
+    src: asset('visita-virtual/G0171737.JPG'),
     title: "Sala 3 - Vista 33",
     room: 2,
     hotspots: [
@@ -3582,7 +3584,7 @@ export const museumMap = [
   },
   {
     id: "G0171738",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0171738.JPG`,
+    src: asset('visita-virtual/G0171738.JPG'),
     title: "Sala 3 - Vista 34",
     room: 2,
     hotspots: [
@@ -3617,7 +3619,7 @@ export const museumMap = [
   },
   {
     id: "G0181740",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0181740.JPG`,
+    src: asset('visita-virtual/G0181740.JPG'),
     title: "Sala 3 - Vista 35",
     room: 2,
     hotspots: [
@@ -3652,7 +3654,7 @@ export const museumMap = [
   },
   {
     id: "G0181741",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0181741.JPG`,
+    src: asset('visita-virtual/G0181741.JPG'),
     title: "Sala 3 - Vista 36",
     room: 2,
     hotspots: [
@@ -3687,7 +3689,7 @@ export const museumMap = [
   },
   {
     id: "G0181742",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0181742.JPG`,
+    src: asset('visita-virtual/G0181742.JPG'),
     title: "Sala 3 - Vista 37",
     room: 2,
     hotspots: [
@@ -3722,7 +3724,7 @@ export const museumMap = [
   },
   {
     id: "G0181743",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0181743.JPG`,
+    src: asset('visita-virtual/G0181743.JPG'),
     title: "Sala 3 - Vista 38",
     room: 2,
     hotspots: [
@@ -3757,7 +3759,7 @@ export const museumMap = [
   },
   {
     id: "G0181744",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0181744.JPG`,
+    src: asset('visita-virtual/G0181744.JPG'),
     title: "Sala 3 - Vista 39",
     room: 2,
     hotspots: [
@@ -3792,7 +3794,7 @@ export const museumMap = [
   },
   {
     id: "G0181745",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0181745.JPG`,
+    src: asset('visita-virtual/G0181745.JPG'),
     title: "Sala 3 - Vista 40",
     room: 2,
     hotspots: [
@@ -3827,7 +3829,7 @@ export const museumMap = [
   },
   {
     id: "G0191747",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0191747.JPG`,
+    src: asset('visita-virtual/G0191747.JPG'),
     title: "Sala 3 - Vista 41",
     room: 2,
     hotspots: [
@@ -3862,7 +3864,7 @@ export const museumMap = [
   },
   {
     id: "G0201749",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0201749.JPG`,
+    src: asset('visita-virtual/G0201749.JPG'),
     title: "Sala 3 - Vista 42",
     room: 2,
     hotspots: [
@@ -3897,7 +3899,7 @@ export const museumMap = [
   },
   {
     id: "G0201750",
-    src: `${import.meta.env.BASE_URL}visita-virtual/G0201750.JPG`,
+    src: asset('visita-virtual/G0201750.JPG'),
     title: "Sala 3 - Vista 43",
     room: 2,
     hotspots: [

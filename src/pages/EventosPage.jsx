@@ -6,6 +6,7 @@ import { es } from 'date-fns/locale';
 import styled from 'styled-components';
 import { FaCalendarAlt, FaMapMarkerAlt, FaSearch, FaPlus, FaEdit, FaTrash, FaClock, FaInfoCircle, FaTimes, FaTicketAlt, FaArrowLeft } from 'react-icons/fa';
 import { theme } from '../styles/theme';
+import { optimizedUploadUrl, fallbackTo } from '../utils/imageAsset';
 import Button from '../components/ui/Button';
 import Modal from '../components/Modal';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
@@ -679,7 +680,7 @@ const EventosPage = ({
                     <Card key={event.id} onClick={() => handleCardClick(event)}>
                       <CardImageContainer>
                         {hasImage ? (
-                          <CardImage src={event.imageUrl} alt={event.title} onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
+                          <CardImage src={optimizedUploadUrl(event.imageUrl)} alt={event.title} loading="lazy" decoding="async" onError={fallbackTo(event.imageUrl, (e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; })} />
                         ) : (
                           <CardImagePlaceholder>
                             <FaCalendarAlt />
@@ -731,11 +732,12 @@ const EventosPage = ({
               {viewEvent.imageUrl && (
                 <ModalImageWrapper>
                   <ModalImage 
-                    src={viewEvent.imageUrl} 
+                    src={optimizedUploadUrl(viewEvent.imageUrl)} 
                     alt={viewEvent.title}
-                    onError={(e) => {
+                    decoding="async"
+                    onError={fallbackTo(viewEvent.imageUrl, (e) => {
                       e.target.style.display = 'none';
-                    }}
+                    })}
                   />
                 </ModalImageWrapper>
               )}

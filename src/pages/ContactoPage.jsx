@@ -3,6 +3,7 @@ import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaWhatsapp, FaInstagram, FaFacebook, FaPaperPlane, FaYoutube } from 'react-icons/fa';
 import { theme } from '../styles/theme';
+import { asset } from '../utils/imageAsset';
 import Button from '../components/ui/Button';
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -12,7 +13,7 @@ const PageContainer = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url('${import.meta.env.BASE_URL}museo_frente.jpg');
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url('${asset('museo_frente.jpg')}');
   background-size: cover;
   background-position: center 60%;
   background-repeat: no-repeat;

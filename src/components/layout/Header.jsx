@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaCog, FaPlus } from 'react-icons/fa';
 import { theme } from '../../styles/theme';
+import { asset } from '../../utils/imageAsset';
 import * as eventService from '../../api/eventService';
 import Button from '../ui/Button';
 import LoginModal from '../auth/LoginModal';
@@ -302,7 +303,7 @@ const Header = ({ isAdmin, onLoginClick, onLogout, onRefreshEvents }) => {
     }}>
       <Nav>
         <Logo to="/">
-          <img src={`${import.meta.env.BASE_URL}logo-museo2.png`} alt="Museo Regional Andino" />
+          <img src={asset('logo-museo2.png')} alt="Museo Regional Andino" />
           <span>{t('header.title')}</span>
         </Logo>
         

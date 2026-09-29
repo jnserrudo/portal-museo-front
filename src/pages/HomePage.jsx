@@ -9,9 +9,10 @@ import Button from '../components/ui/Button';
 import Modal from '../components/Modal';
 import { theme } from '../styles/theme';
 import * as eventService from '../api/eventService';
+import { asset, optimizedUploadUrl, fallbackTo } from '../utils/imageAsset';
 
 // Ruta a la imagen usando BASE_URL
-const museoFrente = `${import.meta.env.BASE_URL}museo_frente.jpg`;
+const museoFrente = asset('museo_frente.jpg');
 
 const HeroSection = styled.section`
   position: relative;
@@ -599,11 +600,13 @@ const HomePage = ({ events: propEvents = [], isLoading: propLoading = false }) =
                       <EventImageContainer $hasImage={!!event.imageUrl}>
                         {event.imageUrl ? (
                           <EventImageElement 
-                            src={event.imageUrl} 
+                            src={optimizedUploadUrl(event.imageUrl)} 
                             alt={event.title}
-                            onError={(e) => { 
+                            loading="lazy"
+                            decoding="async"
+                            onError={fallbackTo(event.imageUrl, (e) => { 
                               e.target.style.display = 'none'; 
-                            }}
+                            })}
                           />
                         ) : (
                           <FaCalendarAlt />
@@ -667,11 +670,12 @@ const HomePage = ({ events: propEvents = [], isLoading: propLoading = false }) =
             {viewEvent.imageUrl && (
               <ModalImageWrapper>
                 <ModalImage 
-                  src={viewEvent.imageUrl} 
+                  src={optimizedUploadUrl(viewEvent.imageUrl)} 
                   alt={viewEvent.title}
-                  onError={(e) => {
+                  decoding="async"
+                  onError={fallbackTo(viewEvent.imageUrl, (e) => {
                     e.target.style.display = 'none';
-                  }}
+                  })}
                 />
               </ModalImageWrapper>
             )}

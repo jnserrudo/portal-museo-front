@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
+import { asset, assetSize } from '../utils/imageAsset';
 import { FaMountain, FaGem, FaLeaf, FaHistory, FaTrain, FaLandmark, FaMapMarkerAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
 
@@ -280,80 +281,90 @@ const SalasPage = () => {
       id: 'experiencia-inmersiva',
       title: t('salas.immersive.title'),
       icon: <FaMountain />,
-      image: `${import.meta.env.BASE_URL}salas/portal_sala_experiencia_inmersiva.png`,
-      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_experiencia_inmersiva.png`,
+      image: asset('salas/portal_sala_experiencia_inmersiva.png'),
+      detailImage: asset('salas/portal_sala_experiencia_inmersiva.png'),
+      detailSize: assetSize('salas/portal_sala_experiencia_inmersiva.png'),
       content: t('salas.immersive.content')
     },
     {
       id: 'sala-geologia',
       title: t('salas.geology.title'),
       icon: <FaGem />,
-      image: `${import.meta.env.BASE_URL}geologia.jpg`,
-      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_geologia.JPG`,
+      image: asset('geologia.jpg'),
+      detailImage: asset('salas/portal_sala_geologia.JPG'),
+      detailSize: assetSize('salas/portal_sala_geologia.JPG'),
       content: t('salas.geology.content')
     },
     {
       id: 'sala-biodiversidad',
       title: t('salas.biodiversity.title'),
       icon: <FaLeaf />,
-      image: `${import.meta.env.BASE_URL}biodiversidad.jpg`,
-      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_biodiversidad.JPG`,
+      image: asset('biodiversidad.jpg'),
+      detailImage: asset('salas/portal_sala_biodiversidad.JPG'),
+      detailSize: assetSize('salas/portal_sala_biodiversidad.JPG'),
       content: t('salas.biodiversity.content')
     },
     {
       id: 'sala-arqueologia',
       title: t('salas.archeology.title'),
       icon: <FaHistory />,
-      image: `${import.meta.env.BASE_URL}arqueologia.JPG`,
-      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_arqueologia.JPG`,
+      image: asset('arqueologia.JPG'),
+      detailImage: asset('salas/portal_sala_arqueologia.JPG'),
+      detailSize: assetSize('salas/portal_sala_arqueologia.JPG'),
       content: t('salas.archeology.content')
     },
     {
       id: 'sala-mineria',
       title: t('salas.mining.title'),
       icon: <FaGem />,
-      image: `${import.meta.env.BASE_URL}minerologia_y_mineria.jpg`,
-      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_mineria.JPG`,
+      image: asset('minerologia_y_mineria.jpg'),
+      detailImage: asset('salas/portal_sala_mineria.JPG'),
+      detailSize: assetSize('salas/portal_sala_mineria.JPG'),
       content: t('salas.mining.content')
     },
     {
       id: 'sala-ramal-c14',
       title: t('salas.c14.title'),
       icon: <FaTrain />,
-      image: `${import.meta.env.BASE_URL}ramalc14_tarjeta.jpg`,
-      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_ramal.JPG`,
+      image: asset('ramalc14_tarjeta.jpg'),
+      detailImage: asset('salas/portal_sala_ramal.JPG'),
+      detailSize: assetSize('salas/portal_sala_ramal.JPG'),
       content: t('salas.c14.content')
     },
     {
       id: 'sala-historia',
       title: t('salas.history.title'),
       icon: <FaLandmark />,
-      image: `${import.meta.env.BASE_URL}historia_museo.JPG`,
-      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_historia.JPG`,
+      image: asset('historia_museo.JPG'),
+      detailImage: asset('salas/portal_sala_historia.JPG'),
+      detailSize: assetSize('salas/portal_sala_historia.JPG'),
       content: t('salas.history.content')
     },
     {
       id: 'sala-territorio',
       title: t('salas.territory.title'),
       icon: <FaMapMarkerAlt />,
-      image: `${import.meta.env.BASE_URL}territorio_andes_tarjeta.JPG`,
-      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_territorio_andes.JPG`,
+      image: asset('territorio_andes_tarjeta.JPG'),
+      detailImage: asset('salas/portal_sala_territorio_andes.JPG'),
+      detailSize: assetSize('salas/portal_sala_territorio_andes.JPG'),
       content: t('salas.territory.content')
     },
     {
       id: 'sala-gobernacion',
       title: t('salas.governance.title'),
       icon: <FaLandmark />,
-      image: `${import.meta.env.BASE_URL}historia_museo.png`,
-      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_gobernacion_andes.JPG`,
+      image: asset('historia_museo.png'),
+      detailImage: asset('salas/portal_sala_gobernacion_andes.JPG'),
+      detailSize: assetSize('salas/portal_sala_gobernacion_andes.JPG'),
       content: t('salas.governance.content')
     },
     {
       id: 'sala-sac-hoy',
       title: t('salas.sac.title'),
       icon: <FaMapMarkerAlt />,
-      image: `${import.meta.env.BASE_URL}territorio_andes.jpg`,
-      detailImage: `${import.meta.env.BASE_URL}salas/portal_sala_san_antonio.JPG`,
+      image: asset('territorio_andes.jpg'),
+      detailImage: asset('salas/portal_sala_san_antonio.JPG'),
+      detailSize: assetSize('salas/portal_sala_san_antonio.JPG'),
       content: t('salas.sac.content')
     }
   ];
@@ -520,7 +531,7 @@ const SalasPage = () => {
                 )) : sala.content}
               </SalaContent>
               <SalaImage>
-                <img src={sala.detailImage} alt={sala.title} />
+                <img src={sala.detailImage} alt={sala.title} {...sala.detailSize} loading="lazy" decoding="async" />
               </SalaImage>
             </SalaContentWrapper>
           </SalaSection>

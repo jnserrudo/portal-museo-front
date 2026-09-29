@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FaStepBackward, FaStepForward, FaFastBackward, FaFastForward, FaExpand, FaCompress, FaRedo, FaMapMarkedAlt, FaTimes } from 'react-icons/fa';
 import { theme } from '../../styles/theme';
+import { thumbnailFor } from '../../utils/imageAsset';
 
 // Animaciones
 const fadeIn = keyframes`
@@ -883,7 +884,7 @@ const VirtualTourView = ({ museumMap, initialImageId }) => {
                     setShowMinimap(false);
                   }}
                 >
-                  <img src={item.src} alt={item.title} loading="lazy" />
+                  <img src={thumbnailFor(item.src)} alt={item.title} loading="lazy" decoding="async" />
                   <MinimapItemLabel>
                     {index + 1}. {item.title}
                   </MinimapItemLabel>

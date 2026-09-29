@@ -3,6 +3,7 @@ import { useLanguage } from '../context/LanguageContext';
 import styled from 'styled-components';
 import { FaMapMarkerAlt, FaClock, FaTicketAlt, FaWifi, FaWheelchair, FaCamera, FaBus, FaCar, FaInfoCircle, FaBook, FaTree, FaArchive, FaCouch, FaCheck, FaGlobe, FaRoute } from 'react-icons/fa';
 import { theme } from '../styles/theme';
+import { asset } from '../utils/imageAsset';
 
 const PageContainer = styled.div`
   padding-bottom: ${theme.spacing.xl};
@@ -10,7 +11,7 @@ const PageContainer = styled.div`
 `;
 
 const HeroSection = styled.section`
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${import.meta.env.BASE_URL}museo_frente.jpg');
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${asset('museo_frente.jpg')}');
   background-size: cover;
   background-position: center 60%;
   height: 40vh;
